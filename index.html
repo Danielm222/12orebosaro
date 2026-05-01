@@ -43,10 +43,17 @@
     transition: all 0.3s;
   }
   .nav-logo {
+    display: flex; align-items: center; gap: 0.7rem;
     font-family: 'Bebas Neue', sans-serif;
     font-size: 1.5rem;
     letter-spacing: 0.15em;
     color: var(--neon);
+    text-decoration: none;
+  }
+  .nav-logo img {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    object-fit: cover;
   }
   .nav-links {
     display: flex; gap: 2rem; list-style: none;
@@ -80,8 +87,11 @@
   .nav-cta:hover { background: var(--neon2); transform: translateY(-1px); }
 
   /* HAMBURGER */
-  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
-  .hamburger span { width: 24px; height: 2px; background: var(--white); transition: all 0.3s; }
+  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; z-index: 101; position: relative; }
+  .hamburger span { width: 24px; height: 2px; background: var(--white); transition: all 0.3s; display: block; }
+  .hamburger.active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .hamburger.active span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+  .hamburger.active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
   /* HERO */
   #hero {
@@ -403,12 +413,17 @@
     display: flex; align-items: center; justify-content: center;
     font-size: 1.3rem; z-index: 1;
   }
+  .tl-dot.dj-dot {
+    border-color: #b040ff;
+    background: rgba(176,64,255,0.1);
+  }
   .tl-content {}
   .tl-time {
     font-family: 'Bebas Neue', sans-serif;
     font-size: 1.5rem; color: var(--neon);
     line-height: 1;
   }
+  .tl-time.dj-time { color: #b040ff; }
   .tl-title {
     font-family: 'Barlow Condensed', sans-serif;
     font-size: 1.15rem; font-weight: 700;
@@ -417,6 +432,15 @@
   }
   .tl-desc {
     font-size: 0.88rem; color: var(--gray); line-height: 1.5;
+  }
+  .tl-badge-dj {
+    display: inline-block;
+    background: rgba(176,64,255,0.15);
+    border: 1px solid #b040ff;
+    color: #b040ff;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase;
+    padding: 0.15rem 0.6rem; margin-top: 0.4rem;
   }
 
   /* PREMI */
@@ -434,17 +458,17 @@
   }
   .premio-card.gold { border-top: 3px solid #FFD700; }
   .premio-card.silver { border-top: 3px solid #C0C0C0; }
-  .premio-card:hover { transform: translateY(-5px); }
-  .premio-medal { font-size: 3rem; display: block; margin-bottom: 1rem; }
+  .premio-card:hover { border-color: var(--border); transform: translateY(-4px); }
+  .premio-medal { font-size: 2.5rem; display: block; margin-bottom: 0.8rem; }
   .premio-pos {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.4rem; letter-spacing: 0.1em;
-    color: var(--gray); margin-bottom: 0.5rem;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.75rem; letter-spacing: 0.25em;
+    text-transform: uppercase; color: var(--gray);
+    margin-bottom: 0.5rem;
   }
   .premio-name {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 1.1rem; font-weight: 700;
-    letter-spacing: 0.08em; text-transform: uppercase;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem; letter-spacing: 0.05em;
     color: var(--white);
   }
   .premi-individual {
@@ -468,16 +492,18 @@
   }
   .ind-card p { font-size: 0.82rem; color: var(--gray); margin-top: 0.2rem; }
 
-  /* REGOLAMENTO */
+  /* REGOLAMENTO — ACCORDION */
   #regolamento { background: var(--black); }
   .reg-intro {
     font-size: 1.05rem; line-height: 1.8;
-    color: rgba(255,255,255,0.6); margin-bottom: 3rem;
+    color: rgba(255,255,255,0.6); margin-bottom: 2rem;
     max-width: 700px;
   }
-  .reg-grid {
+
+  /* Collapsed preview: mostra solo i primi 3 articoli visibili */
+  .reg-collapsed-preview {
     display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem;
-    margin-top: 2rem;
+    margin-top: 1rem;
   }
   .reg-article {
     background: var(--dark2);
@@ -512,13 +538,54 @@
     content: '—'; position: absolute; left: 0;
     color: var(--neon); font-size: 0.8rem;
   }
-  .reg-full {
+
+  /* Expanded full regulation */
+  .reg-full-content {
+    display: none;
+  }
+  .reg-full-content.open {
+    display: block;
+  }
+  .reg-grid-full {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem;
+    margin-top: 1.5rem;
+  }
+  .reg-fade {
+    position: relative;
+    overflow: hidden;
+  }
+  .reg-fade::after {
+    content: '';
+    position: absolute; bottom: 0; left: 0; right: 0;
+    height: 120px;
+    background: linear-gradient(to bottom, transparent, var(--black));
+    pointer-events: none;
+    transition: opacity 0.4s;
+  }
+  .reg-fade.open::after { display: none; }
+
+  .reg-expand-btn {
+    display: flex; align-items: center; gap: 0.7rem; justify-content: center;
+    margin: 2rem auto 0;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.95rem; font-weight: 700;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--black); background: var(--neon);
+    border: none; cursor: pointer;
+    padding: 1rem 2.5rem;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .reg-expand-btn:hover { background: var(--neon2); transform: translateY(-2px); }
+  .reg-expand-btn svg { width: 16px; height: 16px; transition: transform 0.3s; flex-shrink: 0; }
+  .reg-expand-btn.open svg { transform: rotate(180deg); }
+
+  .reg-full-note {
     background: var(--dark2);
     border: 1px solid rgba(255,255,255,0.06);
     padding: 2rem;
     margin-top: 1.5rem;
   }
-  .reg-full p {
+  .reg-full-note p {
     font-size: 0.88rem; line-height: 1.7;
     color: rgba(255,255,255,0.55);
     margin-bottom: 0.7rem;
@@ -600,6 +667,86 @@
     padding: 0.2rem 0.6rem; margin-top: 0.5rem;
   }
 
+  /* MENU CIBO */
+  .menu-btn {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    margin-top: 1rem;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.78rem; font-weight: 700;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--black); background: var(--neon);
+    border: none; cursor: pointer;
+    padding: 0.5rem 1.2rem;
+    transition: background 0.2s;
+    pointer-events: all;
+    z-index: 5;
+    position: relative;
+  }
+  .menu-btn:hover { background: var(--neon2); }
+
+  /* MODAL */
+  .modal-overlay {
+    display: none;
+    position: fixed; inset: 0; z-index: 200;
+    background: rgba(0,0,0,0.88);
+    justify-content: center; align-items: center;
+    padding: 1.5rem;
+    overflow-y: auto;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal-box {
+    background: var(--dark2);
+    border: 1px solid var(--border);
+    width: 100%; max-width: 600px;
+    padding: 2.5rem;
+    position: relative;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  .modal-close {
+    position: absolute; top: 1rem; right: 1.2rem;
+    font-size: 1.8rem; color: var(--gray); cursor: pointer;
+    background: none; border: none; line-height: 1;
+  }
+  .modal-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.5rem; letter-spacing: 0.05em;
+    color: var(--neon); margin-bottom: 0.3rem;
+  }
+  .modal-subtitle {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.75rem; letter-spacing: 0.25em;
+    text-transform: uppercase; color: var(--gray);
+    margin-bottom: 2rem;
+  }
+  .menu-section { margin-bottom: 2rem; }
+  .menu-section-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.75rem; font-weight: 700;
+    letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--neon); padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 1rem;
+  }
+  .menu-item {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  .menu-item-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1rem; font-weight: 600;
+    color: var(--white);
+  }
+  .menu-item-desc {
+    font-size: 0.78rem; color: var(--gray); margin-top: 0.15rem;
+  }
+  .menu-item-price {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.2rem; color: var(--neon); flex-shrink: 0;
+    margin-left: 1rem;
+  }
+
   /* CONTATTI */
   #contatti { background: var(--dark); }
   .contatti-inner {
@@ -649,10 +796,12 @@
     text-align: center;
   }
   .footer-logo {
+    display: flex; align-items: center; justify-content: center; gap: 0.8rem;
     font-family: 'Bebas Neue', sans-serif;
     font-size: 2.5rem; letter-spacing: 0.1em; color: var(--neon);
     margin-bottom: 0.5rem;
   }
+  .footer-logo img { width: 44px; height: 44px; border-radius: 50%; }
   .footer-sub {
     font-family: 'Barlow Condensed', sans-serif;
     font-size: 0.8rem; letter-spacing: 0.2em; text-transform: uppercase;
@@ -689,20 +838,268 @@
     display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
     background: rgba(8,8,8,0.97); z-index: 99;
     flex-direction: column; justify-content: center; align-items: center;
-    gap: 2rem;
+    gap: 0;
+    overflow-y: auto;
+    padding: 5rem 2rem 3rem;
   }
   .mobile-menu.open { display: flex; }
-  .mobile-menu a {
+  .mob-section-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.65rem; letter-spacing: 0.35em; text-transform: uppercase;
+    color: var(--neon); opacity: 0.7;
+    margin: 1.5rem 0 0.5rem;
+    width: 100%; text-align: center;
+  }
+  .mob-link {
     font-family: 'Bebas Neue', sans-serif;
-    font-size: 2.2rem; letter-spacing: 0.1em;
+    font-size: 2rem; letter-spacing: 0.1em;
     color: var(--white); text-decoration: none;
     transition: color 0.2s;
+    padding: 0.3rem 0;
+    width: 100%; text-align: center;
   }
-  .mobile-menu a:hover { color: var(--neon); }
-  .mobile-close {
-    position: absolute; top: 1.5rem; right: 2rem;
-    font-size: 2rem; color: var(--gray); cursor: pointer;
-    background: none; border: none;
+  .mob-link:hover, .mob-link:active { color: var(--neon); }
+  .mob-link-small {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1rem; font-weight: 600;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: rgba(255,255,255,0.55); text-decoration: none;
+    transition: color 0.2s;
+    padding: 0.35rem 1rem;
+    border: 1px solid rgba(255,255,255,0.08);
+    width: auto; display: inline-block;
+    margin: 0.3rem 0;
+    text-align: center;
+  }
+  .mob-link-small:hover { color: var(--neon); border-color: var(--neon); }
+  .mob-divider {
+    width: 40px; height: 1px; background: var(--border);
+    margin: 1.2rem 0;
+  }
+  .mob-links-row {
+    display: flex; gap: 0.8rem; flex-wrap: wrap; justify-content: center;
+    margin-top: 0.3rem;
+  }
+
+  /* ============ OVERLAY PAGES ============ */
+  .overlay-page {
+    display: none;
+    position: fixed; inset: 0; z-index: 150;
+    background: var(--black);
+    overflow-y: auto;
+  }
+  .overlay-page.open { display: block; }
+  .overlay-header {
+    position: sticky; top: 0; z-index: 10;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.2rem 2rem;
+    background: rgba(8,8,8,0.9);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .overlay-back {
+    display: flex; align-items: center; gap: 0.5rem;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.8rem; font-weight: 700;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--neon); background: none; border: none;
+    cursor: pointer; text-decoration: none;
+    transition: opacity 0.2s;
+  }
+  .overlay-back:hover { opacity: 0.7; }
+  .overlay-back svg { width: 16px; height: 16px; }
+  .overlay-title-bar {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem; letter-spacing: 0.1em;
+    color: var(--white);
+  }
+  .overlay-content {
+    max-width: 1200px; margin: 0 auto;
+    padding: 3rem 2rem 5rem;
+  }
+
+  /* SPONSOR PAGE */
+  .sponsor-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem;
+    margin-top: 3rem;
+  }
+  .sponsor-card {
+    background: var(--dark2);
+    border: 1px solid rgba(255,255,255,0.06);
+    padding: 3rem 2rem;
+    display: flex; flex-direction: column; align-items: center;
+    text-align: center;
+    transition: border-color 0.3s, transform 0.3s;
+    position: relative;
+  }
+  .sponsor-card:hover { border-color: var(--border); transform: translateY(-4px); }
+  .sponsor-card.main-sponsor {
+    grid-column: span 3;
+    border-color: rgba(232,255,0,0.25);
+  }
+  .sponsor-card.main-sponsor::before {
+    content: 'MAIN SPONSOR';
+    position: absolute; top: -1px; left: 50%; transform: translateX(-50%);
+    background: var(--neon); color: var(--black);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.65rem; font-weight: 700; letter-spacing: 0.2em;
+    padding: 0.2rem 1rem;
+  }
+  .sponsor-placeholder {
+    width: 100%; aspect-ratio: 3/1; max-width: 300px;
+    background: rgba(255,255,255,0.04);
+    border: 2px dashed rgba(255,255,255,0.1);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--gray2);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase;
+    margin-bottom: 1.2rem;
+  }
+  .sponsor-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+  }
+  .sponsor-cta-note {
+    margin-top: 4rem;
+    padding: 2rem;
+    background: var(--dark2);
+    border-left: 3px solid var(--neon);
+    font-size: 0.92rem; line-height: 1.7;
+    color: rgba(255,255,255,0.65);
+  }
+
+  /* RISULTATI PAGE */
+  .risultati-section { margin-bottom: 4rem; }
+  .risultati-section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem; letter-spacing: 0.05em;
+    color: var(--neon);
+    border-bottom: 2px solid var(--border);
+    padding-bottom: 0.7rem; margin-bottom: 1.5rem;
+  }
+  .classifica-table {
+    width: 100%; border-collapse: collapse;
+    font-family: 'Barlow Condensed', sans-serif;
+  }
+  .classifica-table th {
+    font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--neon); background: var(--dark2);
+    padding: 0.8rem 1rem; text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  .classifica-table td {
+    padding: 0.75rem 1rem;
+    font-size: 0.95rem; color: rgba(255,255,255,0.8);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .classifica-table tr:hover td { background: rgba(255,255,255,0.02); }
+  .team-rank { font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; color: var(--gray); }
+  .team-rank.first { color: #FFD700; }
+  .team-rank.second { color: #C0C0C0; }
+  .team-rank.third { color: #CD7F32; }
+  .pts-badge {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.2rem; color: var(--neon);
+  }
+  .partite-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem;
+  }
+  .partita-card {
+    background: var(--dark2);
+    border: 1px solid rgba(255,255,255,0.06);
+    padding: 1.2rem 1.5rem;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .partita-team {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.9rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.05em;
+    color: var(--white);
+    flex: 1;
+  }
+  .partita-team.away { text-align: right; }
+  .partita-score {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem; color: var(--neon);
+    padding: 0 1rem; text-align: center; flex-shrink: 0;
+    min-width: 70px;
+  }
+  .partita-score.tbd {
+    font-size: 1.1rem; color: var(--gray2);
+    font-family: 'Barlow Condensed', sans-serif;
+    letter-spacing: 0.1em;
+  }
+  .risultati-empty {
+    padding: 3rem 2rem;
+    background: var(--dark2);
+    border: 1px dashed rgba(255,255,255,0.08);
+    text-align: center;
+    color: var(--gray2);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.9rem; letter-spacing: 0.1em; text-transform: uppercase;
+  }
+
+  /* ALBO D'ORO PAGE */
+  .albo-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 2rem;
+    margin-top: 3rem;
+  }
+  .albo-card {
+    background: var(--dark2);
+    border: 1px solid rgba(255,255,255,0.06);
+    overflow: hidden;
+    transition: border-color 0.3s, transform 0.3s;
+    position: relative;
+  }
+  .albo-card:hover { border-color: var(--border); transform: translateY(-4px); }
+  .albo-card.latest {
+    border-color: rgba(232,255,0,0.3);
+  }
+  .albo-card.latest::before {
+    content: 'ULTIMA EDIZIONE';
+    position: absolute; top: 0; right: 0;
+    background: var(--neon); color: var(--black);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.6rem; font-weight: 700; letter-spacing: 0.15em;
+    padding: 0.2rem 0.8rem;
+    z-index: 1;
+  }
+  .albo-photo {
+    width: 100%; aspect-ratio: 4/3;
+    background: var(--dark3);
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden; position: relative;
+  }
+  .albo-photo img {
+    width: 100%; height: 100%; object-fit: cover;
+    filter: brightness(0.85) saturate(0.7);
+    transition: transform 0.5s, filter 0.4s;
+  }
+  .albo-card:hover .albo-photo img { transform: scale(1.05); filter: brightness(0.95) saturate(0.9); }
+  .albo-photo-placeholder {
+    display: flex; flex-direction: column; align-items: center; gap: 0.7rem;
+    color: var(--gray2);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase;
+  }
+  .albo-photo-placeholder span { font-size: 3rem; }
+  .albo-info {
+    padding: 1.5rem;
+  }
+  .albo-edition {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.7rem; letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--neon); margin-bottom: 0.4rem;
+  }
+  .albo-team {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.7rem; letter-spacing: 0.05em; line-height: 1;
+    color: var(--white); margin-bottom: 0.3rem;
+  }
+  .albo-year {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.82rem; color: var(--gray);
   }
 
   /* RESPONSIVE */
@@ -714,7 +1111,9 @@
     .format-grid { grid-template-columns: repeat(2, 1fr); }
     .premi-top, .premi-individual { grid-template-columns: 1fr; }
     .exp-grid { grid-template-columns: 1fr; }
-    .reg-grid { grid-template-columns: 1fr; }
+    .reg-collapsed-preview, .reg-grid-full { grid-template-columns: 1fr; }
+    .sponsor-grid { grid-template-columns: 1fr; }
+    .sponsor-card.main-sponsor { grid-column: span 1; }
   }
   @media (max-width: 600px) {
     section { padding: 4rem 0; }
@@ -724,6 +1123,8 @@
     .cd-num { font-size: 2rem; }
     .hero-meta { flex-direction: column; gap: 0.5rem; }
     .hero-meta-sep { display: none; }
+    .modal-box { padding: 1.8rem 1.2rem; }
+    .albo-grid { grid-template-columns: 1fr; }
   }
 </style>
 </head>
@@ -731,7 +1132,10 @@
 
 <!-- NAV -->
 <nav id="navbar">
-  <div class="nav-logo">12 ORE BOSARO</div>
+  <a href="#hero" class="nav-logo">
+    <img src="LOGO_12_ORE.png" alt="12 Ore Bosaro Logo">
+    12 ORE BOSARO
+  </a>
   <ul class="nav-links">
     <li><a href="#torneo">Torneo</a></li>
     <li><a href="#format">Format</a></li>
@@ -739,6 +1143,9 @@
     <li><a href="#premi">Premi</a></li>
     <li><a href="#regolamento">Regolamento</a></li>
     <li><a href="#location">Location</a></li>
+    <li><a href="#" onclick="openPage('risultati'); return false;">Risultati</a></li>
+    <li><a href="#" onclick="openPage('albodoro'); return false;">Albo d'Oro</a></li>
+    <li><a href="#" onclick="openPage('sponsor'); return false;">Sponsor</a></li>
   </ul>
   <a href="#contatti" class="nav-cta">Contattaci</a>
   <div class="hamburger" id="hamburger">
@@ -748,7 +1155,7 @@
 
 <!-- MOBILE MENU -->
 <div class="mobile-menu" id="mobileMenu">
-  <button class="mobile-close" id="mobileClose">✕</button>
+  <div class="mob-section-title">— Navigazione principale</div>
   <a href="#torneo" class="mob-link">Torneo</a>
   <a href="#format" class="mob-link">Format</a>
   <a href="#programma" class="mob-link">Programma</a>
@@ -756,6 +1163,13 @@
   <a href="#regolamento" class="mob-link">Regolamento</a>
   <a href="#location" class="mob-link">Location</a>
   <a href="#contatti" class="mob-link">Contatti</a>
+  <div class="mob-divider"></div>
+  <div class="mob-section-title">— Sezioni extra</div>
+  <div class="mob-links-row">
+    <a href="#" class="mob-link-small" onclick="openPage('risultati'); closeMobileMenu(); return false;">🏅 Risultati</a>
+    <a href="#" class="mob-link-small" onclick="openPage('albodoro'); closeMobileMenu(); return false;">🏆 Albo d'Oro</a>
+    <a href="#" class="mob-link-small" onclick="openPage('sponsor'); closeMobileMenu(); return false;">⭐ Sponsor</a>
+  </div>
 </div>
 
 <!-- HERO -->
@@ -916,6 +1330,18 @@
           <div class="tl-desc">Tutte le squadre scendono in campo nei rispettivi gironi. Più partite garantite per ogni team. Ritmo alto, intensità massima.</div>
         </div>
       </div>
+
+      <!-- DJ SET tra gironi e fasi finali -->
+      <div class="tl-item reveal">
+        <div class="tl-dot dj-dot">🎧</div>
+        <div class="tl-content">
+          <div class="tl-time dj-time">19:30 — 20:30</div>
+          <div class="tl-title">DJ Set</div>
+          <div class="tl-desc">Pausa musicale prima delle fasi finali. Il DJ scalda l'atmosfera con musica dal vivo mentre il campo si prepara per la resa dei conti.</div>
+          <span class="tl-badge-dj">🎶 Live Music Break</span>
+        </div>
+      </div>
+
       <div class="tl-item reveal">
         <div class="tl-dot">⚡</div>
         <div class="tl-content">
@@ -965,7 +1391,6 @@
         <div class="premio-name">Finalista</div>
         <div style="margin-top:0.8rem; font-size:0.85rem; color:rgba(255,255,255,0.5);">Coppa finalista + rimborso spese €800</div>
       </div>
-      
     </div>
     <div class="premi-individual">
       <div class="ind-card reveal">
@@ -993,7 +1418,7 @@
   </div>
 </section>
 
-<!-- REGOLAMENTO -->
+<!-- REGOLAMENTO — ACCORDION -->
 <section id="regolamento">
   <div class="container">
     <div class="reveal">
@@ -1002,7 +1427,9 @@
       <div class="section-divider"></div>
       <p class="reg-intro">Il torneo si svolge nel rispetto delle seguenti norme ufficiali. Tutti i partecipanti sono tenuti a leggere integralmente il presente regolamento prima dell'iscrizione. Nel momento dell'iscrizione si accetta automaticamente il regolamento ufficiale.</p>
     </div>
-    <div class="reg-grid">
+
+    <!-- ANTEPRIMA: primi 4 articoli sempre visibili -->
+    <div class="reg-collapsed-preview" id="regPreview">
       <div class="reg-article reveal">
         <div class="reg-article-num">Art. 01</div>
         <h3>Le Squadre</h3>
@@ -1027,7 +1454,7 @@
         <div class="reg-article-num">Art. 03</div>
         <h3>Sostituzioni</h3>
         <ul>
-          <li>Le sostituzioni sono “volanti”, e sono consentite in numero illimitato.</li>
+          <li>Le sostituzioni sono "volanti", e sono consentite in numero illimitato.</li>
           <li>Fa eccezione la sostituzione del portiere, che può essere effettuata soltanto durante un'interruzione del gioco.</li>
         </ul>
       </div>
@@ -1040,116 +1467,125 @@
           <li>La squadra che scenderà in campo con un ritardo superiore ai 15 minuti, perderà l'incontro con il risultato di 6 - 0.</li>
         </ul>
       </div>
-      <div class="reg-article reveal">
-        <div class="reg-article-num">Art. 05</div>
-        <h3>Numero di squadre</h3>
-        <ul>
-          <li>Il torneo si svolgerà con un minimo di 6 squadre, il numero massimo di squadre iscrivibili al torneo è 16.</li>
-          <li>Nel caso si superassero le 13 squadre iscritte, il torneo verrà disputato su 3 campi di cui due in erba e uno in erba sintetica.</li>
-          <li>La suddivisone delle partite verrà effettuata in modo da garantire equità nell'utilizzo delle due diverse tipologie di terreno.</li>
-        </ul>
-      </div>
-      <div class="reg-article reveal">
-        <div class="reg-article-num">Art. 06</div>
-        <h3>Formula del Torneo</h3>
-        <ul>
-          <li>Il Torneo si svolgerà in un girone unico all'italiana nel caso di 6 o 7 squadre iscritte, se saranno iscritte più squadre le stesse verranno suddivise in gironi; saranno disputate gare di sola andata. Con 8 o più squadre la fase finale sarà composta da quarti, semifinali e finale, altrimenti essa vedrà soltanto semifinali e finale.</li>
-          <li>Per ogni partita verranno assegnati 3 punti in caso di vittoria e 0 per la sconfitta, mentre in caso di parità si procederà con 3 calci di rigore per squadra (e se necessario a oltranza): in tal caso per la vittoria saranno assegnati 2 punti, 1 punto per la sconfitta.</li>
-          <li>In caso di parità dopo tutte le gare disputate, la classifica sarà determinata nel modo seguente:
+    </div>
+
+    <!-- CONTENUTO COMPLETO (nascosto di default) -->
+    <div class="reg-full-content" id="regFull">
+      <div class="reg-grid-full">
+        <div class="reg-article">
+          <div class="reg-article-num">Art. 05</div>
+          <h3>Numero di squadre</h3>
+          <ul>
+            <li>Il torneo si svolgerà con un minimo di 6 squadre, il numero massimo di squadre iscrivibili al torneo è 16.</li>
+            <li>Nel caso si superassero le 13 squadre iscritte, il torneo verrà disputato su 3 campi di cui due in erba e uno in erba sintetica.</li>
+            <li>La suddivisone delle partite verrà effettuata in modo da garantire equità nell'utilizzo delle due diverse tipologie di terreno.</li>
+          </ul>
+        </div>
+        <div class="reg-article">
+          <div class="reg-article-num">Art. 06</div>
+          <h3>Formula del Torneo</h3>
+          <ul>
+            <li>Il Torneo si svolgerà in un girone unico all'italiana nel caso di 6 o 7 squadre iscritte, se saranno iscritte più squadre le stesse verranno suddivise in gironi; saranno disputate gare di sola andata. Con 8 o più squadre la fase finale sarà composta da quarti, semifinali e finale, altrimenti essa vedrà soltanto semifinali e finale.</li>
+            <li>Per ogni partita verranno assegnati 3 punti in caso di vittoria e 0 per la sconfitta, mentre in caso di parità si procederà con 3 calci di rigore per squadra (e se necessario a oltranza): in tal caso per la vittoria saranno assegnati 2 punti, 1 punto per la sconfitta.</li>
+            <li>In caso di parità dopo tutte le gare disputate, la classifica sarà determinata nel modo seguente:
 a. Scontro diretto
 b. Differenza reti (non saranno conteggiati gli eventuali rigori in caso di parità)
-c. La squadra che avrà segnato più goal 
-d. La squadra che avrà subito meno goal 
-e. Sorteggio
-</li>
-          <li>Durante la fase play-off se la gara terminerà con un risultato di parità si farà un tempo supplementare da 10 minuti; in caso di ulteriore parità si procederà con i calci di rigore (3 per squadra e se necessario ad oltranza).</li>
-        </ul>
+c. La squadra che avrà segnato più goal
+d. La squadra che avrà subito meno goal
+e. Sorteggio</li>
+            <li>Durante la fase play-off se la gara terminerà con un risultato di parità si farà un tempo supplementare da 10 minuti; in caso di ulteriore parità si procederà con i calci di rigore (3 per squadra e se necessario ad oltranza).</li>
+          </ul>
+        </div>
+        <div class="reg-article">
+          <div class="reg-article-num">Art. 07</div>
+          <h3>Portieri</h3>
+          <ul>
+            <li>Il portiere non può toccare il pallone con le mani su passaggio dei compagni</li>
+            <li>Il portiere non può mantenere il possesso della palla per più di 4 secondi; altrimenti verrà effettuata una punizione dal limite dell'area di seconda.</li>
+          </ul>
+        </div>
+        <div class="reg-article">
+          <div class="reg-article-num">Art. 08</div>
+          <h3>Punizioni</h3>
+          <ul>
+            <li>Sulle punizioni, la distanza dovrà essere di cinque metri, o comunque il giocatore avversario dovrà posizionarsi ad una distanza che renda possibile la battuta.</li>
+          </ul>
+        </div>
+        <div class="reg-article">
+          <div class="reg-article-num">Art. 09</div>
+          <h3>Rimesse laterali</h3>
+          <ul>
+            <li>Dovranno essere battute entro 4 secondi con i piedi, con il pallone sulla linea laterale o fuori e con i piedi fuori dal terreno di gioco.</li>
+          </ul>
+        </div>
+        <div class="reg-article">
+          <div class="reg-article-num">Art. 10</div>
+          <h3>Ammonizioni ed espulsioni</h3>
+          <ul>
+            <li>Il giocatore espulso non può più prendere parte alla gara e non scenderà in campo alla successiva partita. La sua sostituzione seguirà le seguenti modalità:</li>
+            <li>La sostituzione può essere effettuata dopo 2 minuti dall'espulsione</li>
+            <li>La sostituzione può essere effettuata prima dello scadere dei 2 minuti nel caso in cui la squadra affetta dalla penalità subisca una marcatura</li>
+            <li>Il controllo dei 2 minuti di penalità, sarà effettuato dall'Arbitro</li>
+            <li>Il giocatore entra in campo per sostituire un giocatore espulso, a gioco fermo e con il consenso dell'Arbitro.</li>
+          </ul>
+        </div>
+        <div class="reg-article">
+          <div class="reg-article-num">Art. 11</div>
+          <h3>Falli</h3>
+          <ul>
+            <li>Superati i 5 falli, per ogni fallo commesso verrà assegnato alla squadra avversaria un tiro libero.</li>
+            <li>Nelle partite della fase a play-off, il conteggio dei falli verrà azzerato a fine primo tempo ed eventualmente a fine secondo tempo nel caso si proseguisse con un tempo supplementare.</li>
+          </ul>
+        </div>
+        <div class="reg-article">
+          <div class="reg-article-num">Art. 12</div>
+          <h3>Infortuni</h3>
+          <ul>
+            <li>L'Organizzazione si esonera da qualsiasi responsabilità in occasione di eventuali infortuni all'interno e fuori dal terreno di gioco.</li>
+          </ul>
+        </div>
+        <div class="reg-article">
+          <div class="reg-article-num">Art. 13</div>
+          <h3>Sorteggio gironi</h3>
+          <ul>
+            <li>L'eventuale sorteggio dei gironi e la compilazione del calendario di gioco verrà effettuato 3/4 giorni prima del torneo.</li>
+          </ul>
+        </div>
+        <div class="reg-article">
+          <div class="reg-article-num">Art. 14</div>
+          <h3>Orario</h3>
+          <ul>
+            <li>Il torneo comincerà alle ore 14:00, il campo sarà aperto dalle 13:00.</li>
+          </ul>
+        </div>
+        <div class="reg-article">
+          <div class="reg-article-num">Art. 15</div>
+          <h3>Spogliatoi</h3>
+          <ul>
+            <li>È consentito l'uso degli spogliatoi</li>
+          </ul>
+        </div>
+        <div class="reg-article">
+          <div class="reg-article-num">Art. 16</div>
+          <h3>Modifiche al regolamento</h3>
+          <ul>
+            <li>L'Organizzazione potrà apportare modifiche al presente regolamento, se si ritenesse necessario, per il migliore svolgimento del Torneo.</li>
+            <li>L'Organizzazione conta sull'apporto di tutti i partecipanti per una buona riuscita del Torneo.</li>
+          </ul>
+        </div>
       </div>
-      <div class="reg-article reveal">
-        <div class="reg-article-num">Art. 07</div>
-        <h3>Portieri</h3>
-        <ul>
-          <li>Il portiere non può toccare il pallone con le mani su passaggio dei compagni</li>
-          <li>Il portiere non può mantenere il possesso della palla per più di 4 secondi; altrimenti verrà effettuata una punizione dal limite dell'area di seconda.</li>
-        </ul>
-      </div>
-      <div class="reg-article reveal">
-        <div class="reg-article-num">Art. 08</div>
-        <h3>Punizioni</h3>
-        <ul>
-          <li>Sulle punizioni, la distanza dovrà essere di cinque metri, o comunque il giocatore avversario dovrà posizionarsi ad una distanza che renda possibile la battuta.</li>
-        </ul>
-      </div>
-      <div class="reg-article reveal">
-        <div class="reg-article-num">Art. 09</div>
-        <h3>Rimesse laterali</h3>
-        <ul>
-          <li>Dovranno essere battute entro 4 secondi con i piedi, con il pallone sulla linea laterale o fuori e con i piedi fuori dal terreno di gioco.</li>
-        </ul>
-      </div>
-      <div class="reg-article reveal">
-        <div class="reg-article-num">Art. 10</div>
-        <h3>Ammonizioni ed espulsioni</h3>
-        <ul>
-          <pi>Il giocatore espulso non può più prendere parte alla gara e non scenderà in campo alla successiva partita. La sua sostituzione seguirà le seguenti modalità:</pi>
-          <li>La sostituzione può essere effettuata dopo 2 minuti dall'espulsione</li>
-          <li>La sostituzione può essere effettuata prima dello scadere dei 2 minuti nel caso in cui la squadra affetta dalla penalità subisca una marcatura</li>
-          <li>Il controllo dei 2 minuti di penalità, sarà effettuato dall'Arbitro</li>
-          <li>Il giocatore entra in campo per sostituire un giocatore espulso, a gioco fermo e con il consenso dell'Arbitro.</li>
-
-        </ul>
-      </div>
-      <div class="reg-article reveal">
-        <div class="reg-article-num">Art. 11</div>
-        <h3>Falli</h3>
-        <ul>
-          <li>Superati i 5 falli, per ogni fallo commesso verrà assegnato alla squadra avversaria un tiro libero.</li>
-          <li>Nelle partite della fase a play-off, il conteggio dei falli verrà azzerato a fine primo tempo ed eventualmente a fine secondo tempo nel caso si proseguisse con un tempo supplementare.</li>
-
-        </ul>
-      </div>
-      <div class="reg-article reveal">
-        <div class="reg-article-num">Art. 12</div>
-        <h3>Infortuni</h3>
-        <ul>
-          <li>L’Organizzazione si esonera da qualsiasi responsabilità in occasione di eventuali infortuni all’interno e fuori dal terreno di gioco.</li>
-        </ul>
-      </div>
-      <div class="reg-article reveal">
-        <div class="reg-article-num">Art. 13</div>
-        <h3>Sorteggio gironi</h3>
-        <ul>
-          <li>L’eventuale sorteggio dei gironi e la compilazione del calendario di gioco verrà effettuato 3/4 giorni prima del torneo.</li>
-        </ul>
-      </div>
-      <div class="reg-article reveal">
-        <div class="reg-article-num">Art. 14</div>
-        <h3>Orario</h3>
-        <ul>
-          <li>Il torneo comincerà alle ore 14:00, il campo sarà aperto dalle 13:00.</li>
-        </ul>
-      </div>
-      <div class="reg-article reveal">
-        <div class="reg-article-num">Art. 15</div>
-        <h3>Spogliatoi</h3>
-        <ul>
-          <li>È consentito l'uso degli spogliatoi</li>
-        </ul>
-      </div>
-      <div class="reg-article reveal">
-        <div class="reg-article-num">Art. 16</div>
-        <h3>Modifiche al regolamento</h3>
-        <ul>
-          <li>L’Organizzazione potrà apportare modifiche al presente regolamento, se si ritenesse necessario, per il migliore svolgimento del Torneo.</li>
-          <li>L’Organizzazione conta sull’apporto di tutti i partecipanti per una buona riuscita del Torneo.</li>
-
-        </ul>
+      <div class="reg-full-note">
+        <p><strong style="color:var(--neon);">Nota Finale:</strong> Partecipando al torneo, ogni squadra e ogni giocatore accettano integralmente il presente regolamento. Per qualsiasi dubbio o chiarimento, è possibile contattare l'organizzazione tramite i canali ufficiali.</p>
+        <p>Il regolamento completo sarà disponibile in copia fisica il giorno dell'evento. In caso di controversia tra versione online e versione cartacea, prevale la versione cartacea firmata dall'organizzazione.</p>
       </div>
     </div>
-    <div class="reg-full reveal">
-      <p><strong style="color:var(--neon);">Nota Finale:</strong> Partecipando al torneo, ogni squadra e ogni giocatore accettano integralmente il presente regolamento. Per qualsiasi dubbio o chiarimento, è possibile contattare l'organizzazione tramite i canali ufficiali.</p>
-      <p>Il regolamento completo sarà disponibile in copia fisica il giorno dell'evento. In caso di controversia tra versione online e versione cartacea, prevale la versione cartacea firmata dall'organizzazione.</p>
-    </div>
+
+    <!-- BOTTONE ESPANDI -->
+    <button class="reg-expand-btn" id="regExpandBtn" onclick="toggleRegolamento()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 9l-7 7-7-7"/></svg>
+      Leggi Regolamento Completo
+    </button>
+
   </div>
 </section>
 
@@ -1223,6 +1659,10 @@ e. Sorteggio
           <h3>Cibo & Bevande</h3>
           <p>Punto ristoro con piadine, aperitivo e bevande fresche per ricaricare le pile.</p>
           <span class="exp-highlight">Open food area</span>
+          <button class="menu-btn" onclick="openModal('menuModal')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+            Scopri il Menù
+          </button>
         </div>
       </div>
     </div>
@@ -1259,11 +1699,337 @@ e. Sorteggio
 
 <!-- FOOTER -->
 <footer>
-  <div class="footer-logo">12 ORE BOSARO</div>
+  <div class="footer-logo">
+    <img src="LOGO_12_ORE.png" alt="12 Ore Bosaro">
+    12 ORE BOSARO
+  </div>
   <div class="footer-sub">Torneo di Calcio a 5 — 4 Luglio 2026</div>
   <div class="footer-line"></div>
   <div class="footer-copy">© 2026 <span>12 Ore Bosaro</span> — Powered by BosaroEventi</div>
 </footer>
+
+
+<!-- ============================================================ -->
+<!-- MODAL: MENÙ CIBO E BEVANDE -->
+<!-- ============================================================ -->
+<div class="modal-overlay" id="menuModal" onclick="closeModalOutside(event, 'menuModal')">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('menuModal')">✕</button>
+    <div class="modal-title">Menù</div>
+    <div class="modal-subtitle">— Cibo & Bevande · 4 Luglio 2026</div>
+
+    <div class="menu-section">
+      <div class="menu-section-title">🥙 Piadine & Panini</div>
+      <div class="menu-item">
+        <div><div class="menu-item-name">Piadina Classica</div><div class="menu-item-desc">Prosciutto cotto, mozzarella, pomodoro</div></div>
+        <div class="menu-item-price">€4</div>
+      </div>
+      <div class="menu-item">
+        <div><div class="menu-item-name">Piadina Speciale</div><div class="menu-item-desc">Crudo, rucola, stracchino</div></div>
+        <div class="menu-item-price">€5</div>
+      </div>
+      <div class="menu-item">
+        <div><div class="menu-item-name">Piadina Veggie</div><div class="menu-item-desc">Grigliata di verdure, hummus, rucola</div></div>
+        <div class="menu-item-price">€4</div>
+      </div>
+      <div class="menu-item">
+        <div><div class="menu-item-name">Panino con Hamburger</div><div class="menu-item-desc">Burger, lattuga, pomodoro, salsa</div></div>
+        <div class="menu-item-price">€5</div>
+      </div>
+    </div>
+
+    <div class="menu-section">
+      <div class="menu-section-title">🍟 Contorni & Sfizi</div>
+      <div class="menu-item">
+        <div><div class="menu-item-name">Patatine Fritte</div><div class="menu-item-desc">Con ketchup o maionese</div></div>
+        <div class="menu-item-price">€3</div>
+      </div>
+      <div class="menu-item">
+        <div><div class="menu-item-name">Arrosticini</div><div class="menu-item-desc">5 pezzi, agnello alla brace</div></div>
+        <div class="menu-item-price">€4</div>
+      </div>
+    </div>
+
+    <div class="menu-section">
+      <div class="menu-section-title">🍺 Bevande</div>
+      <div class="menu-item">
+        <div><div class="menu-item-name">Birra Media</div><div class="menu-item-desc">Alla spina, 0.4L</div></div>
+        <div class="menu-item-price">€3</div>
+      </div>
+      <div class="menu-item">
+        <div><div class="menu-item-name">Birra Piccola</div><div class="menu-item-desc">Alla spina, 0.2L</div></div>
+        <div class="menu-item-price">€2</div>
+      </div>
+      <div class="menu-item">
+        <div><div class="menu-item-name">Soft Drink</div><div class="menu-item-desc">Coca-Cola, Sprite, acqua, succhi</div></div>
+        <div class="menu-item-price">€2</div>
+      </div>
+      <div class="menu-item">
+        <div><div class="menu-item-name">Aperitivo Spritz</div><div class="menu-item-desc">Aperol Spritz o Campari</div></div>
+        <div class="menu-item-price">€4</div>
+      </div>
+    </div>
+
+    <div class="menu-section">
+      <div class="menu-section-title">🍦 Dolci</div>
+      <div class="menu-item">
+        <div><div class="menu-item-name">Gelato</div><div class="menu-item-desc">2 gusti a scelta</div></div>
+        <div class="menu-item-price">€2</div>
+      </div>
+      <div class="menu-item">
+        <div><div class="menu-item-name">Bombolone</div><div class="menu-item-desc">Crema o cioccolato</div></div>
+        <div class="menu-item-price">€1,50</div>
+      </div>
+    </div>
+
+    <div style="margin-top:1.5rem; padding:1rem; background:rgba(232,255,0,0.05); border-left:2px solid var(--neon); font-size:0.82rem; color:rgba(255,255,255,0.5); line-height:1.6;">
+      ℹ️ Il menù potrebbe subire variazioni. I prezzi sono indicativi. Disponibile dalle ore 13:00 fino a fine evento.
+    </div>
+  </div>
+</div>
+
+
+<!-- ============================================================ -->
+<!-- OVERLAY PAGE: RISULTATI -->
+<!-- ============================================================ -->
+<div class="overlay-page" id="risultati">
+  <div class="overlay-header">
+    <button class="overlay-back" onclick="closePage('risultati')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      Torna alla home
+    </button>
+    <div class="overlay-title-bar">Risultati</div>
+    <div style="width:100px"></div>
+  </div>
+  <div class="overlay-content">
+    <p class="section-label">— 4 Luglio 2026</p>
+    <h2 class="section-title">Risultati & Classifiche</h2>
+    <div class="section-divider"></div>
+
+    <!-- CLASSIFICHE GIRONI -->
+    <div class="risultati-section">
+      <div class="risultati-section-title">📊 Classifiche Gironi</div>
+      <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 2rem;">
+
+        <!-- GIRONE A -->
+        <div>
+          <div style="font-family:'Barlow Condensed',sans-serif; font-size:0.75rem; letter-spacing:0.3em; text-transform:uppercase; color:var(--neon); margin-bottom:0.8rem;">Girone A</div>
+          <table class="classifica-table">
+            <thead><tr><th>#</th><th>Squadra</th><th>G</th><th>V</th><th>P</th><th>Gf</th><th>Gs</th><th>Pt</th></tr></thead>
+            <tbody>
+              <tr><td><span class="team-rank first">1</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td><span class="pts-badge">—</span></td></tr>
+              <tr><td><span class="team-rank second">2</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td><span class="pts-badge">—</span></td></tr>
+              <tr><td><span class="team-rank third">3</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td><span class="pts-badge">—</span></td></tr>
+              <tr><td><span class="team-rank">4</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td><span class="pts-badge">—</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- GIRONE B -->
+        <div>
+          <div style="font-family:'Barlow Condensed',sans-serif; font-size:0.75rem; letter-spacing:0.3em; text-transform:uppercase; color:var(--neon); margin-bottom:0.8rem;">Girone B</div>
+          <table class="classifica-table">
+            <thead><tr><th>#</th><th>Squadra</th><th>G</th><th>V</th><th>P</th><th>Gf</th><th>Gs</th><th>Pt</th></tr></thead>
+            <tbody>
+              <tr><td><span class="team-rank first">1</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td><span class="pts-badge">—</span></td></tr>
+              <tr><td><span class="team-rank second">2</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td><span class="pts-badge">—</span></td></tr>
+              <tr><td><span class="team-rank third">3</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td><span class="pts-badge">—</span></td></tr>
+              <tr><td><span class="team-rank">4</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td><span class="pts-badge">—</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+      <div class="risultati-empty" style="margin-top:1.5rem;">I dati verranno aggiornati in tempo reale il giorno del torneo</div>
+    </div>
+
+    <!-- RISULTATI PARTITE -->
+    <div class="risultati-section">
+      <div class="risultati-section-title">⚽ Risultati Partite — Gironi</div>
+      <div class="risultati-empty">Le partite non sono ancora iniziate. Torna il 4 Luglio!</div>
+    </div>
+
+    <!-- FASI FINALI -->
+    <div class="risultati-section">
+      <div class="risultati-section-title">⚡ Fasi Finali</div>
+      <div style="display:grid; gap:1rem;">
+        <div style="font-family:'Barlow Condensed',sans-serif; font-size:0.8rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--gray); margin-bottom:0.5rem;">Quarti di Finale</div>
+        <div class="partite-grid">
+          <div class="partita-card"><div class="partita-team">TBD</div><div class="partita-score tbd">vs</div><div class="partita-team away">TBD</div></div>
+          <div class="partita-card"><div class="partita-team">TBD</div><div class="partita-score tbd">vs</div><div class="partita-team away">TBD</div></div>
+          <div class="partita-card"><div class="partita-team">TBD</div><div class="partita-score tbd">vs</div><div class="partita-team away">TBD</div></div>
+          <div class="partita-card"><div class="partita-team">TBD</div><div class="partita-score tbd">vs</div><div class="partita-team away">TBD</div></div>
+        </div>
+        <div style="font-family:'Barlow Condensed',sans-serif; font-size:0.8rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--gray); margin:1rem 0 0.5rem;">Semifinali</div>
+        <div class="partite-grid">
+          <div class="partita-card"><div class="partita-team">TBD</div><div class="partita-score tbd">vs</div><div class="partita-team away">TBD</div></div>
+          <div class="partita-card"><div class="partita-team">TBD</div><div class="partita-score tbd">vs</div><div class="partita-team away">TBD</div></div>
+        </div>
+        <div style="font-family:'Barlow Condensed',sans-serif; font-size:0.8rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--gray); margin:1rem 0 0.5rem;">🔥 Finalissima</div>
+        <div class="partite-grid">
+          <div class="partita-card" style="border-color:rgba(232,255,0,0.2);"><div class="partita-team">TBD</div><div class="partita-score tbd">vs</div><div class="partita-team away">TBD</div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ============================================================ -->
+<!-- OVERLAY PAGE: ALBO D'ORO -->
+<!-- ============================================================ -->
+<div class="overlay-page" id="albodoro">
+  <div class="overlay-header">
+    <button class="overlay-back" onclick="closePage('albodoro')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      Torna alla home
+    </button>
+    <div class="overlay-title-bar">Albo d'Oro</div>
+    <div style="width:100px"></div>
+  </div>
+  <div class="overlay-content">
+    <p class="section-label">— La storia del torneo</p>
+    <h2 class="section-title">Albo d'Oro</h2>
+    <div class="section-divider"></div>
+    <p style="color:rgba(255,255,255,0.55); font-size:1rem; line-height:1.8; max-width:600px; margin-bottom:1rem;">I campioni che hanno scritto la storia della 12 Ore Bosaro. Ogni edizione, una nuova leggenda.</p>
+
+    <div class="albo-grid">
+
+      <!-- Edizione esempio (placeholder) — sostituire con foto reali -->
+      <div class="albo-card latest">
+        <div class="albo-photo">
+          <div class="albo-photo-placeholder">
+            <span>🏆</span>
+            Foto vincitori
+          </div>
+        </div>
+        <div class="albo-info">
+          <div class="albo-edition">Edizione 2025</div>
+          <div class="albo-team">Nome Squadra</div>
+          <div class="albo-year">4 Luglio 2025 · Bosaro (RO)</div>
+        </div>
+      </div>
+
+      <div class="albo-card">
+        <div class="albo-photo">
+          <div class="albo-photo-placeholder">
+            <span>🏆</span>
+            Foto vincitori
+          </div>
+        </div>
+        <div class="albo-info">
+          <div class="albo-edition">Edizione 2024</div>
+          <div class="albo-team">Nome Squadra</div>
+          <div class="albo-year">Bosaro (RO)</div>
+        </div>
+      </div>
+
+      <div class="albo-card">
+        <div class="albo-photo">
+          <div class="albo-photo-placeholder">
+            <span>🏆</span>
+            Foto vincitori
+          </div>
+        </div>
+        <div class="albo-info">
+          <div class="albo-edition">Edizione 2023</div>
+          <div class="albo-team">Nome Squadra</div>
+          <div class="albo-year">Bosaro (RO)</div>
+        </div>
+      </div>
+
+      <div class="albo-card">
+        <div class="albo-photo">
+          <div class="albo-photo-placeholder">
+            <span>🏆</span>
+            Foto vincitori
+          </div>
+        </div>
+        <div class="albo-info">
+          <div class="albo-edition">Edizione 2022</div>
+          <div class="albo-team">Nome Squadra</div>
+          <div class="albo-year">Bosaro (RO)</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div style="margin-top:3rem; padding:1.5rem 2rem; background:var(--dark2); border-left:3px solid var(--neon); font-size:0.88rem; line-height:1.7; color:rgba(255,255,255,0.5);">
+      📸 Per inserire le foto dei vincitori nelle edizioni passate, sostituire i placeholder con i tag <code style="color:var(--neon)">&lt;img src="..."&gt;</code> nella sezione Albo d'Oro.
+    </div>
+  </div>
+</div>
+
+
+<!-- ============================================================ -->
+<!-- OVERLAY PAGE: SPONSOR -->
+<!-- ============================================================ -->
+<div class="overlay-page" id="sponsor">
+  <div class="overlay-header">
+    <button class="overlay-back" onclick="closePage('sponsor')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      Torna alla home
+    </button>
+    <div class="overlay-title-bar">Sponsor</div>
+    <div style="width:100px"></div>
+  </div>
+  <div class="overlay-content">
+    <p class="section-label">— I nostri partner</p>
+    <h2 class="section-title">Sponsor</h2>
+    <div class="section-divider"></div>
+    <p style="color:rgba(255,255,255,0.55); font-size:1rem; line-height:1.8; max-width:600px; margin-bottom:1rem;">Grazie a chi supporta la 12 Ore Bosaro rendendo possibile questo evento.</p>
+
+    <div class="sponsor-grid">
+
+      <!-- MAIN SPONSOR -->
+      <div class="sponsor-card main-sponsor">
+        <div class="sponsor-placeholder" style="max-width:400px; aspect-ratio:4/1;">Logo Main Sponsor</div>
+        <div class="sponsor-name">Nome Main Sponsor</div>
+      </div>
+
+      <!-- SPONSOR -->
+      <div class="sponsor-card">
+        <div class="sponsor-placeholder">Logo Sponsor</div>
+        <div class="sponsor-name">Sponsor 1</div>
+      </div>
+      <div class="sponsor-card">
+        <div class="sponsor-placeholder">Logo Sponsor</div>
+        <div class="sponsor-name">Sponsor 2</div>
+      </div>
+      <div class="sponsor-card">
+        <div class="sponsor-placeholder">Logo Sponsor</div>
+        <div class="sponsor-name">Sponsor 3</div>
+      </div>
+      <div class="sponsor-card">
+        <div class="sponsor-placeholder">Logo Sponsor</div>
+        <div class="sponsor-name">Sponsor 4</div>
+      </div>
+      <div class="sponsor-card">
+        <div class="sponsor-placeholder">Logo Sponsor</div>
+        <div class="sponsor-name">Sponsor 5</div>
+      </div>
+      <div class="sponsor-card">
+        <div class="sponsor-placeholder">Logo Sponsor</div>
+        <div class="sponsor-name">Sponsor 6</div>
+      </div>
+
+    </div>
+
+    <div class="sponsor-cta-note">
+      <strong style="color:var(--white);">Vuoi diventare sponsor?</strong><br>
+      Contatta l'organizzazione tramite WhatsApp o i canali social per scoprire le opportunità di partnership disponibili per la prossima edizione.
+      <div style="margin-top:1rem;">
+        <a href="https://wa.me/393348528228?text=Ciao!%20Vorrei%20informazioni%20per%20diventare%20sponsor%20della%2012%20Ore%20Bosaro" target="_blank" rel="noopener"
+          style="display:inline-flex; align-items:center; gap:0.5rem; background:#25D366; color:#000; font-family:'Barlow Condensed',sans-serif; font-size:0.85rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; padding:0.8rem 1.8rem; text-decoration:none; transition:background 0.2s;">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.118 1.524 5.849L0 24l6.284-1.498A11.94 11.94 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.878 0-3.63-.49-5.147-1.347l-.367-.217-3.731.888.926-3.639-.236-.375A9.927 9.927 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+          Contattaci su WhatsApp
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 <script>
   // COUNTDOWN
@@ -1290,7 +2056,7 @@ e. Sorteggio
   // SCROLL REVEAL
   const reveals = document.querySelectorAll('.reveal, .reveal-left, .reveal-right');
   const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry, i) => {
+    entries.forEach((entry) => {
       if (entry.isIntersecting) {
         setTimeout(() => {
           entry.target.classList.add('visible');
@@ -1301,14 +2067,30 @@ e. Sorteggio
   }, { threshold: 0.12 });
   reveals.forEach(el => observer.observe(el));
 
-  // MOBILE MENU
+  // MOBILE MENU — toggle con hamburger (apri e chiudi)
   const hamburger = document.getElementById('hamburger');
   const mobileMenu = document.getElementById('mobileMenu');
-  const mobileClose = document.getElementById('mobileClose');
-  hamburger.addEventListener('click', () => mobileMenu.classList.add('open'));
-  mobileClose.addEventListener('click', () => mobileMenu.classList.remove('open'));
+
+  hamburger.addEventListener('click', () => {
+    const isOpen = mobileMenu.classList.contains('open');
+    if (isOpen) {
+      closeMobileMenu();
+    } else {
+      mobileMenu.classList.add('open');
+      hamburger.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+  });
+
+  function closeMobileMenu() {
+    mobileMenu.classList.remove('open');
+    hamburger.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  // Chiudi menù mobile cliccando sui link
   document.querySelectorAll('.mob-link').forEach(link => {
-    link.addEventListener('click', () => mobileMenu.classList.remove('open'));
+    link.addEventListener('click', () => closeMobileMenu());
   });
 
   // NAV SCROLL EFFECT
@@ -1318,6 +2100,65 @@ e. Sorteggio
       nav.style.padding = '0.8rem 3rem';
     } else {
       nav.style.padding = '1.2rem 3rem';
+    }
+  });
+
+  // REGOLAMENTO ACCORDION
+  function toggleRegolamento() {
+    const fullContent = document.getElementById('regFull');
+    const btn = document.getElementById('regExpandBtn');
+    const isOpen = fullContent.classList.contains('open');
+
+    if (isOpen) {
+      fullContent.classList.remove('open');
+      btn.classList.remove('open');
+      btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 9l-7 7-7-7"/></svg> Leggi Regolamento Completo`;
+      // Scroll verso la sezione regolamento
+      document.getElementById('regolamento').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else {
+      fullContent.classList.add('open');
+      btn.classList.add('open');
+      btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 9l-7 7-7-7"/></svg> Chiudi Regolamento`;
+    }
+  }
+
+  // MODAL MENÙ
+  function openModal(id) {
+    document.getElementById(id).classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal(id) {
+    document.getElementById(id).classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  function closeModalOutside(e, id) {
+    if (e.target === document.getElementById(id)) {
+      closeModal(id);
+    }
+  }
+
+  // OVERLAY PAGES (Risultati, Albo d'Oro, Sponsor)
+  function openPage(id) {
+    document.getElementById(id).classList.add('open');
+    document.body.style.overflow = 'hidden';
+    window.scrollTo(0, 0);
+  }
+  function closePage(id) {
+    document.getElementById(id).classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  // Chiudi overlay con tasto ESC
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      ['risultati', 'albodoro', 'sponsor'].forEach(id => {
+        document.getElementById(id).classList.remove('open');
+      });
+      ['menuModal'].forEach(id => {
+        document.getElementById(id).classList.remove('open');
+      });
+      document.body.style.overflow = '';
+      closeMobileMenu();
     }
   });
 </script>
