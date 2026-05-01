@@ -411,7 +411,7 @@
     border: 2px solid var(--neon);
     background: var(--black);
     display: flex; align-items: center; justify-content: center;
-    font-size: 1.3rem; z-index: 1;
+    font-size: 1.3rem; z-index: 2; position: relative;
   }
   .tl-dot.dj-dot {
     border-color: #b040ff;
@@ -1040,6 +1040,19 @@
     font-size: 0.9rem; letter-spacing: 0.1em; text-transform: uppercase;
   }
 
+  .partite-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
+  }
+
+  .partita-score small {
+    color: var(--neon);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
   /* ALBO D'ORO PAGE */
   .albo-grid {
     display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 2rem;
@@ -1127,6 +1140,7 @@
     .albo-grid { grid-template-columns: 1fr; }
   }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </head>
 <body>
 
@@ -1846,7 +1860,11 @@ e. Sorteggio</li>
     <!-- RISULTATI PARTITE -->
     <div class="risultati-section">
       <div class="risultati-section-title">⚽ Risultati Partite — Gironi</div>
-      <div class="risultati-empty">Le partite non sono ancora iniziate. Torna il 4 Luglio!</div>
+      <div class="partite-grid">
+        <!-- Le partite verranno caricate qui -->
+      </div>
+<div class="risultati-empty" style="margin-top:2rem;">
+Le partite non sono ancora iniziate. Torna il 4 Luglio!</div>
     </div>
 
     <!-- FASI FINALI -->
@@ -1955,9 +1973,7 @@ e. Sorteggio</li>
 
     </div>
 
-    <div style="margin-top:3rem; padding:1.5rem 2rem; background:var(--dark2); border-left:3px solid var(--neon); font-size:0.88rem; line-height:1.7; color:rgba(255,255,255,0.5);">
-      📸 Per inserire le foto dei vincitori nelle edizioni passate, sostituire i placeholder con i tag <code style="color:var(--neon)">&lt;img src="..."&gt;</code> nella sezione Albo d'Oro.
-    </div>
+    
   </div>
 </div>
 
@@ -2162,5 +2178,176 @@ e. Sorteggio</li>
     }
   });
 </script>
+
+
+
+
+<script>
+async function loadTournamentData() {
+  try {
+    const response = await fetch('./risultati.xlsx');
+    const buffer = await response.arrayBuffer();
+
+    const workbook = XLSX.read(buffer, { type: 'array' });
+
+    const gironi = XLSX.utils.sheet_to_json(workbook.Sheets['Gironi']);
+    const finali = XLSX.utils.sheet_to_json(workbook.Sheets['Finali']);
+
+    // ===== CLASSIFICHE =====
+    const gruppi = {};
+
+    gironi.forEach(m => {
+      const g = String(m.Girone).trim();
+
+      if (!gruppi[g]) gruppi[g] = {};
+
+      [m.Casa, m.Trasferta].forEach(team => {
+        if (!gruppi[g][team]) {
+          gruppi[g][team] = {
+            squadra: team,
+            pt: 0,
+            gf: 0,
+            gs: 0,
+            g: 0,
+            v: 0,
+            p: 0,
+            l: 0
+          };
+        }
+      });
+
+      const home = gruppi[g][m.Casa];
+      const away = gruppi[g][m.Trasferta];
+
+      const hs = Number(m.GolCasa);
+      const as = Number(m.GolTrasferta);
+
+      home.g++;
+      away.g++;
+
+      home.gf += hs;
+      home.gs += as;
+
+      away.gf += as;
+      away.gs += hs;
+
+      if (m.Esito === 'RigoriCasa') {
+        home.pt += 2;
+        away.pt += 1;
+        home.p++;
+        away.p++;
+      } else if (m.Esito === 'RigoriTrasferta') {
+        away.pt += 2;
+        home.pt += 1;
+        home.p++;
+        away.p++;
+      } else if (hs > as) {
+        home.pt += 3;
+        home.v++;
+        away.l++;
+      } else if (as > hs) {
+        away.pt += 3;
+        away.v++;
+        home.l++;
+      } else {
+        home.pt += 1;
+        away.pt += 1;
+        home.p++;
+        away.p++;
+      }
+    });
+
+    // usa le tabelle già presenti
+    const tables = document.querySelectorAll('.classifica-table');
+
+    Object.keys(gruppi).forEach((groupName, index) => {
+      if (!tables[index]) return;
+
+      const tbody = tables[index].querySelector('tbody');
+      if (!tbody) return;
+
+      const teams = Object.values(gruppi[groupName]).sort((a,b)=>
+        b.pt - a.pt || ((b.gf-b.gs)-(a.gf-a.gs))
+      );
+
+      tbody.innerHTML = teams.map((t,i)=>`
+        <tr>
+          <td><span class="team-rank">${i+1}</span></td>
+          <td>${t.squadra}</td>
+          <td>${t.g}</td>
+          <td>${t.v}</td>
+          <td>${t.p}</td>
+          <td>${t.gf}</td>
+          <td>${t.gs}</td>
+          <td><span class="pts-badge">${t.pt}</span></td>
+        </tr>
+      `).join('');
+    });
+
+    // ===== PARTITE GIRONI =====
+    const groupCards = document.querySelectorAll('.partite-grid')[0];
+
+    if (groupCards) {
+      groupCards.innerHTML = gironi.map(m=>`
+        <div class="partita-card">
+          <div class="partita-team">${m.Casa}</div>
+          <div class="partita-score">${m.GolCasa} - ${m.GolTrasferta}${m.Esito === 'RigoriCasa' ? `<br><small>Vinto ai rigori da ${m.Casa}</small>` : m.Esito === 'RigoriTrasferta' ? `<br><small>Vinto ai rigori da ${m.Trasferta}</small>` : ''}</div>
+          <div class="partita-team away">${m.Trasferta}</div>
+        </div>
+      `).join('');
+    }
+
+    // ===== FASI FINALI =====
+    const quarti = finali.filter(m => m.Fase === 'Quarti');
+    const semifinali = finali.filter(m => m.Fase === 'Semifinali');
+    const finalMatch = finali.filter(m => m.Fase === 'Finale');
+
+    const quartiGrid = document.querySelectorAll('.partite-grid')[1];
+    const semiGrid = document.querySelectorAll('.partite-grid')[2];
+    const finalGrid = document.querySelectorAll('.partite-grid')[3];
+
+    if (quartiGrid) {
+      quartiGrid.innerHTML = quarti.map(m=>`
+        <div class="partita-card">
+          <div class="partita-team">${m.Casa}</div>
+          <div class="partita-score">${m.GolCasa} - ${m.GolTrasferta}${m.Esito === 'RigoriCasa' ? `<br><small>Vinto ai rigori da ${m.Casa}</small>` : m.Esito === 'RigoriTrasferta' ? `<br><small>Vinto ai rigori da ${m.Trasferta}</small>` : ''}</div>
+          <div class="partita-team away">${m.Trasferta}</div>
+        </div>
+      `).join('') || quartiGrid.innerHTML; // Se non ci sono dati, mantiene i TBD
+    }
+
+    if (semiGrid) {
+      semiGrid.innerHTML = semifinali.map(m=>`
+        <div class="partita-card">
+          <div class="partita-team">${m.Casa}</div>
+          <div class="partita-score">${m.GolCasa} - ${m.GolTrasferta}${m.Esito === 'RigoriCasa' ? `<br><small>Vinto ai rigori da ${m.Casa}</small>` : m.Esito === 'RigoriTrasferta' ? `<br><small>Vinto ai rigori da ${m.Trasferta}</small>` : ''}</div>
+          <div class="partita-team away">${m.Trasferta}</div>
+        </div>
+      `).join('') || semiGrid.innerHTML;
+    }
+
+    if (finalGrid) {
+      finalGrid.innerHTML = finalMatch.map(m=>`
+        <div class="partita-card">
+          <div class="partita-team">${m.Casa}</div>
+          <div class="partita-score">${m.GolCasa} - ${m.GolTrasferta}${m.Esito === 'RigoriCasa' ? `<br><small>Vinto ai rigori da ${m.Casa}</small>` : m.Esito === 'RigoriTrasferta' ? `<br><small>Vinto ai rigori da ${m.Trasferta}</small>` : ''}</div>
+          <div class="partita-team away">${m.Trasferta}</div>
+        </div>
+      `).join('') || finalGrid.innerHTML;
+    }
+
+    // rimuove eventuali box placeholder
+    document.querySelectorAll('.risultati-empty').forEach(el=>{
+      el.style.display = 'none';
+    });
+
+  } catch(err) {
+    console.error(err);
+  }
+}
+
+window.addEventListener('load', loadTournamentData);
+</script>
+
 </body>
 </html>
