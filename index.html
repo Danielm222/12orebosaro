@@ -926,6 +926,14 @@
     display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem;
     margin-top: 3rem;
   }
+  @media (max-width: 900px) {
+    .sponsor-grid { grid-template-columns: repeat(2, 1fr); }
+    .sponsor-card.main-sponsor { grid-column: span 2; }
+  }
+  @media (max-width: 500px) {
+    .sponsor-grid { grid-template-columns: 1fr; }
+    .sponsor-card.main-sponsor { grid-column: span 1; }
+  }
   .sponsor-card {
     background: var(--dark2);
     border: 1px solid rgba(255,255,255,0.06);
@@ -2307,9 +2315,65 @@ async function loadTournamentData() {
       const tbody = targetTable.querySelector('tbody');
       if (!tbody) return;
 
-      const teams = Object.values(gruppi[groupName]).sort((a,b)=>
-        b.pt - a.pt || ((b.gf-b.gs)-(a.gf-a.gs))
-      );
+      // Costruisce mappa degli scontri diretti: h2h[A][B] = { gf, gs }
+      const h2h = {};
+      gironi.forEach(m => {
+        if (String(m.Girone).trim() !== groupName) return;
+        const esito = (m.Esito || m['Esito (RigoriCasa/RigoriTrasferta)'] || '').toString().trim();
+        const hs = Number(m.GolCasa);
+        const as = Number(m.GolTrasferta);
+        // gol da scontro diretto: NON contiamo i rigori (solo i gol nei tempi regolamentari)
+        if (!h2h[m.Casa]) h2h[m.Casa] = {};
+        if (!h2h[m.Trasferta]) h2h[m.Trasferta] = {};
+        if (!h2h[m.Casa][m.Trasferta]) h2h[m.Casa][m.Trasferta] = { pt: 0, gf: 0, gs: 0 };
+        if (!h2h[m.Trasferta][m.Casa]) h2h[m.Trasferta][m.Casa] = { pt: 0, gf: 0, gs: 0 };
+        // punti scontro diretto
+        if (esito === 'RigoriCasa') {
+          h2h[m.Casa][m.Trasferta].pt += 2;
+          h2h[m.Trasferta][m.Casa].pt += 1;
+        } else if (esito === 'RigoriTrasferta') {
+          h2h[m.Trasferta][m.Casa].pt += 2;
+          h2h[m.Casa][m.Trasferta].pt += 1;
+        } else if (hs > as) {
+          h2h[m.Casa][m.Trasferta].pt += 3;
+        } else if (as > hs) {
+          h2h[m.Trasferta][m.Casa].pt += 3;
+        } else {
+          h2h[m.Casa][m.Trasferta].pt += 1;
+          h2h[m.Trasferta][m.Casa].pt += 1;
+        }
+        // gol scontro diretto (esclusi rigori)
+        h2h[m.Casa][m.Trasferta].gf += hs;
+        h2h[m.Casa][m.Trasferta].gs += as;
+        h2h[m.Trasferta][m.Casa].gf += as;
+        h2h[m.Trasferta][m.Casa].gs += hs;
+      });
+
+      const allTeams = Object.values(gruppi[groupName]);
+
+      // Funzione comparatore completa con spareggi
+      function compare(a, b) {
+        // 1. Punti totali
+        if (b.pt !== a.pt) return b.pt - a.pt;
+
+        // 2. Scontro diretto (punti negli scontri diretti tra le squadre in parità)
+        const h2hA = (h2h[a.squadra] && h2h[a.squadra][b.squadra]) ? h2h[a.squadra][b.squadra].pt : 0;
+        const h2hB = (h2h[b.squadra] && h2h[b.squadra][a.squadra]) ? h2h[b.squadra][a.squadra].pt : 0;
+        if (h2hB !== h2hA) return h2hB - h2hA;
+
+        // 3. Differenza reti generale (esclusi rigori — i gol segnati ai rigori non cambiano il punteggio gf/gs)
+        const drA = a.gf - a.gs;
+        const drB = b.gf - b.gs;
+        if (drB !== drA) return drB - drA;
+
+        // 4. Gol fatti
+        if (b.gf !== a.gf) return b.gf - a.gf;
+
+        // 5. Gol subiti (meno è meglio)
+        return a.gs - b.gs;
+      }
+
+      const teams = allTeams.slice().sort(compare);
 
       tbody.innerHTML = teams.map((t,i)=>{
         const rankClass = i===0 ? 'first' : i===1 ? 'second' : i===2 ? 'third' : '';
