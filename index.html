@@ -922,65 +922,151 @@
   }
 
   /* SPONSOR PAGE */
-  .sponsor-grid {
-    display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem;
-    margin-top: 3rem;
-  }
-  @media (max-width: 900px) {
-    .sponsor-grid { grid-template-columns: repeat(2, 1fr); }
-    .sponsor-card.main-sponsor { grid-column: span 2; }
-  }
-  @media (max-width: 500px) {
-    .sponsor-grid { grid-template-columns: 1fr; }
-    .sponsor-card.main-sponsor { grid-column: span 1; }
-  }
-  .sponsor-card {
-    background: var(--dark2);
-    border: 1px solid rgba(255,255,255,0.06);
-    padding: 3rem 2rem;
-    display: flex; flex-direction: column; align-items: center;
-    text-align: center;
-    transition: border-color 0.3s, transform 0.3s;
-    position: relative;
-  }
-  .sponsor-card:hover { border-color: var(--border); transform: translateY(-4px); }
-  .sponsor-card.main-sponsor {
-    grid-column: span 3;
-    border-color: rgba(232,255,0,0.25);
-  }
-  .sponsor-card.main-sponsor::before {
-    content: 'MAIN SPONSOR';
-    position: absolute; top: -1px; left: 50%; transform: translateX(-50%);
-    background: var(--neon); color: var(--black);
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 0.65rem; font-weight: 700; letter-spacing: 0.2em;
-    padding: 0.2rem 1rem;
-  }
-  .sponsor-logo {
-  max-width: 400px;
-  max-height: 120px;
+  /* SPONSOR PAGE */
 
-  width: auto;
+* {
+  box-sizing: border-box;
+}
+
+.sponsor-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2rem;
+
+  width: 100%;
+  max-width: 100%;
+
+  margin-top: 3rem;
+}
+
+@media (max-width: 900px) {
+  .sponsor-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .sponsor-card.main-sponsor {
+    grid-column: span 2;
+  }
+}
+
+@media (max-width: 500px) {
+  .sponsor-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .sponsor-card.main-sponsor {
+    grid-column: span 1;
+  }
+
+  .sponsor-card {
+    padding: 2rem 1rem;
+  }
+}
+
+.sponsor-card {
+  background: var(--dark2);
+  border: 1px solid rgba(255,255,255,0.06);
+
+  padding: 3rem 2rem;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+
+  transition: border-color 0.3s, transform 0.3s;
+
+  position: relative;
+
+  width: 100%;
+  overflow: hidden;
+}
+
+.sponsor-card:hover {
+  border-color: var(--border);
+  transform: translateY(-4px);
+}
+
+.sponsor-card.main-sponsor {
+  grid-column: span 3;
+  border-color: rgba(232,255,0,0.25);
+}
+
+.sponsor-card.main-sponsor::before {
+  content: 'MAIN SPONSOR';
+
+  position: absolute;
+  top: -1px;
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  background: var(--neon);
+  color: var(--black);
+
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+
+  padding: 0.2rem 1rem;
+
+  white-space: nowrap;
+}
+
+.sponsor-logo {
+  width: 100%;
+  max-width: 400px;
+
   height: auto;
+  max-height: 120px;
 
   object-fit: contain;
 
   display: block;
   margin: 0 auto;
 }
-  .sponsor-name {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 1rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
-    color: rgba(255,255,255,0.5);
-  }
-  .sponsor-cta-note {
-    margin-top: 4rem;
-    padding: 2rem;
-    background: var(--dark2);
-    border-left: 3px solid var(--neon);
-    font-size: 0.92rem; line-height: 1.7;
-    color: rgba(255,255,255,0.65);
-  }
+
+.sponsor-name {
+  margin-top: 1rem;
+
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+
+  color: rgba(255,255,255,0.5);
+
+  word-break: break-word;
+}
+
+.sponsor-cta-note {
+  margin-top: 4rem;
+
+  padding: 2rem;
+
+  background: var(--dark2);
+  border-left: 3px solid var(--neon);
+
+  font-size: 0.92rem;
+  line-height: 1.7;
+
+  color: rgba(255,255,255,0.65);
+
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Evita scroll orizzontale */
+html,
+body {
+  overflow-x: hidden;
+}
 
   /* RISULTATI PAGE */
   .risultati-section { margin-bottom: 4rem; }
@@ -1257,7 +1343,7 @@
         <p class="section-label">— Chi siamo</p>
         <h2 class="section-title">Il Torneo</h2>
         <div class="section-divider"></div>
-        <p>La <strong>12 Ore Bosaro</strong>nasce dalla voglia di creare un torneo fatto bene, competitivo e divertente, dove passare una giornata di calcio, musica e compagnia in un ambiente organizzato e coinvolgente.</p>
+        <p>La <strong>12 Ore Bosaro</strong>nasce dalla voglia di creare un torneo competitivo e divertente, dove passare una giornata di calcio, musica e compagnia in un ambiente organizzato e coinvolgente.</p>
         <p>L’obiettivo è portare in campo squadre, amici e tifosi in un evento che unisca sport e intrattenimento, mantenendo sempre al centro il clima del torneo: competitivo sì, ma con lo spirito giusto.</p>
         <p>Ogni edizione è pensata per migliorare quella precedente, con attenzione ai dettagli, all’organizzazione e all’esperienza di chi partecipa e di chi viene a guardare.</p>
         <div class="torneo-stats">
@@ -1910,7 +1996,6 @@
       <div class="risultati-empty" style="margin-top:1.5rem;">I dati verranno aggiornati in tempo reale il giorno del torneo</div>
       <div style="margin-top:1rem; padding:0.8rem 1rem; background:var(--dark2); border-left:2px solid var(--border); font-family:'Barlow Condensed',sans-serif; font-size:0.75rem; color:var(--gray); line-height:1.8; letter-spacing:0.05em;">
         <strong style="color:var(--neon); letter-spacing:0.1em;">LEGENDA:</strong>&nbsp;
-        <span style="color:#FFD700">1°</span> oro &nbsp;·&nbsp; <span style="color:#C0C0C0">2°</span> argento &nbsp;·&nbsp; <span style="color:#CD7F32">3°</span> bronzo &nbsp;·&nbsp;
         <strong>G</strong> = Partite giocate &nbsp;·&nbsp; <strong>V</strong> = Vittorie &nbsp;·&nbsp; <strong>S</strong> = Sconfitte &nbsp;·&nbsp;
         <strong>VR</strong> = Vittorie ai rigori &nbsp;·&nbsp; <strong>SR</strong> = Sconfitte ai rigori &nbsp;·&nbsp;
         <strong>GF</strong> = Gol fatti &nbsp;·&nbsp; <strong>GS</strong> = Gol subiti &nbsp;·&nbsp; <strong>DR</strong> = Differenza reti &nbsp;·&nbsp; <strong>PT</strong> = Punti
