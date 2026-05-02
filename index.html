@@ -30,6 +30,7 @@
     font-family: 'Barlow', sans-serif;
     font-weight: 400;
     overflow-x: hidden;
+    max-width: 100vw;
   }
 
   /* NAV */
@@ -415,7 +416,7 @@
   }
   .tl-dot.dj-dot {
     border-color: #b040ff;
-    background: rgba(176,64,255,0.1);
+    background: var(--black);
   }
   .tl-content {}
   .tl-time {
@@ -637,6 +638,7 @@
   .exp-card {
     position: relative; aspect-ratio: 16/9; overflow: hidden;
     cursor: pointer;
+    min-height: 220px;
   }
   .exp-card img {
     width: 100%; height: 100%; object-fit: cover;
@@ -887,6 +889,7 @@
     position: fixed; inset: 0; z-index: 150;
     background: var(--black);
     overflow-y: auto;
+    overflow-x: hidden;
   }
   .overlay-page.open { display: block; }
   .overlay-header {
@@ -983,6 +986,10 @@
   .classifica-table {
     width: 100%; border-collapse: collapse;
     font-family: 'Barlow Condensed', sans-serif;
+  }
+  .classifica-table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
   .classifica-table th {
     font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
@@ -1149,6 +1156,10 @@
     .hero-meta-sep { display: none; }
     .modal-box { padding: 1.8rem 1.2rem; }
     .albo-grid { grid-template-columns: 1fr; }
+    .classifica-table { font-size: 0.75rem; }
+    .classifica-table th, .classifica-table td { padding: 0.5rem 0.4rem; }
+    .exp-card { aspect-ratio: 4/3; }
+    .exp-grid { gap: 1.2rem; }
   }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
@@ -1513,11 +1524,14 @@
             <li>Il Torneo si svolgerà in un girone unico all'italiana nel caso di 6 o 7 squadre iscritte, se saranno iscritte più squadre le stesse verranno suddivise in gironi; saranno disputate gare di sola andata. Con 8 o più squadre la fase finale sarà composta da quarti, semifinali e finale, altrimenti essa vedrà soltanto semifinali e finale.</li>
             <li>Per ogni partita verranno assegnati 3 punti in caso di vittoria e 0 per la sconfitta, mentre in caso di parità si procederà con 3 calci di rigore per squadra (e se necessario a oltranza): in tal caso per la vittoria saranno assegnati 2 punti, 1 punto per la sconfitta.</li>
             <li>In caso di parità dopo tutte le gare disputate, la classifica sarà determinata nel modo seguente:
-a. Scontro diretto
-b. Differenza reti (non saranno conteggiati gli eventuali rigori in caso di parità)
-c. La squadra che avrà segnato più goal
-d. La squadra che avrà subito meno goal
-e. Sorteggio</li>
+              <ol style="margin-top:0.5rem; padding-left:1.5rem; list-style-type:lower-alpha;">
+                <li>Scontro diretto</li>
+                <li>Differenza reti (non saranno conteggiati gli eventuali rigori in caso di parità)</li>
+                <li>La squadra che avrà segnato più goal</li>
+                <li>La squadra che avrà subito meno goal</li>
+                <li>Sorteggio</li>
+              </ol>
+            </li>
             <li>Durante la fase play-off se la gara terminerà con un risultato di parità si farà un tempo supplementare da 10 minuti; in caso di ulteriore parità si procederà con i calci di rigore (3 per squadra e se necessario ad oltranza).</li>
           </ul>
         </div>
@@ -1839,47 +1853,60 @@ e. Sorteggio</li>
         <!-- GIRONE A -->
         <div>
           <div style="font-family:'Barlow Condensed',sans-serif; font-size:0.75rem; letter-spacing:0.3em; text-transform:uppercase; color:var(--neon); margin-bottom:0.8rem;">Girone A</div>
-          <table class="classifica-table">
-            <thead><tr><th>#</th><th>Squadra</th><th>G</th><th>V</th><th>P</th><th>Gf</th><th>Gs</th><th>Pt</th></tr></thead>
+          <div class="classifica-table-wrap">
+          <table class="classifica-table" data-girone="A">
+            <thead><tr><th>#</th><th>Squadra</th><th>G</th><th>V</th><th>S</th><th>VR</th><th>SR</th><th>GF</th><th>GS</th><th>DR</th><th>PT</th></tr></thead>
             <tbody>
-              <tr><td><span class="team-rank first">1</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td><span class="pts-badge">—</span></td></tr>
-              <tr><td><span class="team-rank second">2</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td><span class="pts-badge">—</span></td></tr>
-              <tr><td><span class="team-rank third">3</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td><span class="pts-badge">—</span></td></tr>
-              <tr><td><span class="team-rank">4</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td><span class="pts-badge">—</span></td></tr>
+              <tr><td><span class="team-rank first">1</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td><span class="pts-badge">—</span></td></tr>
+              <tr><td><span class="team-rank second">2</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td><span class="pts-badge">—</span></td></tr>
+              <tr><td><span class="team-rank third">3</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td><span class="pts-badge">—</span></td></tr>
+              <tr><td><span class="team-rank">4</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td><span class="pts-badge">—</span></td></tr>
             </tbody>
           </table>
+          </div>
         </div>
 
         <!-- GIRONE B -->
         <div>
           <div style="font-family:'Barlow Condensed',sans-serif; font-size:0.75rem; letter-spacing:0.3em; text-transform:uppercase; color:var(--neon); margin-bottom:0.8rem;">Girone B</div>
-          <table class="classifica-table">
-            <thead><tr><th>#</th><th>Squadra</th><th>G</th><th>V</th><th>P</th><th>Gf</th><th>Gs</th><th>Pt</th></tr></thead>
+          <div class="classifica-table-wrap">
+          <table class="classifica-table" data-girone="B">
+            <thead><tr><th>#</th><th>Squadra</th><th>G</th><th>V</th><th>S</th><th>VR</th><th>SR</th><th>GF</th><th>GS</th><th>DR</th><th>PT</th></tr></thead>
             <tbody>
-              <tr><td><span class="team-rank first">1</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td><span class="pts-badge">—</span></td></tr>
-              <tr><td><span class="team-rank second">2</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td><span class="pts-badge">—</span></td></tr>
-              <tr><td><span class="team-rank third">3</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td><span class="pts-badge">—</span></td></tr>
-              <tr><td><span class="team-rank">4</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td><span class="pts-badge">—</span></td></tr>
+              <tr><td><span class="team-rank first">1</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td><span class="pts-badge">—</span></td></tr>
+              <tr><td><span class="team-rank second">2</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td><span class="pts-badge">—</span></td></tr>
+              <tr><td><span class="team-rank third">3</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td><span class="pts-badge">—</span></td></tr>
+              <tr><td><span class="team-rank">4</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td><span class="pts-badge">—</span></td></tr>
             </tbody>
           </table>
+          </div>
         </div>
 
         <!-- GIRONE C -->
         <div>
           <div style="font-family:'Barlow Condensed',sans-serif; font-size:0.75rem; letter-spacing:0.3em; text-transform:uppercase; color:var(--neon); margin-bottom:0.8rem;">Girone C</div>
-          <table class="classifica-table">
-            <thead><tr><th>#</th><th>Squadra</th><th>G</th><th>V</th><th>P</th><th>Gf</th><th>Gs</th><th>Pt</th></tr></thead>
+          <div class="classifica-table-wrap">
+          <table class="classifica-table" data-girone="C">
+            <thead><tr><th>#</th><th>Squadra</th><th>G</th><th>V</th><th>S</th><th>VR</th><th>SR</th><th>GF</th><th>GS</th><th>DR</th><th>PT</th></tr></thead>
             <tbody>
-              <tr><td><span class="team-rank first">1</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td><span class="pts-badge">—</span></td></tr>
-              <tr><td><span class="team-rank second">2</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td><span class="pts-badge">—</span></td></tr>
-              <tr><td><span class="team-rank third">3</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td><span class="pts-badge">—</span></td></tr>
-              <tr><td><span class="team-rank">4</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td><span class="pts-badge">—</span></td></tr>
+              <tr><td><span class="team-rank first">1</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td><span class="pts-badge">—</span></td></tr>
+              <tr><td><span class="team-rank second">2</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td><span class="pts-badge">—</span></td></tr>
+              <tr><td><span class="team-rank third">3</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td><span class="pts-badge">—</span></td></tr>
+              <tr><td><span class="team-rank">4</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td><span class="pts-badge">—</span></td></tr>
             </tbody>
           </table>
+          </div>
         </div>
         
       </div>
       <div class="risultati-empty" style="margin-top:1.5rem;">I dati verranno aggiornati in tempo reale il giorno del torneo</div>
+      <div style="margin-top:1rem; padding:0.8rem 1rem; background:var(--dark2); border-left:2px solid var(--border); font-family:'Barlow Condensed',sans-serif; font-size:0.75rem; color:var(--gray); line-height:1.8; letter-spacing:0.05em;">
+        <strong style="color:var(--neon); letter-spacing:0.1em;">LEGENDA:</strong>&nbsp;
+        <span style="color:#FFD700">1°</span> oro &nbsp;·&nbsp; <span style="color:#C0C0C0">2°</span> argento &nbsp;·&nbsp; <span style="color:#CD7F32">3°</span> bronzo &nbsp;·&nbsp;
+        <strong>G</strong> = Partite giocate &nbsp;·&nbsp; <strong>V</strong> = Vittorie &nbsp;·&nbsp; <strong>S</strong> = Sconfitte &nbsp;·&nbsp;
+        <strong>VR</strong> = Vittorie ai rigori &nbsp;·&nbsp; <strong>SR</strong> = Sconfitte ai rigori &nbsp;·&nbsp;
+        <strong>GF</strong> = Gol fatti &nbsp;·&nbsp; <strong>GS</strong> = Gol subiti &nbsp;·&nbsp; <strong>DR</strong> = Differenza reti &nbsp;·&nbsp; <strong>PT</strong> = Punti
+      </div>
     </div>
 
     <!-- RISULTATI PARTITE -->
@@ -2212,6 +2239,8 @@ async function loadTournamentData() {
 
     gironi.forEach(m => {
       const g = String(m.Girone).trim();
+      // supporta sia "Esito" che il nome lungo con parentesi
+      const esito = (m.Esito || m['Esito (RigoriCasa/RigoriTrasferta)'] || '').toString().trim();
 
       if (!gruppi[g]) gruppi[g] = {};
 
@@ -2224,8 +2253,9 @@ async function loadTournamentData() {
             gs: 0,
             g: 0,
             v: 0,
-            p: 0,
-            l: 0
+            s: 0,
+            vr: 0,
+            sr: 0
           };
         }
       });
@@ -2245,109 +2275,117 @@ async function loadTournamentData() {
       away.gf += as;
       away.gs += hs;
 
-      if (m.Esito === 'RigoriCasa') {
+      if (esito === 'RigoriCasa') {
         home.pt += 2;
         away.pt += 1;
-        home.p++;
-        away.p++;
-      } else if (m.Esito === 'RigoriTrasferta') {
+        home.vr++;
+        away.sr++;
+      } else if (esito === 'RigoriTrasferta') {
         away.pt += 2;
         home.pt += 1;
-        home.p++;
-        away.p++;
+        away.vr++;
+        home.sr++;
       } else if (hs > as) {
         home.pt += 3;
         home.v++;
-        away.l++;
+        away.s++;
       } else if (as > hs) {
         away.pt += 3;
         away.v++;
-        home.l++;
+        home.s++;
       } else {
         home.pt += 1;
         away.pt += 1;
-        home.p++;
-        away.p++;
       }
     });
 
-    // usa le tabelle già presenti
-    const tables = document.querySelectorAll('.classifica-table');
+    // usa le tabelle già presenti abbinandole per attributo data-girone
+    Object.keys(gruppi).forEach((groupName) => {
+      const targetTable = document.querySelector(`.classifica-table[data-girone="${groupName}"]`);
+      if (!targetTable) return;
 
-    Object.keys(gruppi).forEach((groupName, index) => {
-      if (!tables[index]) return;
-
-      const tbody = tables[index].querySelector('tbody');
+      const tbody = targetTable.querySelector('tbody');
       if (!tbody) return;
 
       const teams = Object.values(gruppi[groupName]).sort((a,b)=>
         b.pt - a.pt || ((b.gf-b.gs)-(a.gf-a.gs))
       );
 
-      tbody.innerHTML = teams.map((t,i)=>`
+      tbody.innerHTML = teams.map((t,i)=>{
+        const rankClass = i===0 ? 'first' : i===1 ? 'second' : i===2 ? 'third' : '';
+        const dr = t.gf - t.gs;
+        return `
         <tr>
-          <td><span class="team-rank">${i+1}</span></td>
+          <td><span class="team-rank ${rankClass}">${i+1}</span></td>
           <td>${t.squadra}</td>
           <td>${t.g}</td>
           <td>${t.v}</td>
-          <td>${t.p}</td>
+          <td>${t.s}</td>
+          <td>${t.vr}</td>
+          <td>${t.sr}</td>
           <td>${t.gf}</td>
           <td>${t.gs}</td>
+          <td>${dr > 0 ? '+' + dr : dr}</td>
           <td><span class="pts-badge">${t.pt}</span></td>
         </tr>
-      `).join('');
+      `}).join('');
     });
 
     // ===== PARTITE GIRONI =====
     const groupCards = document.querySelectorAll('.partite-grid')[0];
 
     if (groupCards) {
-      groupCards.innerHTML = gironi.map(m=>`
+      groupCards.innerHTML = gironi.map(m=>{
+        const esito = (m.Esito || m['Esito (RigoriCasa/RigoriTrasferta)'] || '').toString().trim();
+        return `
         <div class="partita-card">
           <div class="partita-team">${m.Casa}</div>
-          <div class="partita-score">${m.GolCasa} - ${m.GolTrasferta}${m.Esito === 'RigoriCasa' ? `<br><small>Vinto ai rigori da ${m.Casa}</small>` : m.Esito === 'RigoriTrasferta' ? `<br><small>Vinto ai rigori da ${m.Trasferta}</small>` : ''}</div>
+          <div class="partita-score">${m.GolCasa} - ${m.GolTrasferta}${esito === 'RigoriCasa' ? `<br><small>Vinto ai rigori da ${m.Casa}</small>` : esito === 'RigoriTrasferta' ? `<br><small>Vinto ai rigori da ${m.Trasferta}</small>` : ''}</div>
           <div class="partita-team away">${m.Trasferta}</div>
         </div>
-      `).join('');
+      `}).join('');
     }
 
     // ===== FASI FINALI =====
-    const quarti = finali.filter(m => m.Fase === 'Quarti');
-    const semifinali = finali.filter(m => m.Fase === 'Semifinali');
-    const finalMatch = finali.filter(m => m.Fase === 'Finale');
+    const quarti = finali.filter(m => (m.Fase || m.Turno) === 'Quarti');
+    const semifinali = finali.filter(m => (m.Fase || m.Turno) === 'Semifinali');
+    const finalMatch = finali.filter(m => (m.Fase || m.Turno) === 'Finale');
 
     const quartiGrid = document.querySelectorAll('.partite-grid')[1];
     const semiGrid = document.querySelectorAll('.partite-grid')[2];
     const finalGrid = document.querySelectorAll('.partite-grid')[3];
 
     if (quartiGrid) {
-      quartiGrid.innerHTML = quarti.map(m=>`
-        <div class="partita-card">
+      quartiGrid.innerHTML = quarti.map(m=>{
+        const esito = (m.Esito || m['Esito (RigoriCasa/RigoriTrasferta)'] || '').toString().trim();
+        return `<div class="partita-card">
           <div class="partita-team">${m.Casa}</div>
-          <div class="partita-score">${m.GolCasa} - ${m.GolTrasferta}${m.Esito === 'RigoriCasa' ? `<br><small>Vinto ai rigori da ${m.Casa}</small>` : m.Esito === 'RigoriTrasferta' ? `<br><small>Vinto ai rigori da ${m.Trasferta}</small>` : ''}</div>
+          <div class="partita-score">${m.GolCasa} - ${m.GolTrasferta}${esito === 'RigoriCasa' ? `<br><small>Vinto ai rigori da ${m.Casa}</small>` : esito === 'RigoriTrasferta' ? `<br><small>Vinto ai rigori da ${m.Trasferta}</small>` : ''}</div>
           <div class="partita-team away">${m.Trasferta}</div>
-        </div>
-      `).join('') || quartiGrid.innerHTML; // Se non ci sono dati, mantiene i TBD
+        </div>`;
+      }).join('') || quartiGrid.innerHTML;
     }
 
     if (semiGrid) {
-      semiGrid.innerHTML = semifinali.map(m=>`
-        <div class="partita-card">
+      semiGrid.innerHTML = semifinali.map(m=>{
+        const esito = (m.Esito || m['Esito (RigoriCasa/RigoriTrasferta)'] || '').toString().trim();
+        return `<div class="partita-card">
           <div class="partita-team">${m.Casa}</div>
-          <div class="partita-score">${m.GolCasa} - ${m.GolTrasferta}${m.Esito === 'RigoriCasa' ? `<br><small>Vinto ai rigori da ${m.Casa}</small>` : m.Esito === 'RigoriTrasferta' ? `<br><small>Vinto ai rigori da ${m.Trasferta}</small>` : ''}</div>
+          <div class="partita-score">${m.GolCasa} - ${m.GolTrasferta}${esito === 'RigoriCasa' ? `<br><small>Vinto ai rigori da ${m.Casa}</small>` : esito === 'RigoriTrasferta' ? `<br><small>Vinto ai rigori da ${m.Trasferta}</small>` : ''}</div>
           <div class="partita-team away">${m.Trasferta}</div>
-        </div>
-      `).join('') || semiGrid.innerHTML;
+        </div>`;
+      }).join('') || semiGrid.innerHTML;
     }
 
     if (finalGrid) {
-      finalGrid.innerHTML = finalMatch.map(m=>`
-        <div class="partita-card">
+      finalGrid.innerHTML = finalMatch.map(m=>{
+        const esito = (m.Esito || m['Esito (RigoriCasa/RigoriTrasferta)'] || '').toString().trim();
+        return `<div class="partita-card">
           <div class="partita-team">${m.Casa}</div>
-          <div class="partita-score">${m.GolCasa} - ${m.GolTrasferta}${m.Esito === 'RigoriCasa' ? `<br><small>Vinto ai rigori da ${m.Casa}</small>` : m.Esito === 'RigoriTrasferta' ? `<br><small>Vinto ai rigori da ${m.Trasferta}</small>` : ''}</div>
+          <div class="partita-score">${m.GolCasa} - ${m.GolTrasferta}${esito === 'RigoriCasa' ? `<br><small>Vinto ai rigori da ${m.Casa}</small>` : esito === 'RigoriTrasferta' ? `<br><small>Vinto ai rigori da ${m.Trasferta}</small>` : ''}</div>
           <div class="partita-team away">${m.Trasferta}</div>
-        </div>
-      `).join('') || finalGrid.innerHTML;
+        </div>`;
+      }).join('') || finalGrid.innerHTML;
     }
 
     // rimuove eventuali box placeholder
