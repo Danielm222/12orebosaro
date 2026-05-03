@@ -838,7 +838,7 @@
   /* MOBILE NAV */
   .mobile-menu {
     display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(8,8,8,0.97); z-index: 99;
+    background: rgba(8,8,8,0.97); z-index: 200;
     flex-direction: column; justify-content: center; align-items: center;
     gap: 0;
     overflow-y: auto;
@@ -1341,10 +1341,10 @@ body {
     <li><a href="#regolamento">Regolamento</a></li>
     <li><a href="#location">Location</a></li>
     <li><a href="#experience">Esperienza</a></li>
+    <li><a href="#" onclick="openPage('squadre'); return false;">Squadre</a></li>
     <li><a href="#" onclick="openPage('risultati'); return false;">Risultati</a></li>
     <li><a href="#" onclick="openPage('albodoro'); return false;">Albo d'Oro</a></li>
     <li><a href="#" onclick="openPage('sponsor'); return false;">Sponsor</a></li>
-    <li><a href="#" onclick="openPage('squadre'); return false;">Squadre</a></li>
   </ul>
   <a href="#contatti" class="nav-cta">Contattaci</a>
   <div class="hamburger" id="hamburger">
@@ -1366,10 +1366,10 @@ body {
   <div class="mob-divider"></div>
   <div class="mob-section-title">— Sezioni extra</div>
   <div class="mob-links-row">
+    <a href="#" class="mob-link-small" onclick="openPage('squadre'); closeMobileMenu(); return false;">👕 Squadre</a>
     <a href="#" class="mob-link-small" onclick="openPage('risultati'); closeMobileMenu(); return false;">🏅 Risultati</a>
     <a href="#" class="mob-link-small" onclick="openPage('albodoro'); closeMobileMenu(); return false;">🏆 Albo d'Oro</a>
     <a href="#" class="mob-link-small" onclick="openPage('sponsor'); closeMobileMenu(); return false;">⭐ Sponsor</a>
-    <a href="#" class="mob-link-small" onclick="openPage('squadre'); closeMobileMenu(); return false;">👕 Squadre</a>
   </div>
 </div>
 
@@ -2021,7 +2021,7 @@ body {
       Torna alla home
     </button>
     <div class="overlay-title-bar">Risultati</div>
-    <button class="overlay-hamburger" onclick="closePage('risultati'); openMobileMenuFromOverlay()">
+    <button class="overlay-hamburger" onclick="openMobileMenuFromOverlay()">
       <span></span><span></span><span></span>
     </button>
   </div>
@@ -2140,7 +2140,7 @@ Le partite non sono ancora iniziate. Torna il 4 Luglio!</div>
       Torna alla home
     </button>
     <div class="overlay-title-bar">Albo d'Oro</div>
-    <button class="overlay-hamburger" onclick="closePage('albodoro'); openMobileMenuFromOverlay()">
+    <button class="overlay-hamburger" onclick="openMobileMenuFromOverlay()">
       <span></span><span></span><span></span>
     </button>
   </div>
@@ -2215,7 +2215,7 @@ Le partite non sono ancora iniziate. Torna il 4 Luglio!</div>
       Torna alla home
     </button>
     <div class="overlay-title-bar">Sponsor</div>
-    <button class="overlay-hamburger" onclick="closePage('sponsor'); openMobileMenuFromOverlay()">
+    <button class="overlay-hamburger" onclick="openMobileMenuFromOverlay()">
       <span></span><span></span><span></span>
     </button>
   </div>
@@ -2286,7 +2286,7 @@ Le partite non sono ancora iniziate. Torna il 4 Luglio!</div>
       Torna alla home
     </button>
     <div class="overlay-title-bar">Squadre Iscritte</div>
-    <button class="overlay-hamburger" onclick="closePage('squadre'); openMobileMenuFromOverlay()">
+    <button class="overlay-hamburger" onclick="openMobileMenuFromOverlay()">
       <span></span><span></span><span></span>
     </button>
   </div>
@@ -2356,7 +2356,13 @@ Le partite non sono ancora iniziate. Torna il 4 Luglio!</div>
   function closeMobileMenu() {
     mobileMenu.classList.remove('open');
     hamburger.classList.remove('active');
-    document.body.style.overflow = '';
+    // Se c'è un'overlay aperta, non resettare l'overflow
+    const overlayOpen = ['risultati','albodoro','sponsor','squadre'].some(id =>
+      document.getElementById(id).classList.contains('open')
+    );
+    if (!overlayOpen) {
+      document.body.style.overflow = '';
+    }
   }
 
   // Chiudi menù mobile cliccando sui link
@@ -2421,6 +2427,7 @@ Le partite non sono ancora iniziate. Torna il 4 Luglio!</div>
   function openMobileMenuFromOverlay() {
     mobileMenu.classList.add('open');
     hamburger.classList.add('active');
+    // il body.overflow rimane hidden (l'overlay sotto è già hidden)
     document.body.style.overflow = 'hidden';
   }
 
