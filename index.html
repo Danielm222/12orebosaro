@@ -1354,22 +1354,23 @@ body {
 
 <!-- MOBILE MENU -->
 <div class="mobile-menu" id="mobileMenu">
+  <button id="mobileMenuClose" onclick="closeMobileMenu()" style="position:absolute;top:1.2rem;right:1.5rem;background:none;border:none;cursor:pointer;color:var(--white);font-size:1.8rem;line-height:1;padding:0.3rem;">✕</button>
   <div class="mob-section-title">— Navigazione principale</div>
-  <a href="#torneo" class="mob-link">Torneo</a>
-  <a href="#format" class="mob-link">Format</a>
-  <a href="#programma" class="mob-link">Programma</a>
-  <a href="#premi" class="mob-link">Premi</a>
-  <a href="#regolamento" class="mob-link">Regolamento</a>
-  <a href="#location" class="mob-link">Location</a>
-  <a href="#experience" class="mob-link">Esperienza</a>
-  <a href="#contatti" class="mob-link">Contatti</a>
+  <a href="#torneo" class="mob-link" onclick="closeAllAndGo()">Torneo</a>
+  <a href="#format" class="mob-link" onclick="closeAllAndGo()">Format</a>
+  <a href="#programma" class="mob-link" onclick="closeAllAndGo()">Programma</a>
+  <a href="#premi" class="mob-link" onclick="closeAllAndGo()">Premi</a>
+  <a href="#regolamento" class="mob-link" onclick="closeAllAndGo()">Regolamento</a>
+  <a href="#location" class="mob-link" onclick="closeAllAndGo()">Location</a>
+  <a href="#experience" class="mob-link" onclick="closeAllAndGo()">Esperienza</a>
+  <a href="#contatti" class="mob-link" onclick="closeAllAndGo()">Contatti</a>
   <div class="mob-divider"></div>
   <div class="mob-section-title">— Sezioni extra</div>
   <div class="mob-links-row">
-    <a href="#" class="mob-link-small" onclick="openPage('squadre'); closeMobileMenu(); return false;">👕 Squadre</a>
-    <a href="#" class="mob-link-small" onclick="openPage('risultati'); closeMobileMenu(); return false;">🏅 Risultati</a>
-    <a href="#" class="mob-link-small" onclick="openPage('albodoro'); closeMobileMenu(); return false;">🏆 Albo d'Oro</a>
-    <a href="#" class="mob-link-small" onclick="openPage('sponsor'); closeMobileMenu(); return false;">⭐ Sponsor</a>
+    <a href="#" class="mob-link-small" onclick="goToPage('squadre'); return false;">👕 Squadre</a>
+    <a href="#" class="mob-link-small" onclick="goToPage('risultati'); return false;">🏅 Risultati</a>
+    <a href="#" class="mob-link-small" onclick="goToPage('albodoro'); return false;">🏆 Albo d'Oro</a>
+    <a href="#" class="mob-link-small" onclick="goToPage('sponsor'); return false;">⭐ Sponsor</a>
   </div>
 </div>
 
@@ -2338,13 +2339,13 @@ Le partite non sono ancora iniziate. Torna il 4 Luglio!</div>
   }, { threshold: 0.12 });
   reveals.forEach(el => observer.observe(el));
 
-  // MOBILE MENU — toggle con hamburger (apri e chiudi)
+  // MOBILE MENU
   const hamburger = document.getElementById('hamburger');
   const mobileMenu = document.getElementById('mobileMenu');
+  const OVERLAY_IDS = ['risultati', 'albodoro', 'sponsor', 'squadre'];
 
   hamburger.addEventListener('click', () => {
-    const isOpen = mobileMenu.classList.contains('open');
-    if (isOpen) {
+    if (mobileMenu.classList.contains('open')) {
       closeMobileMenu();
     } else {
       mobileMenu.classList.add('open');
@@ -2356,19 +2357,34 @@ Le partite non sono ancora iniziate. Torna il 4 Luglio!</div>
   function closeMobileMenu() {
     mobileMenu.classList.remove('open');
     hamburger.classList.remove('active');
-    // Se c'è un'overlay aperta, non resettare l'overflow
-    const overlayOpen = ['risultati','albodoro','sponsor','squadre'].some(id =>
-      document.getElementById(id).classList.contains('open')
-    );
-    if (!overlayOpen) {
-      document.body.style.overflow = '';
-    }
+    // ripristina overflow solo se non c'è un'overlay aperta
+    const anyOverlay = OVERLAY_IDS.some(id => document.getElementById(id).classList.contains('open'));
+    if (!anyOverlay) document.body.style.overflow = '';
   }
 
-  // Chiudi menù mobile cliccando sui link
-  document.querySelectorAll('.mob-link').forEach(link => {
-    link.addEventListener('click', () => closeMobileMenu());
-  });
+  // Chiude tutto (overlay + menu) e lascia scrollare la home
+  function closeAllAndGo() {
+    OVERLAY_IDS.forEach(id => document.getElementById(id).classList.remove('open'));
+    mobileMenu.classList.remove('open');
+    hamburger.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  // Apre una sezione extra: chiude tutto, poi apre quella giusta
+  function goToPage(id) {
+    OVERLAY_IDS.forEach(p => document.getElementById(p).classList.remove('open'));
+    mobileMenu.classList.remove('open');
+    hamburger.classList.remove('active');
+    document.getElementById(id).classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  // Apre il menu mobile da dentro un'overlay (non chiude l'overlay)
+  function openMobileMenuFromOverlay() {
+    mobileMenu.classList.add('open');
+    hamburger.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
 
   // NAV SCROLL EFFECT
   window.addEventListener('scroll', () => {
