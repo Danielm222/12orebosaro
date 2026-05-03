@@ -2507,7 +2507,7 @@ async function loadTournamentData() {
         return `
         <div class="partita-card">
           <div class="partita-team">${m.Casa}</div>
-          <div class="partita-score">${m.GolCasa} - ${m.GolTrasferta}${esito === 'RigoriCasa' ? `<br><small>Vinto ai rigori da ${m.Casa}</small>` : esito === 'RigoriTrasferta' ? `<br><small>Vinto ai rigori da ${m.Trasferta}</small>` : ''}</div>
+          <div class="partita-score">${m.GolCasa} - ${m.GolTrasferta}${esito === 'RigoriCasa' ? `<br><small>Vinta ai rigori da ${m.Casa}</small>` : esito === 'RigoriTrasferta' ? `<br><small>Vinta ai rigori da ${m.Trasferta}</small>` : ''}</div>
           <div class="partita-team away">${m.Trasferta}</div>
         </div>
       `}).join('');
@@ -2527,7 +2527,7 @@ async function loadTournamentData() {
         const esito = (m.Esito || m['Esito (RigoriCasa/RigoriTrasferta)'] || '').toString().trim();
         return `<div class="partita-card">
           <div class="partita-team">${m.Casa}</div>
-          <div class="partita-score">${m.GolCasa} - ${m.GolTrasferta}${esito === 'RigoriCasa' ? `<br><small>Vinto ai rigori da ${m.Casa}</small>` : esito === 'RigoriTrasferta' ? `<br><small>Vinto ai rigori da ${m.Trasferta}</small>` : ''}</div>
+          <div class="partita-score">${m.GolCasa} - ${m.GolTrasferta}${esito === 'RigoriCasa' ? `<br><small>Vinta ai rigori da ${m.Casa}</small>` : esito === 'RigoriTrasferta' ? `<br><small>Vinta ai rigori da ${m.Trasferta}</small>` : ''}</div>
           <div class="partita-team away">${m.Trasferta}</div>
         </div>`;
       }).join('') || quartiGrid.innerHTML;
@@ -2538,7 +2538,7 @@ async function loadTournamentData() {
         const esito = (m.Esito || m['Esito (RigoriCasa/RigoriTrasferta)'] || '').toString().trim();
         return `<div class="partita-card">
           <div class="partita-team">${m.Casa}</div>
-          <div class="partita-score">${m.GolCasa} - ${m.GolTrasferta}${esito === 'RigoriCasa' ? `<br><small>Vinto ai rigori da ${m.Casa}</small>` : esito === 'RigoriTrasferta' ? `<br><small>Vinto ai rigori da ${m.Trasferta}</small>` : ''}</div>
+          <div class="partita-score">${m.GolCasa} - ${m.GolTrasferta}${esito === 'RigoriCasa' ? `<br><small>Vinta ai rigori da ${m.Casa}</small>` : esito === 'RigoriTrasferta' ? `<br><small>Vinta ai rigori da ${m.Trasferta}</small>` : ''}</div>
           <div class="partita-team away">${m.Trasferta}</div>
         </div>`;
       }).join('') || semiGrid.innerHTML;
@@ -2549,7 +2549,7 @@ async function loadTournamentData() {
         const esito = (m.Esito || m['Esito (RigoriCasa/RigoriTrasferta)'] || '').toString().trim();
         return `<div class="partita-card">
           <div class="partita-team">${m.Casa}</div>
-          <div class="partita-score">${m.GolCasa} - ${m.GolTrasferta}${esito === 'RigoriCasa' ? `<br><small>Vinto ai rigori da ${m.Casa}</small>` : esito === 'RigoriTrasferta' ? `<br><small>Vinto ai rigori da ${m.Trasferta}</small>` : ''}</div>
+          <div class="partita-score">${m.GolCasa} - ${m.GolTrasferta}${esito === 'RigoriCasa' ? `<br><small>Vinta ai rigori da ${m.Casa}</small>` : esito === 'RigoriTrasferta' ? `<br><small>Vinta ai rigori da ${m.Trasferta}</small>` : ''}</div>
           <div class="partita-team away">${m.Trasferta}</div>
         </div>`;
       }).join('') || finalGrid.innerHTML;
