@@ -30,6 +30,7 @@
     font-family: 'Barlow', sans-serif;
     font-weight: 400;
     overflow-x: hidden;
+    max-width: 100vw;
   }
 
   /* NAV */
@@ -415,7 +416,7 @@
   }
   .tl-dot.dj-dot {
     border-color: #b040ff;
-    background: rgba(176,64,255,0.1);
+    background: var(--black);
   }
   .tl-content {}
   .tl-time {
@@ -637,6 +638,7 @@
   .exp-card {
     position: relative; aspect-ratio: 16/9; overflow: hidden;
     cursor: pointer;
+    min-height: 220px;
   }
   .exp-card img {
     width: 100%; height: 100%; object-fit: cover;
@@ -836,7 +838,7 @@
   /* MOBILE NAV */
   .mobile-menu {
     display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(8,8,8,0.97); z-index: 99;
+    background: rgba(8,8,8,0.97); z-index: 200;
     flex-direction: column; justify-content: center; align-items: center;
     gap: 0;
     overflow-y: auto;
@@ -887,6 +889,7 @@
     position: fixed; inset: 0; z-index: 150;
     background: var(--black);
     overflow-y: auto;
+    overflow-x: hidden;
   }
   .overlay-page.open { display: block; }
   .overlay-header {
@@ -919,57 +922,151 @@
   }
 
   /* SPONSOR PAGE */
-  .sponsor-grid {
-    display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem;
-    margin-top: 3rem;
-  }
-  .sponsor-card {
-    background: var(--dark2);
-    border: 1px solid rgba(255,255,255,0.06);
-    padding: 3rem 2rem;
-    display: flex; flex-direction: column; align-items: center;
-    text-align: center;
-    transition: border-color 0.3s, transform 0.3s;
-    position: relative;
-  }
-  .sponsor-card:hover { border-color: var(--border); transform: translateY(-4px); }
-  .sponsor-card.main-sponsor {
-    grid-column: span 3;
-    border-color: rgba(232,255,0,0.25);
-  }
-  .sponsor-card.main-sponsor::before {
-    content: 'MAIN SPONSOR';
-    position: absolute; top: -1px; left: 50%; transform: translateX(-50%);
-    background: var(--neon); color: var(--black);
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 0.65rem; font-weight: 700; letter-spacing: 0.2em;
-    padding: 0.2rem 1rem;
-  }
-  .sponsor-logo {
-  max-width: 400px;
-  max-height: 120px;
+  /* SPONSOR PAGE */
 
-  width: auto;
+* {
+  box-sizing: border-box;
+}
+
+.sponsor-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2rem;
+
+  width: 100%;
+  max-width: 100%;
+
+  margin-top: 3rem;
+}
+
+@media (max-width: 900px) {
+  .sponsor-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .sponsor-card.main-sponsor {
+    grid-column: span 2;
+  }
+}
+
+@media (max-width: 500px) {
+  .sponsor-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .sponsor-card.main-sponsor {
+    grid-column: span 1;
+  }
+
+  .sponsor-card {
+    padding: 2rem 1rem;
+  }
+}
+
+.sponsor-card {
+  background: var(--dark2);
+  border: 1px solid rgba(255,255,255,0.06);
+
+  padding: 3rem 2rem;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+
+  transition: border-color 0.3s, transform 0.3s;
+
+  position: relative;
+
+  width: 100%;
+  overflow: hidden;
+}
+
+.sponsor-card:hover {
+  border-color: var(--border);
+  transform: translateY(-4px);
+}
+
+.sponsor-card.main-sponsor {
+  grid-column: span 3;
+  border-color: rgba(232,255,0,0.25);
+}
+
+.sponsor-card.main-sponsor::before {
+  content: 'MAIN SPONSOR';
+
+  position: absolute;
+  top: -1px;
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  background: var(--neon);
+  color: var(--black);
+
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+
+  padding: 0.2rem 1rem;
+
+  white-space: nowrap;
+}
+
+.sponsor-logo {
+  width: 100%;
+  max-width: 400px;
+
   height: auto;
+  max-height: 120px;
 
   object-fit: contain;
 
   display: block;
   margin: 0 auto;
 }
-  .sponsor-name {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 1rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
-    color: rgba(255,255,255,0.5);
-  }
-  .sponsor-cta-note {
-    margin-top: 4rem;
-    padding: 2rem;
-    background: var(--dark2);
-    border-left: 3px solid var(--neon);
-    font-size: 0.92rem; line-height: 1.7;
-    color: rgba(255,255,255,0.65);
-  }
+
+.sponsor-name {
+  margin-top: 1rem;
+
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+
+  color: rgba(255,255,255,0.5);
+
+  word-break: break-word;
+}
+
+.sponsor-cta-note {
+  margin-top: 4rem;
+
+  padding: 2rem;
+
+  background: var(--dark2);
+  border-left: 3px solid var(--neon);
+
+  font-size: 0.92rem;
+  line-height: 1.7;
+
+  color: rgba(255,255,255,0.65);
+
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Evita scroll orizzontale */
+html,
+body {
+  overflow-x: hidden;
+}
 
   /* RISULTATI PAGE */
   .risultati-section { margin-bottom: 4rem; }
@@ -983,6 +1080,10 @@
   .classifica-table {
     width: 100%; border-collapse: collapse;
     font-family: 'Barlow Condensed', sans-serif;
+  }
+  .classifica-table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
   .classifica-table th {
     font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
@@ -1149,6 +1250,77 @@
     .hero-meta-sep { display: none; }
     .modal-box { padding: 1.8rem 1.2rem; }
     .albo-grid { grid-template-columns: 1fr; }
+    .classifica-table { font-size: 0.75rem; }
+    .classifica-table th, .classifica-table td { padding: 0.5rem 0.4rem; }
+    .exp-card { aspect-ratio: 4/3; }
+    .exp-grid { gap: 1.2rem; }
+  }
+  /* HAMBURGER NELLE OVERLAY */
+  .overlay-hamburger {
+    display: flex; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px;
+    background: none; border: none;
+  }
+  .overlay-hamburger span { width: 24px; height: 2px; background: var(--white); display: block; }
+
+  /* SQUADRE PAGE */
+  .squadre-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 2rem;
+    margin-top: 3rem;
+  }
+  .squadra-card {
+    background: var(--dark2);
+    border: 1px solid rgba(255,255,255,0.06);
+    overflow: hidden;
+    transition: border-color 0.3s, transform 0.3s;
+    position: relative;
+  }
+  .squadra-card:hover { border-color: var(--border); transform: translateY(-4px); }
+  .squadra-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0;
+    height: 3px; background: var(--neon);
+  }
+  .squadra-header {
+    padding: 1.5rem 1.5rem 1rem;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .squadra-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem; letter-spacing: 0.05em; line-height: 1;
+    color: var(--neon);
+  }
+  .squadra-count {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--gray); margin-top: 0.2rem;
+  }
+  .squadra-players { padding: 0.5rem 0; }
+  .player-row {
+    display: flex; align-items: center; gap: 0.8rem;
+    padding: 0.55rem 1.5rem;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  .player-row:last-child { border-bottom: none; }
+  .player-row:hover { background: rgba(255,255,255,0.02); }
+  .player-number {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.3rem; color: var(--neon); line-height: 1;
+    min-width: 28px; text-align: center; flex-shrink: 0;
+  }
+  .player-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1rem; font-weight: 600;
+    color: var(--white); letter-spacing: 0.03em; text-transform: uppercase;
+  }
+  .squadre-empty {
+    padding: 3rem 2rem; text-align: center;
+    background: var(--dark2); border: 1px dashed rgba(255,255,255,0.08);
+    color: var(--gray2);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.9rem; letter-spacing: 0.1em; text-transform: uppercase;
+  }
+  @media (max-width: 600px) {
+    .squadre-grid { grid-template-columns: 1fr; gap: 1.2rem; }
+    .squadra-name { font-size: 1.5rem; }
   }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
@@ -1168,6 +1340,8 @@
     <li><a href="#premi">Premi</a></li>
     <li><a href="#regolamento">Regolamento</a></li>
     <li><a href="#location">Location</a></li>
+    <li><a href="#experience">Esperienza</a></li>
+    <li><a href="#" onclick="openPage('squadre'); return false;">Squadre</a></li>
     <li><a href="#" onclick="openPage('risultati'); return false;">Risultati</a></li>
     <li><a href="#" onclick="openPage('albodoro'); return false;">Albo d'Oro</a></li>
     <li><a href="#" onclick="openPage('sponsor'); return false;">Sponsor</a></li>
@@ -1180,20 +1354,23 @@
 
 <!-- MOBILE MENU -->
 <div class="mobile-menu" id="mobileMenu">
+  <button id="mobileMenuClose" onclick="closeMobileMenu()" style="position:absolute;top:1.2rem;right:1.5rem;background:none;border:none;cursor:pointer;color:var(--white);font-size:1.8rem;line-height:1;padding:0.3rem;">✕</button>
   <div class="mob-section-title">— Navigazione principale</div>
-  <a href="#torneo" class="mob-link">Torneo</a>
-  <a href="#format" class="mob-link">Format</a>
-  <a href="#programma" class="mob-link">Programma</a>
-  <a href="#premi" class="mob-link">Premi</a>
-  <a href="#regolamento" class="mob-link">Regolamento</a>
-  <a href="#location" class="mob-link">Location</a>
-  <a href="#contatti" class="mob-link">Contatti</a>
+  <a href="#torneo" class="mob-link" onclick="closeAllAndGo()">Torneo</a>
+  <a href="#format" class="mob-link" onclick="closeAllAndGo()">Format</a>
+  <a href="#programma" class="mob-link" onclick="closeAllAndGo()">Programma</a>
+  <a href="#premi" class="mob-link" onclick="closeAllAndGo()">Premi</a>
+  <a href="#regolamento" class="mob-link" onclick="closeAllAndGo()">Regolamento</a>
+  <a href="#location" class="mob-link" onclick="closeAllAndGo()">Location</a>
+  <a href="#experience" class="mob-link" onclick="closeAllAndGo()">Esperienza</a>
+  <a href="#contatti" class="mob-link" onclick="closeAllAndGo()">Contatti</a>
   <div class="mob-divider"></div>
   <div class="mob-section-title">— Sezioni extra</div>
   <div class="mob-links-row">
-    <a href="#" class="mob-link-small" onclick="openPage('risultati'); closeMobileMenu(); return false;">🏅 Risultati</a>
-    <a href="#" class="mob-link-small" onclick="openPage('albodoro'); closeMobileMenu(); return false;">🏆 Albo d'Oro</a>
-    <a href="#" class="mob-link-small" onclick="openPage('sponsor'); closeMobileMenu(); return false;">⭐ Sponsor</a>
+    <a href="#" class="mob-link-small" onclick="goToPage('squadre'); return false;">👕 Squadre</a>
+    <a href="#" class="mob-link-small" onclick="goToPage('risultati'); return false;">🏅 Risultati</a>
+    <a href="#" class="mob-link-small" onclick="goToPage('albodoro'); return false;">🏆 Albo d'Oro</a>
+    <a href="#" class="mob-link-small" onclick="goToPage('sponsor'); return false;">⭐ Sponsor</a>
   </div>
 </div>
 
@@ -1238,7 +1415,7 @@
         <p class="section-label">— Chi siamo</p>
         <h2 class="section-title">Il Torneo</h2>
         <div class="section-divider"></div>
-        <p>La <strong>12 Ore Bosaro</strong>nasce dalla voglia di creare un torneo fatto bene, competitivo e divertente, dove passare una giornata di calcio, musica e compagnia in un ambiente organizzato e coinvolgente.</p>
+        <p>La <strong>12 Ore Bosaro</strong> nasce dalla voglia di creare un torneo competitivo e divertente, dove passare una giornata di calcio, musica e compagnia in un ambiente organizzato e coinvolgente.</p>
         <p>L’obiettivo è portare in campo squadre, amici e tifosi in un evento che unisca sport e intrattenimento, mantenendo sempre al centro il clima del torneo: competitivo sì, ma con lo spirito giusto.</p>
         <p>Ogni edizione è pensata per migliorare quella precedente, con attenzione ai dettagli, all’organizzazione e all’esperienza di chi partecipa e di chi viene a guardare.</p>
         <div class="torneo-stats">
@@ -1257,7 +1434,7 @@
         </div>
       </div>
       <div class="torneo-img reveal-right">
-        <img src="https://images.unsplash.com/photo-1517466787929-bc90951d0974?w=900&q=80" alt="Calcio a 5 in azione">
+        <img src="staff.JPG" alt="Calcio a 5 in azione">
       </div>
     </div>
   </div>
@@ -1372,7 +1549,7 @@
         <div class="tl-content">
           <div class="tl-time">20:30 — 23</div>
           <div class="tl-title">Fasi Finali</div>
-          <div class="tl-desc">Ottavi, quarti e semifinali. Eliminazione diretta — si passa il turno o si va a casa. Nessuna via di mezzo.</div>
+          <div class="tl-desc">Quarti e semifinali. Eliminazione diretta — si passa il turno o si va a casa. Nessuna via di mezzo.</div>
         </div>
       </div>
       <div class="tl-item reveal">
@@ -1513,11 +1690,14 @@
             <li>Il Torneo si svolgerà in un girone unico all'italiana nel caso di 6 o 7 squadre iscritte, se saranno iscritte più squadre le stesse verranno suddivise in gironi; saranno disputate gare di sola andata. Con 8 o più squadre la fase finale sarà composta da quarti, semifinali e finale, altrimenti essa vedrà soltanto semifinali e finale.</li>
             <li>Per ogni partita verranno assegnati 3 punti in caso di vittoria e 0 per la sconfitta, mentre in caso di parità si procederà con 3 calci di rigore per squadra (e se necessario a oltranza): in tal caso per la vittoria saranno assegnati 2 punti, 1 punto per la sconfitta.</li>
             <li>In caso di parità dopo tutte le gare disputate, la classifica sarà determinata nel modo seguente:
-a. Scontro diretto
-b. Differenza reti (non saranno conteggiati gli eventuali rigori in caso di parità)
-c. La squadra che avrà segnato più goal
-d. La squadra che avrà subito meno goal
-e. Sorteggio</li>
+              <ol style="margin-top:0.5rem; padding-left:1.5rem; list-style-type:lower-alpha;">
+                <li>Scontro diretto</li>
+                <li>Differenza reti (non saranno conteggiati gli eventuali rigori in caso di parità)</li>
+                <li>La squadra che avrà segnato più goal</li>
+                <li>La squadra che avrà subito meno goal</li>
+                <li>Sorteggio</li>
+              </ol>
+            </li>
             <li>Durante la fase play-off se la gara terminerà con un risultato di parità si farà un tempo supplementare da 10 minuti; in caso di ulteriore parità si procederà con i calci di rigore (3 per squadra e se necessario ad oltranza).</li>
           </ul>
         </div>
@@ -1703,7 +1883,7 @@ e. Sorteggio</li>
       <div class="section-divider" style="margin:1.5rem auto 2rem"></div>
       <p>Scrivi all'organizzazione per iscrivere la tua squadra, ricevere informazioni sull'evento o per qualsiasi altra richiesta. Rispondiamo velocemente.</p>
       <div class="contatti-btns">
-        <a href="https://wa.me/393348528228?text=Ciao!%20Vorrei%20avere%20informazioni%20sulla%2012%20Ore%20Bosaro" class="btn-wa" target="_blank" rel="noopener">
+        <a href="https://wa.me/393402169661?text=Ciao!%20Vorrei%20avere%20informazioni%20sulla%2012%20Ore%20Bosaro" class="btn-wa" target="_blank" rel="noopener">
           <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.118 1.524 5.849L0 24l6.284-1.498A11.94 11.94 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.878 0-3.63-.49-5.147-1.347l-.367-.217-3.731.888.926-3.639-.236-.375A9.927 9.927 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
           Scrivici su WhatsApp
         </a>
@@ -1744,67 +1924,85 @@ e. Sorteggio</li>
     <div class="modal-subtitle">— Cibo & Bevande · 4 Luglio 2026</div>
 
     <div class="menu-section">
-      <div class="menu-section-title">🥙 Piadine & Panini</div>
+      <div class="menu-section-title">🥙 Piadine & Hot Dog</div>
       <div class="menu-item">
-        <div><div class="menu-item-name">Piadina Classica</div><div class="menu-item-desc">Prosciutto cotto, mozzarella, pomodoro</div></div>
-        <div class="menu-item-price">€4</div>
+        <div><div class="menu-item-name">Piadina Classica</div><div class="menu-item-desc">3 ingredienti + salsa</div></div>
+        <div class="menu-item-price">€6</div>
       </div>
       <div class="menu-item">
-        <div><div class="menu-item-name">Piadina Speciale</div><div class="menu-item-desc">Crudo, rucola, stracchino</div></div>
-        <div class="menu-item-price">€5</div>
+        <div><div class="menu-item-name">Ingredienti</div><div class="menu-item-desc"><li>Prosciutto cotto</li><li>Prosciutto crudo</li><li>Porchetta</li><li>Salsiccia</li><li>Fontina</li><li>Zucchine</li><li>Peperoni</li><li>Cipolla</li><li>Maionese</li><li>Ketchup</li><li>Salsa ai funghi</li></div></div>
+        <div class="menu-item-price"></div>
       </div>
       <div class="menu-item">
-        <div><div class="menu-item-name">Piadina Veggie</div><div class="menu-item-desc">Grigliata di verdure, hummus, rucola</div></div>
-        <div class="menu-item-price">€4</div>
+        <div><div class="menu-item-name">Ogni aggiunta</div></div>
+        <div class="menu-item-price">+€0.50</div>
       </div>
       <div class="menu-item">
-        <div><div class="menu-item-name">Panino con Hamburger</div><div class="menu-item-desc">Burger, lattuga, pomodoro, salsa</div></div>
-        <div class="menu-item-price">€5</div>
+        <div><div class="menu-item-name">Hot Dog</div><div class="menu-item-desc">Pane, wurstel e una salsa a scelta</div></div>
+        <div class="menu-item-price">€4.50</div>
       </div>
     </div>
 
     <div class="menu-section">
       <div class="menu-section-title">🍟 Contorni & Sfizi</div>
       <div class="menu-item">
-        <div><div class="menu-item-name">Patatine Fritte</div><div class="menu-item-desc">Con ketchup o maionese</div></div>
-        <div class="menu-item-price">€3</div>
+        <div><div class="menu-item-name">Patatine in sacchetto</div></div>
+        <div class="menu-item-price">€1.20</div>
       </div>
-      <div class="menu-item">
-        <div><div class="menu-item-name">Arrosticini</div><div class="menu-item-desc">5 pezzi, agnello alla brace</div></div>
-        <div class="menu-item-price">€4</div>
-      </div>
+      
     </div>
 
     <div class="menu-section">
       <div class="menu-section-title">🍺 Bevande</div>
       <div class="menu-item">
-        <div><div class="menu-item-name">Birra Media</div><div class="menu-item-desc">Alla spina, 0.4L</div></div>
+        <div><div class="menu-item-name">Birra Media</div><div class="menu-item-desc">Bionda o Non filtrata</div></div>
+        <div class="menu-item-price">€5</div>
+      </div>
+      <div class="menu-item">
+        <div><div class="menu-item-name">Birra Piccola</div><div class="menu-item-desc">Bionda o Non filtrata</div></div>
         <div class="menu-item-price">€3</div>
       </div>
       <div class="menu-item">
-        <div><div class="menu-item-name">Birra Piccola</div><div class="menu-item-desc">Alla spina, 0.2L</div></div>
+        <div><div class="menu-item-name">Soft Drink</div><div class="menu-item-desc">Coca-Cola, The, Fanta</div></div>
         <div class="menu-item-price">€2</div>
       </div>
-      <div class="menu-item">
-        <div><div class="menu-item-name">Soft Drink</div><div class="menu-item-desc">Coca-Cola, Sprite, acqua, succhi</div></div>
-        <div class="menu-item-price">€2</div>
+       <div class="menu-item">
+        <div><div class="menu-item-name">RedBull</div></div>
+        <div class="menu-item-price">€3</div>
       </div>
       <div class="menu-item">
-        <div><div class="menu-item-name">Aperitivo Spritz</div><div class="menu-item-desc">Aperol Spritz o Campari</div></div>
-        <div class="menu-item-price">€4</div>
+        <div><div class="menu-item-name">Acqua</div><div class="menu-item-desc">Naturale o Frizzante</div></div>
+        <div class="menu-item-price">€1</div>
+      </div>
+      <div class="menu-item">
+        <div><div class="menu-item-name">Aperitivo Spritz</div><div class="menu-item-desc">Aperol Spritz, Campari o Misto</div></div>
+        <div class="menu-item-price">€3</div>
+      </div>
+      <div class="menu-item">
+        <div><div class="menu-item-name">Drink</div><div class="menu-item-desc">Gin Tonic, Gin Lemon o Americano</div></div>
+        <div class="menu-item-price">€5</div>
+      </div>
+      <div class="menu-item">
+        <div><div class="menu-item-name">Caffè</div><div class="menu-item-desc">Espresso o Decaffeinato</div></div>
+        <div class="menu-item-price">€1</div>
       </div>
     </div>
 
     <div class="menu-section">
       <div class="menu-section-title">🍦 Dolci</div>
       <div class="menu-item">
-        <div><div class="menu-item-name">Gelato</div><div class="menu-item-desc">2 gusti a scelta</div></div>
-        <div class="menu-item-price">€2</div>
+        <div><div class="menu-item-name">Piadina con nutella</div></div>
+        <div class="menu-item-price">€3</div>
       </div>
       <div class="menu-item">
-        <div><div class="menu-item-name">Bombolone</div><div class="menu-item-desc">Crema o cioccolato</div></div>
-        <div class="menu-item-price">€1,50</div>
+        <div><div class="menu-item-name">Macedonia</div><div class="menu-item-desc">Fragole, mele, pere, banane</div></div>
+        <div class="menu-item-price">€3</div>
       </div>
+      <div class="menu-item">
+        <div><div class="menu-item-name">Ghiaccioli</div><div class="menu-item-desc">Gusto a scelta</div></div>
+        <div class="menu-item-price">€0.80</div>
+      </div>
+      
     </div>
 
     <div style="margin-top:1.5rem; padding:1rem; background:rgba(232,255,0,0.05); border-left:2px solid var(--neon); font-size:0.82rem; color:rgba(255,255,255,0.5); line-height:1.6;">
@@ -1824,7 +2022,9 @@ e. Sorteggio</li>
       Torna alla home
     </button>
     <div class="overlay-title-bar">Risultati</div>
-    <div style="width:100px"></div>
+    <button class="overlay-hamburger" onclick="openMobileMenuFromOverlay()">
+      <span></span><span></span><span></span>
+    </button>
   </div>
   <div class="overlay-content">
     <p class="section-label">— 4 Luglio 2026</p>
@@ -1839,47 +2039,59 @@ e. Sorteggio</li>
         <!-- GIRONE A -->
         <div>
           <div style="font-family:'Barlow Condensed',sans-serif; font-size:0.75rem; letter-spacing:0.3em; text-transform:uppercase; color:var(--neon); margin-bottom:0.8rem;">Girone A</div>
-          <table class="classifica-table">
-            <thead><tr><th>#</th><th>Squadra</th><th>G</th><th>V</th><th>P</th><th>Gf</th><th>Gs</th><th>Pt</th></tr></thead>
+          <div class="classifica-table-wrap">
+          <table class="classifica-table" data-girone="A">
+            <thead><tr><th>#</th><th>Squadra</th><th>G</th><th>V</th><th>S</th><th>VR</th><th>SR</th><th>GF</th><th>GS</th><th>DR</th><th>PT</th></tr></thead>
             <tbody>
-              <tr><td><span class="team-rank first">1</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td><span class="pts-badge">—</span></td></tr>
-              <tr><td><span class="team-rank second">2</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td><span class="pts-badge">—</span></td></tr>
-              <tr><td><span class="team-rank third">3</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td><span class="pts-badge">—</span></td></tr>
-              <tr><td><span class="team-rank">4</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td><span class="pts-badge">—</span></td></tr>
+              <tr><td><span class="team-rank first">1</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td><span class="pts-badge">—</span></td></tr>
+              <tr><td><span class="team-rank second">2</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td><span class="pts-badge">—</span></td></tr>
+              <tr><td><span class="team-rank third">3</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td><span class="pts-badge">—</span></td></tr>
+              <tr><td><span class="team-rank">4</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td><span class="pts-badge">—</span></td></tr>
             </tbody>
           </table>
+          </div>
         </div>
 
         <!-- GIRONE B -->
         <div>
           <div style="font-family:'Barlow Condensed',sans-serif; font-size:0.75rem; letter-spacing:0.3em; text-transform:uppercase; color:var(--neon); margin-bottom:0.8rem;">Girone B</div>
-          <table class="classifica-table">
-            <thead><tr><th>#</th><th>Squadra</th><th>G</th><th>V</th><th>P</th><th>Gf</th><th>Gs</th><th>Pt</th></tr></thead>
+          <div class="classifica-table-wrap">
+          <table class="classifica-table" data-girone="B">
+            <thead><tr><th>#</th><th>Squadra</th><th>G</th><th>V</th><th>S</th><th>VR</th><th>SR</th><th>GF</th><th>GS</th><th>DR</th><th>PT</th></tr></thead>
             <tbody>
-              <tr><td><span class="team-rank first">1</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td><span class="pts-badge">—</span></td></tr>
-              <tr><td><span class="team-rank second">2</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td><span class="pts-badge">—</span></td></tr>
-              <tr><td><span class="team-rank third">3</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td><span class="pts-badge">—</span></td></tr>
-              <tr><td><span class="team-rank">4</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td><span class="pts-badge">—</span></td></tr>
+              <tr><td><span class="team-rank first">1</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td><span class="pts-badge">—</span></td></tr>
+              <tr><td><span class="team-rank second">2</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td><span class="pts-badge">—</span></td></tr>
+              <tr><td><span class="team-rank third">3</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td><span class="pts-badge">—</span></td></tr>
+              <tr><td><span class="team-rank">4</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td><span class="pts-badge">—</span></td></tr>
             </tbody>
           </table>
+          </div>
         </div>
 
         <!-- GIRONE C -->
         <div>
           <div style="font-family:'Barlow Condensed',sans-serif; font-size:0.75rem; letter-spacing:0.3em; text-transform:uppercase; color:var(--neon); margin-bottom:0.8rem;">Girone C</div>
-          <table class="classifica-table">
-            <thead><tr><th>#</th><th>Squadra</th><th>G</th><th>V</th><th>P</th><th>Gf</th><th>Gs</th><th>Pt</th></tr></thead>
+          <div class="classifica-table-wrap">
+          <table class="classifica-table" data-girone="C">
+            <thead><tr><th>#</th><th>Squadra</th><th>G</th><th>V</th><th>S</th><th>VR</th><th>SR</th><th>GF</th><th>GS</th><th>DR</th><th>PT</th></tr></thead>
             <tbody>
-              <tr><td><span class="team-rank first">1</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td><span class="pts-badge">—</span></td></tr>
-              <tr><td><span class="team-rank second">2</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td><span class="pts-badge">—</span></td></tr>
-              <tr><td><span class="team-rank third">3</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td><span class="pts-badge">—</span></td></tr>
-              <tr><td><span class="team-rank">4</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td><span class="pts-badge">—</span></td></tr>
+              <tr><td><span class="team-rank first">1</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td><span class="pts-badge">—</span></td></tr>
+              <tr><td><span class="team-rank second">2</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td><span class="pts-badge">—</span></td></tr>
+              <tr><td><span class="team-rank third">3</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td><span class="pts-badge">—</span></td></tr>
+              <tr><td><span class="team-rank">4</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td><span class="pts-badge">—</span></td></tr>
             </tbody>
           </table>
+          </div>
         </div>
         
       </div>
       <div class="risultati-empty" style="margin-top:1.5rem;">I dati verranno aggiornati in tempo reale il giorno del torneo</div>
+      <div style="margin-top:1rem; padding:0.8rem 1rem; background:var(--dark2); border-left:2px solid var(--border); font-family:'Barlow Condensed',sans-serif; font-size:0.75rem; color:var(--gray); line-height:1.8; letter-spacing:0.05em;">
+        <strong style="color:var(--neon); letter-spacing:0.1em;">LEGENDA:</strong>&nbsp;
+        <strong>G</strong> = Partite giocate &nbsp;·&nbsp; <strong>V</strong> = Vittorie &nbsp;·&nbsp; <strong>S</strong> = Sconfitte &nbsp;·&nbsp;
+        <strong>VR</strong> = Vittorie ai rigori &nbsp;·&nbsp; <strong>SR</strong> = Sconfitte ai rigori &nbsp;·&nbsp;
+        <strong>GF</strong> = Gol fatti &nbsp;·&nbsp; <strong>GS</strong> = Gol subiti &nbsp;·&nbsp; <strong>DR</strong> = Differenza reti &nbsp;·&nbsp; <strong>PT</strong> = Punti
+      </div>
     </div>
 
     <!-- RISULTATI PARTITE -->
@@ -1929,7 +2141,9 @@ Le partite non sono ancora iniziate. Torna il 4 Luglio!</div>
       Torna alla home
     </button>
     <div class="overlay-title-bar">Albo d'Oro</div>
-    <div style="width:100px"></div>
+    <button class="overlay-hamburger" onclick="openMobileMenuFromOverlay()">
+      <span></span><span></span><span></span>
+    </button>
   </div>
   <div class="overlay-content">
     <p class="section-label">— La storia del torneo</p>
@@ -2002,7 +2216,9 @@ Le partite non sono ancora iniziate. Torna il 4 Luglio!</div>
       Torna alla home
     </button>
     <div class="overlay-title-bar">Sponsor</div>
-    <div style="width:100px"></div>
+    <button class="overlay-hamburger" onclick="openMobileMenuFromOverlay()">
+      <span></span><span></span><span></span>
+    </button>
   </div>
   <div class="overlay-content">
     <p class="section-label">— I nostri partner</p>
@@ -2050,12 +2266,38 @@ Le partite non sono ancora iniziate. Torna il 4 Luglio!</div>
       <strong style="color:var(--white);">Vuoi diventare sponsor?</strong><br>
       Contatta l'organizzazione tramite WhatsApp o i canali social per scoprire le opportunità di partnership disponibili per la prossima edizione.
       <div style="margin-top:1rem;">
-        <a href="https://wa.me/393348528228?text=Ciao!%20Vorrei%20informazioni%20per%20diventare%20sponsor%20della%2012%20Ore%20Bosaro" target="_blank" rel="noopener"
+        <a href="https://wa.me/393402169661?text=Ciao!%20Vorrei%20diventare%20sponsor%20della%2012%20Ore%20Bosaro" target="_blank" rel="noopener"
           style="display:inline-flex; align-items:center; gap:0.5rem; background:#25D366; color:#000; font-family:'Barlow Condensed',sans-serif; font-size:0.85rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; padding:0.8rem 1.8rem; text-decoration:none; transition:background 0.2s;">
           <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.118 1.524 5.849L0 24l6.284-1.498A11.94 11.94 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.878 0-3.63-.49-5.147-1.347l-.367-.217-3.731.888.926-3.639-.236-.375A9.927 9.927 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
           Contattaci su WhatsApp
         </a>
       </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ============================================================ -->
+<!-- OVERLAY PAGE: SQUADRE ISCRITTE -->
+<!-- ============================================================ -->
+<div class="overlay-page" id="squadre">
+  <div class="overlay-header">
+    <button class="overlay-back" onclick="closePage('squadre')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      Torna alla home
+    </button>
+    <div class="overlay-title-bar">Squadre Iscritte</div>
+    <button class="overlay-hamburger" onclick="openMobileMenuFromOverlay()">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="overlay-content">
+    <p class="section-label">— Torneo 2026</p>
+    <h2 class="section-title">Squadre Iscritte</h2>
+    <div class="section-divider"></div>
+    <p style="color:rgba(255,255,255,0.55); font-size:1rem; line-height:1.8; max-width:600px; margin-bottom:1rem;">Tutte le squadre iscritte alla 12 Ore Bosaro 2026.</p>
+    <div id="squadreContainer" class="squadre-grid">
+      <div class="squadre-empty">Non ci sono ancora squadre iscritte ufficialmente.</div>
     </div>
   </div>
 </div>
@@ -2097,13 +2339,13 @@ Le partite non sono ancora iniziate. Torna il 4 Luglio!</div>
   }, { threshold: 0.12 });
   reveals.forEach(el => observer.observe(el));
 
-  // MOBILE MENU — toggle con hamburger (apri e chiudi)
+  // MOBILE MENU
   const hamburger = document.getElementById('hamburger');
   const mobileMenu = document.getElementById('mobileMenu');
+  const OVERLAY_IDS = ['risultati', 'albodoro', 'sponsor', 'squadre'];
 
   hamburger.addEventListener('click', () => {
-    const isOpen = mobileMenu.classList.contains('open');
-    if (isOpen) {
+    if (mobileMenu.classList.contains('open')) {
       closeMobileMenu();
     } else {
       mobileMenu.classList.add('open');
@@ -2115,13 +2357,34 @@ Le partite non sono ancora iniziate. Torna il 4 Luglio!</div>
   function closeMobileMenu() {
     mobileMenu.classList.remove('open');
     hamburger.classList.remove('active');
+    // ripristina overflow solo se non c'è un'overlay aperta
+    const anyOverlay = OVERLAY_IDS.some(id => document.getElementById(id).classList.contains('open'));
+    if (!anyOverlay) document.body.style.overflow = '';
+  }
+
+  // Chiude tutto (overlay + menu) e lascia scrollare la home
+  function closeAllAndGo() {
+    OVERLAY_IDS.forEach(id => document.getElementById(id).classList.remove('open'));
+    mobileMenu.classList.remove('open');
+    hamburger.classList.remove('active');
     document.body.style.overflow = '';
   }
 
-  // Chiudi menù mobile cliccando sui link
-  document.querySelectorAll('.mob-link').forEach(link => {
-    link.addEventListener('click', () => closeMobileMenu());
-  });
+  // Apre una sezione extra: chiude tutto, poi apre quella giusta
+  function goToPage(id) {
+    OVERLAY_IDS.forEach(p => document.getElementById(p).classList.remove('open'));
+    mobileMenu.classList.remove('open');
+    hamburger.classList.remove('active');
+    document.getElementById(id).classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  // Apre il menu mobile da dentro un'overlay (non chiude l'overlay)
+  function openMobileMenuFromOverlay() {
+    mobileMenu.classList.add('open');
+    hamburger.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
 
   // NAV SCROLL EFFECT
   window.addEventListener('scroll', () => {
@@ -2167,7 +2430,7 @@ Le partite non sono ancora iniziate. Torna il 4 Luglio!</div>
     }
   }
 
-  // OVERLAY PAGES (Risultati, Albo d'Oro, Sponsor)
+  // OVERLAY PAGES (Risultati, Albo d'Oro, Sponsor, Squadre)
   function openPage(id) {
     document.getElementById(id).classList.add('open');
     document.body.style.overflow = 'hidden';
@@ -2177,11 +2440,17 @@ Le partite non sono ancora iniziate. Torna il 4 Luglio!</div>
     document.getElementById(id).classList.remove('open');
     document.body.style.overflow = '';
   }
+  function openMobileMenuFromOverlay() {
+    mobileMenu.classList.add('open');
+    hamburger.classList.add('active');
+    // il body.overflow rimane hidden (l'overlay sotto è già hidden)
+    document.body.style.overflow = 'hidden';
+  }
 
   // Chiudi overlay con tasto ESC
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
-      ['risultati', 'albodoro', 'sponsor'].forEach(id => {
+      ['risultati', 'albodoro', 'sponsor', 'squadre'].forEach(id => {
         document.getElementById(id).classList.remove('open');
       });
       ['menuModal'].forEach(id => {
@@ -2212,6 +2481,8 @@ async function loadTournamentData() {
 
     gironi.forEach(m => {
       const g = String(m.Girone).trim();
+      // supporta sia "Esito" che il nome lungo con parentesi
+      const esito = (m.Esito || m['Esito (RigoriCasa/RigoriTrasferta)'] || '').toString().trim();
 
       if (!gruppi[g]) gruppi[g] = {};
 
@@ -2224,8 +2495,9 @@ async function loadTournamentData() {
             gs: 0,
             g: 0,
             v: 0,
-            p: 0,
-            l: 0
+            s: 0,
+            vr: 0,
+            sr: 0
           };
         }
       });
@@ -2245,115 +2517,185 @@ async function loadTournamentData() {
       away.gf += as;
       away.gs += hs;
 
-      if (m.Esito === 'RigoriCasa') {
+      if (esito === 'RigoriCasa') {
         home.pt += 2;
         away.pt += 1;
-        home.p++;
-        away.p++;
-      } else if (m.Esito === 'RigoriTrasferta') {
+        home.vr++;
+        away.sr++;
+      } else if (esito === 'RigoriTrasferta') {
         away.pt += 2;
         home.pt += 1;
-        home.p++;
-        away.p++;
+        away.vr++;
+        home.sr++;
       } else if (hs > as) {
         home.pt += 3;
         home.v++;
-        away.l++;
+        away.s++;
       } else if (as > hs) {
         away.pt += 3;
         away.v++;
-        home.l++;
+        home.s++;
       } else {
         home.pt += 1;
         away.pt += 1;
-        home.p++;
-        away.p++;
       }
     });
 
-    // usa le tabelle già presenti
-    const tables = document.querySelectorAll('.classifica-table');
+    // usa le tabelle già presenti abbinandole per attributo data-girone
+    Object.keys(gruppi).forEach((groupName) => {
+      const targetTable = document.querySelector(`.classifica-table[data-girone="${groupName}"]`);
+      if (!targetTable) return;
 
-    Object.keys(gruppi).forEach((groupName, index) => {
-      if (!tables[index]) return;
-
-      const tbody = tables[index].querySelector('tbody');
+      const tbody = targetTable.querySelector('tbody');
       if (!tbody) return;
 
-      const teams = Object.values(gruppi[groupName]).sort((a,b)=>
-        b.pt - a.pt || ((b.gf-b.gs)-(a.gf-a.gs))
-      );
+      // Costruisce mappa degli scontri diretti: h2h[A][B] = { gf, gs }
+      const h2h = {};
+      gironi.forEach(m => {
+        if (String(m.Girone).trim() !== groupName) return;
+        const esito = (m.Esito || m['Esito (RigoriCasa/RigoriTrasferta)'] || '').toString().trim();
+        const hs = Number(m.GolCasa);
+        const as = Number(m.GolTrasferta);
+        // gol da scontro diretto: NON contiamo i rigori (solo i gol nei tempi regolamentari)
+        if (!h2h[m.Casa]) h2h[m.Casa] = {};
+        if (!h2h[m.Trasferta]) h2h[m.Trasferta] = {};
+        if (!h2h[m.Casa][m.Trasferta]) h2h[m.Casa][m.Trasferta] = { pt: 0, gf: 0, gs: 0 };
+        if (!h2h[m.Trasferta][m.Casa]) h2h[m.Trasferta][m.Casa] = { pt: 0, gf: 0, gs: 0 };
+        // punti scontro diretto
+        if (esito === 'RigoriCasa') {
+          h2h[m.Casa][m.Trasferta].pt += 2;
+          h2h[m.Trasferta][m.Casa].pt += 1;
+        } else if (esito === 'RigoriTrasferta') {
+          h2h[m.Trasferta][m.Casa].pt += 2;
+          h2h[m.Casa][m.Trasferta].pt += 1;
+        } else if (hs > as) {
+          h2h[m.Casa][m.Trasferta].pt += 3;
+        } else if (as > hs) {
+          h2h[m.Trasferta][m.Casa].pt += 3;
+        } else {
+          h2h[m.Casa][m.Trasferta].pt += 1;
+          h2h[m.Trasferta][m.Casa].pt += 1;
+        }
+        // gol scontro diretto (esclusi rigori)
+        h2h[m.Casa][m.Trasferta].gf += hs;
+        h2h[m.Casa][m.Trasferta].gs += as;
+        h2h[m.Trasferta][m.Casa].gf += as;
+        h2h[m.Trasferta][m.Casa].gs += hs;
+      });
 
-      tbody.innerHTML = teams.map((t,i)=>`
+      const allTeams = Object.values(gruppi[groupName]);
+
+      // Funzione comparatore completa con spareggi
+      function compare(a, b) {
+        // 1. Punti totali
+        if (b.pt !== a.pt) return b.pt - a.pt;
+
+        // 2. Scontro diretto (punti negli scontri diretti tra le squadre in parità)
+        const h2hA = (h2h[a.squadra] && h2h[a.squadra][b.squadra]) ? h2h[a.squadra][b.squadra].pt : 0;
+        const h2hB = (h2h[b.squadra] && h2h[b.squadra][a.squadra]) ? h2h[b.squadra][a.squadra].pt : 0;
+        if (h2hB !== h2hA) return h2hB - h2hA;
+
+        // 3. Differenza reti generale (esclusi rigori — i gol segnati ai rigori non cambiano il punteggio gf/gs)
+        const drA = a.gf - a.gs;
+        const drB = b.gf - b.gs;
+        if (drB !== drA) return drB - drA;
+
+        // 4. Gol fatti
+        if (b.gf !== a.gf) return b.gf - a.gf;
+
+        // 5. Gol subiti (meno è meglio)
+        return a.gs - b.gs;
+      }
+
+      const teams = allTeams.slice().sort(compare);
+
+      tbody.innerHTML = teams.map((t,i)=>{
+        const rankClass = i===0 ? 'first' : i===1 ? 'second' : i===2 ? 'third' : '';
+        const dr = t.gf - t.gs;
+        return `
         <tr>
-          <td><span class="team-rank">${i+1}</span></td>
+          <td><span class="team-rank ${rankClass}">${i+1}</span></td>
           <td>${t.squadra}</td>
           <td>${t.g}</td>
           <td>${t.v}</td>
-          <td>${t.p}</td>
+          <td>${t.s}</td>
+          <td>${t.vr}</td>
+          <td>${t.sr}</td>
           <td>${t.gf}</td>
           <td>${t.gs}</td>
+          <td>${dr > 0 ? '+' + dr : dr}</td>
           <td><span class="pts-badge">${t.pt}</span></td>
         </tr>
-      `).join('');
+      `}).join('');
     });
 
     // ===== PARTITE GIRONI =====
     const groupCards = document.querySelectorAll('.partite-grid')[0];
 
     if (groupCards) {
-      groupCards.innerHTML = gironi.map(m=>`
+      groupCards.innerHTML = gironi.map(m=>{
+        const esito = (m.Esito || m['Esito (RigoriCasa/RigoriTrasferta)'] || '').toString().trim();
+        return `
         <div class="partita-card">
           <div class="partita-team">${m.Casa}</div>
-          <div class="partita-score">${m.GolCasa} - ${m.GolTrasferta}${m.Esito === 'RigoriCasa' ? `<br><small>Vinto ai rigori da ${m.Casa}</small>` : m.Esito === 'RigoriTrasferta' ? `<br><small>Vinto ai rigori da ${m.Trasferta}</small>` : ''}</div>
+          <div class="partita-score">${m.GolCasa} - ${m.GolTrasferta}${esito === 'RigoriCasa' ? `<br><small>Vinta ai rigori da ${m.Casa}</small>` : esito === 'RigoriTrasferta' ? `<br><small>Vinta ai rigori da ${m.Trasferta}</small>` : ''}</div>
           <div class="partita-team away">${m.Trasferta}</div>
         </div>
-      `).join('');
+      `}).join('');
     }
 
     // ===== FASI FINALI =====
-    const quarti = finali.filter(m => m.Fase === 'Quarti');
-    const semifinali = finali.filter(m => m.Fase === 'Semifinali');
-    const finalMatch = finali.filter(m => m.Fase === 'Finale');
+    const quarti = finali.filter(m => (m.Fase || m.Turno) === 'Quarti');
+    const semifinali = finali.filter(m => (m.Fase || m.Turno) === 'Semifinali');
+    const finalMatch = finali.filter(m => (m.Fase || m.Turno) === 'Finale');
 
     const quartiGrid = document.querySelectorAll('.partite-grid')[1];
     const semiGrid = document.querySelectorAll('.partite-grid')[2];
     const finalGrid = document.querySelectorAll('.partite-grid')[3];
 
     if (quartiGrid) {
-      quartiGrid.innerHTML = quarti.map(m=>`
-        <div class="partita-card">
+      const quartiHTML = quarti.map(m=>{
+        const esito = (m.Esito || m['Esito (RigoriCasa/RigoriTrasferta)'] || '').toString().trim();
+        return `<div class="partita-card">
           <div class="partita-team">${m.Casa}</div>
-          <div class="partita-score">${m.GolCasa} - ${m.GolTrasferta}${m.Esito === 'RigoriCasa' ? `<br><small>Vinto ai rigori da ${m.Casa}</small>` : m.Esito === 'RigoriTrasferta' ? `<br><small>Vinto ai rigori da ${m.Trasferta}</small>` : ''}</div>
+          <div class="partita-score">${m.GolCasa} - ${m.GolTrasferta}${esito === 'RigoriCasa' ? `<br><small>Vinta ai rigori da ${m.Casa}</small>` : esito === 'RigoriTrasferta' ? `<br><small>Vinta ai rigori da ${m.Trasferta}</small>` : ''}</div>
           <div class="partita-team away">${m.Trasferta}</div>
-        </div>
-      `).join('') || quartiGrid.innerHTML; // Se non ci sono dati, mantiene i TBD
+        </div>`;
+      }).join('');
+      if (quartiHTML) quartiGrid.innerHTML = quartiHTML;
     }
 
     if (semiGrid) {
-      semiGrid.innerHTML = semifinali.map(m=>`
-        <div class="partita-card">
+      const semiHTML = semifinali.map(m=>{
+        const esito = (m.Esito || m['Esito (RigoriCasa/RigoriTrasferta)'] || '').toString().trim();
+        return `<div class="partita-card">
           <div class="partita-team">${m.Casa}</div>
-          <div class="partita-score">${m.GolCasa} - ${m.GolTrasferta}${m.Esito === 'RigoriCasa' ? `<br><small>Vinto ai rigori da ${m.Casa}</small>` : m.Esito === 'RigoriTrasferta' ? `<br><small>Vinto ai rigori da ${m.Trasferta}</small>` : ''}</div>
+          <div class="partita-score">${m.GolCasa} - ${m.GolTrasferta}${esito === 'RigoriCasa' ? `<br><small>Vinta ai rigori da ${m.Casa}</small>` : esito === 'RigoriTrasferta' ? `<br><small>Vinta ai rigori da ${m.Trasferta}</small>` : ''}</div>
           <div class="partita-team away">${m.Trasferta}</div>
-        </div>
-      `).join('') || semiGrid.innerHTML;
+        </div>`;
+      }).join('');
+      if (semiHTML) semiGrid.innerHTML = semiHTML;
     }
 
     if (finalGrid) {
-      finalGrid.innerHTML = finalMatch.map(m=>`
-        <div class="partita-card">
+      const finalHTML = finalMatch.map(m=>{
+        const esito = (m.Esito || m['Esito (RigoriCasa/RigoriTrasferta)'] || '').toString().trim();
+        return `<div class="partita-card">
           <div class="partita-team">${m.Casa}</div>
-          <div class="partita-score">${m.GolCasa} - ${m.GolTrasferta}${m.Esito === 'RigoriCasa' ? `<br><small>Vinto ai rigori da ${m.Casa}</small>` : m.Esito === 'RigoriTrasferta' ? `<br><small>Vinto ai rigori da ${m.Trasferta}</small>` : ''}</div>
+          <div class="partita-score">${m.GolCasa} - ${m.GolTrasferta}${esito === 'RigoriCasa' ? `<br><small>Vinta ai rigori da ${m.Casa}</small>` : esito === 'RigoriTrasferta' ? `<br><small>Vinta ai rigori da ${m.Trasferta}</small>` : ''}</div>
           <div class="partita-team away">${m.Trasferta}</div>
-        </div>
-      `).join('') || finalGrid.innerHTML;
+        </div>`;
+      }).join('');
+      if (finalHTML) finalGrid.innerHTML = finalHTML;
     }
 
-    // rimuove eventuali box placeholder
-    document.querySelectorAll('.risultati-empty').forEach(el=>{
-      el.style.display = 'none';
-    });
+    // Nasconde il box placeholder solo se ci sono partite nei gironi
+    const hasGironiData = gironi.some(m => m.Casa && m.Trasferta && (m.GolCasa !== '' || m.GolTrasferta !== ''));
+    if (hasGironiData) {
+      document.querySelectorAll('.risultati-empty').forEach(el => {
+        el.style.display = 'none';
+      });
+    }
 
   } catch(err) {
     console.error(err);
@@ -2361,6 +2703,74 @@ async function loadTournamentData() {
 }
 
 window.addEventListener('load', loadTournamentData);
+</script>
+
+<script>
+// ===== SQUADRE ISCRITTE =====
+function renderSquadreFromWorkbook(wb) {
+  var container = document.getElementById('squadreContainer');
+  container.innerHTML = '';
+  if (!wb.SheetNames || wb.SheetNames.length === 0) {
+    container.innerHTML = '<div class="squadre-empty">Non ci sono ancora squadre iscritte ufficialmente.</div>';
+    return;
+  }
+
+  // Costruisce i dati di ogni foglio
+  var squadre = wb.SheetNames.map(function(sheetName) {
+    var sheet = wb.Sheets[sheetName];
+    var rows = XLSX.utils.sheet_to_json(sheet, { defval: '' });
+    var players = rows.filter(function(r){ return r['Nome'] || r['Cognome'] || r['Numero']; });
+    return { name: sheetName, players: players };
+  });
+
+  // Filtra solo le squadre con almeno un giocatore
+  var squadreConGiocatori = squadre.filter(function(s){ return s.players.length > 0; });
+
+  if (squadreConGiocatori.length === 0) {
+    container.innerHTML = '<div class="squadre-empty">Non ci sono ancora squadre iscritte ufficialmente.</div>';
+    return;
+  }
+
+  squadreConGiocatori.forEach(function(squadra) {
+    var card = document.createElement('div');
+    card.className = 'squadra-card';
+
+    var header = document.createElement('div');
+    header.className = 'squadra-header';
+    header.innerHTML = '<div class="squadra-name">' + squadra.name + '</div>'
+      + '<div class="squadra-count">' + squadra.players.length + ' giocator' + (squadra.players.length === 1 ? 'e' : 'i') + '</div>';
+    card.appendChild(header);
+
+    var playersDiv = document.createElement('div');
+    playersDiv.className = 'squadra-players';
+
+    squadra.players.forEach(function(p) {
+      var row = document.createElement('div');
+      row.className = 'player-row';
+      var numero = (p['Numero'] !== undefined && p['Numero'] !== '') ? p['Numero'] : '—';
+      var nome = ((p['Nome'] || '') + ' ' + (p['Cognome'] || '')).trim() || '—';
+      row.innerHTML = '<span class="player-number">' + numero + '</span>'
+        + '<span class="player-name">' + nome + '</span>';
+      playersDiv.appendChild(row);
+    });
+
+    card.appendChild(playersDiv);
+    container.appendChild(card);
+  });
+}
+
+async function loadSquadreAuto() {
+  try {
+    var response = await fetch('./squadre.xlsx');
+    if (!response.ok) return;
+    var buffer = await response.arrayBuffer();
+    var wb = XLSX.read(new Uint8Array(buffer), { type: 'array' });
+    renderSquadreFromWorkbook(wb);
+  } catch(err) {
+    // squadre.xlsx non trovato: nessun messaggio, resta il banner predefinito
+  }
+}
+window.addEventListener('load', loadSquadreAuto);
 </script>
 
 </body>
