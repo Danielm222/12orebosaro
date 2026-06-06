@@ -1307,6 +1307,7 @@ body {
   }
   .player-row:last-child { border-bottom: none; }
   .player-row:hover { background: rgba(255,255,255,0.02); }
+  .player-row.captain { background: rgba(232,255,0,0.08); border-color: rgba(232,255,0,0.15); }
   .player-number {
     font-family: 'Bebas Neue', sans-serif;
     font-size: 1.3rem; color: var(--neon); line-height: 1;
@@ -1316,6 +1317,16 @@ body {
     font-family: 'Barlow Condensed', sans-serif;
     font-size: 1rem; font-weight: 600;
     color: var(--white); letter-spacing: 0.03em; text-transform: uppercase;
+  }
+  .player-name.captain { color: var(--neon); }
+  .player-name.captain::after {
+    content: ' (Capitano)';
+    font-size: 0.75rem;
+    color: var(--neon2);
+    display: inline-block;
+    margin-left: 0.4rem;
+    font-weight: 500;
+    text-transform: none;
   }
   .squadre-empty {
     padding: 3rem 2rem; text-align: center;
@@ -2809,10 +2820,12 @@ function renderSquadreFromWorkbook(wb) {
     squadra.players.forEach(function(p) {
       var row = document.createElement('div');
       row.className = 'player-row';
+      var isCaptain = String(p['Capitano'] || '').trim().toLowerCase() === 'c';
+      if (isCaptain) row.classList.add('captain');
       var numero = (p['Numero'] !== undefined && p['Numero'] !== '') ? p['Numero'] : '—';
       var nome = ((p['Nome'] || '') + ' ' + (p['Cognome'] || '')).trim() || '—';
       row.innerHTML = '<span class="player-number">' + numero + '</span>'
-        + '<span class="player-name">' + nome + '</span>';
+        + '<span class="player-name' + (isCaptain ? ' captain' : '') + '">' + nome + '</span>';
       playersDiv.appendChild(row);
     });
 
