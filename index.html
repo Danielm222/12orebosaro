@@ -915,12 +915,15 @@
     display: none;
   }
   .top-extra-links .extra-link {
-    flex: 1 1 0;
+    display: inline-flex;
+    flex: 1 1 22%;
+    max-width: 22%;
     min-width: 0;
     white-space: nowrap;
     align-items: center;
     justify-content: center;
-    padding: 0.55rem 0.6rem;
+    gap: 0.35rem;
+    padding: 0.5rem 0.5rem;
     border: 1px solid rgba(255,255,255,0.12);
     border-radius: 999px;
     background: rgba(255,255,255,0.03);
@@ -928,15 +931,42 @@
     font-family: 'Barlow Condensed', sans-serif;
     font-size: 0.72rem;
     font-weight: 700;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
     text-decoration: none;
-    transition: background 0.2s, color 0.2s, border-color 0.2s;
+    transition: background 0.2s, color 0.2s, border-color 0.2s, padding 0.2s;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .top-extra-links .extra-link .link-icon {
+    display: inline-flex;
+    font-size: 1rem;
+    line-height: 1;
+  }
+  .top-extra-links .extra-link .link-label {
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
   .top-extra-links .extra-link:hover {
     background: var(--neon);
     color: var(--black);
     border-color: var(--neon);
+  }
+  .top-extra-links.compact {
+    top: 4.3rem;
+    padding: 0.4rem 0.4rem 0.45rem;
+  }
+  .top-extra-links.compact .extra-links {
+    gap: 0.25rem;
+  }
+  .top-extra-links.compact .extra-link {
+    padding: 0.4rem 0.35rem;
+    font-size: 0.65rem;
+  }
+  .top-extra-links.compact .link-label {
+    display: none;
   }
 
   /* ============ OVERLAY PAGES ============ */
@@ -1434,10 +1464,10 @@ body {
 <div class="top-extra-links">
   <div class="extra-title">Sezioni extra</div>
   <div class="extra-links">
-    <a href="#" class="extra-link" onclick="goToPage('squadre'); return false;">👕 Squadre</a>
-    <a href="#" class="extra-link" onclick="goToPage('risultati'); return false;">🏅 Risultati</a>
-    <a href="#" class="extra-link" onclick="goToPage('albodoro'); return false;">🏆 Albo d'Oro</a>
-    <a href="#" class="extra-link" onclick="goToPage('sponsor'); return false;">⭐ Sponsor</a>
+    <a href="#" class="extra-link" onclick="goToPage('squadre'); return false;"><span class="link-icon">👕</span><span class="link-label">Squadre</span></a>
+    <a href="#" class="extra-link" onclick="goToPage('risultati'); return false;"><span class="link-icon">🏅</span><span class="link-label">Risultati</span></a>
+    <a href="#" class="extra-link" onclick="goToPage('albodoro'); return false;"><span class="link-icon">🏆</span><span class="link-label">Albo d'Oro</span></a>
+    <a href="#" class="extra-link" onclick="goToPage('sponsor'); return false;"><span class="link-icon">⭐</span><span class="link-label">Sponsor</span></a>
   </div>
 </div>
 
@@ -2523,12 +2553,15 @@ Le partite non sono ancora iniziate. Torna il 4 Luglio!</div>
   }
 
   // NAV SCROLL EFFECT
+  const mobileExtraNav = document.querySelector('.top-extra-links');
   window.addEventListener('scroll', () => {
     const nav = document.getElementById('navbar');
     if (window.scrollY > 80) {
       nav.style.padding = '0.8rem 3rem';
+      mobileExtraNav?.classList.add('compact');
     } else {
       nav.style.padding = '1.2rem 3rem';
+      mobileExtraNav?.classList.remove('compact');
     }
   });
 
