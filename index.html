@@ -892,11 +892,11 @@
   .top-extra-links {
     display: none;
     position: fixed;
-    top: 5.1rem;
+    top: var(--top-extra-nav, 5.1rem);
     left: 0;
     right: 0;
     z-index: 95;
-    padding: 0.75rem 0.75rem 0.8rem;
+    padding: 0.65rem 0.65rem 0.7rem;
     background: rgba(8,8,8,0.96);
     border-bottom: 1px solid var(--border);
   }
@@ -905,11 +905,11 @@
   }
   .top-extra-links .extra-links {
     display: flex;
-    gap: 0.45rem;
+    gap: 0.3rem;
     justify-content: space-between;
     flex-wrap: nowrap;
     overflow-x: auto;
-    padding: 0 0.3rem;
+    padding: 0 0.2rem;
   }
   .top-extra-links .extra-links::-webkit-scrollbar {
     display: none;
@@ -922,21 +922,19 @@
     white-space: nowrap;
     align-items: center;
     justify-content: center;
-    gap: 0.35rem;
-    padding: 0.5rem 0.5rem;
+    gap: 0.25rem;
+    padding: 0.35rem 0.4rem;
     border: 1px solid rgba(255,255,255,0.12);
     border-radius: 999px;
     background: rgba(255,255,255,0.03);
     color: var(--white);
     font-family: 'Barlow Condensed', sans-serif;
-    font-size: 0.72rem;
+    font-size: 0.65rem;
     font-weight: 700;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
     text-decoration: none;
     transition: background 0.2s, color 0.2s, border-color 0.2s, padding 0.2s;
-    overflow: hidden;
-    text-overflow: ellipsis;
   }
   .top-extra-links .extra-link .link-icon {
     display: inline-flex;
@@ -945,9 +943,6 @@
   }
   .top-extra-links .extra-link .link-label {
     display: inline-block;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
   }
   .top-extra-links .extra-link:hover {
     background: var(--neon);
@@ -955,15 +950,15 @@
     border-color: var(--neon);
   }
   .top-extra-links.compact {
-    top: 4.3rem;
-    padding: 0.4rem 0.4rem 0.45rem;
+    top: var(--top-extra-nav, 5.1rem);
+    padding: 0.35rem 0.35rem 0.4rem;
   }
   .top-extra-links.compact .extra-links {
-    gap: 0.25rem;
+    gap: 0.2rem;
   }
   .top-extra-links.compact .extra-link {
-    padding: 0.4rem 0.35rem;
-    font-size: 0.65rem;
+    padding: 0.3rem 0.3rem;
+    font-size: 0.62rem;
   }
   .top-extra-links.compact .link-label {
     display: none;
@@ -2554,16 +2549,28 @@ Le partite non sono ancora iniziate. Torna il 4 Luglio!</div>
 
   // NAV SCROLL EFFECT
   const mobileExtraNav = document.querySelector('.top-extra-links');
-  window.addEventListener('scroll', () => {
+  const updateExtraNavTop = () => {
     const nav = document.getElementById('navbar');
+    if (mobileExtraNav && nav) {
+      document.documentElement.style.setProperty('--top-extra-nav', `${nav.offsetHeight}px`);
+    }
+  };
+  const updateNavPadding = () => {
+    const nav = document.getElementById('navbar');
+    if (!nav) return;
+    const isMobile = window.innerWidth <= 900;
     if (window.scrollY > 80) {
-      nav.style.padding = '0.8rem 3rem';
+      nav.style.padding = isMobile ? '0.8rem 1.5rem' : '0.8rem 3rem';
       mobileExtraNav?.classList.add('compact');
     } else {
-      nav.style.padding = '1.2rem 3rem';
+      nav.style.padding = isMobile ? '1rem 1.5rem' : '1.2rem 3rem';
       mobileExtraNav?.classList.remove('compact');
     }
-  });
+    updateExtraNavTop();
+  };
+  window.addEventListener('scroll', updateNavPadding);
+  window.addEventListener('resize', updateNavPadding);
+  window.addEventListener('load', updateNavPadding);
 
   // REGOLAMENTO ACCORDION
   function toggleRegolamento() {
