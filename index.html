@@ -889,6 +889,52 @@
     margin-top: 0.3rem;
   }
 
+  .top-extra-links {
+    display: none;
+    padding: 1rem 1.5rem 1.25rem;
+    background: rgba(8,8,8,0.9);
+    border-bottom: 1px solid var(--border);
+    text-align: center;
+    position: relative;
+    z-index: 90;
+  }
+  .top-extra-links .extra-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--neon);
+    margin-bottom: 0.85rem;
+  }
+  .top-extra-links .extra-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.6rem;
+  }
+  .top-extra-links .extra-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.65rem 0.95rem;
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 999px;
+    background: rgba(255,255,255,0.03);
+    color: var(--white);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+  }
+  .top-extra-links .extra-link:hover {
+    background: var(--neon);
+    color: var(--black);
+    border-color: var(--neon);
+  }
+
   /* ============ OVERLAY PAGES ============ */
   .overlay-page {
     display: none;
@@ -1238,6 +1284,7 @@ body {
     nav { padding: 1rem 1.5rem; }
     .nav-links, .nav-cta { display: none; }
     .hamburger { display: flex; }
+    .top-extra-links { display: block; }
     .torneo-grid, .location-grid, .iscr-wrap { grid-template-columns: 1fr; gap: 2.5rem; }
     .format-grid { grid-template-columns: repeat(2, 1fr); }
     .premi-top, .premi-individual { grid-template-columns: 1fr; }
@@ -1377,6 +1424,16 @@ body {
     <span></span><span></span><span></span>
   </div>
 </nav>
+
+<div class="top-extra-links">
+  <div class="extra-title">Sezioni extra</div>
+  <div class="extra-links">
+    <a href="#" class="extra-link" onclick="goToPage('squadre'); return false;">👕 Squadre</a>
+    <a href="#" class="extra-link" onclick="goToPage('risultati'); return false;">🏅 Risultati</a>
+    <a href="#" class="extra-link" onclick="goToPage('albodoro'); return false;">🏆 Albo d'Oro</a>
+    <a href="#" class="extra-link" onclick="goToPage('sponsor'); return false;">⭐ Sponsor</a>
+  </div>
+</div>
 
 <!-- MOBILE MENU -->
 <div class="mobile-menu" id="mobileMenu">
