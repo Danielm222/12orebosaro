@@ -892,14 +892,20 @@
   .top-extra-links {
     display: none;
     position: fixed;
-    top: var(--top-extra-nav, 5.1rem);
+    top: var(--top-extra-nav, 4.3rem);
     left: 0;
     right: 0;
     z-index: 95;
     padding: 0.65rem 0.65rem 0.7rem;
     background: rgba(8,8,8,0.96);
     border-bottom: 1px solid var(--border);
-    transition: top 0.25s ease, padding 0.25s ease, background 0.25s ease;
+    transition: top 0.25s ease, padding 0.25s ease, background 0.25s ease, opacity 0.25s ease;
+    opacity: 0;
+    visibility: hidden;
+  }
+  .top-extra-links.ready {
+    opacity: 1;
+    visibility: visible;
   }
   .top-extra-links .extra-title {
     display: none;
@@ -1315,7 +1321,7 @@ body {
     .nav-links, .nav-cta { display: none; }
     .hamburger { display: flex; }
     .top-extra-links { display: block; }
-    body { padding-top: 9rem; }
+    body { padding-top: var(--page-offset, 0); }
     #hero { padding-top: 0; }
     .torneo-grid, .location-grid, .iscr-wrap { grid-template-columns: 1fr; gap: 2.5rem; }
     .format-grid { grid-template-columns: repeat(2, 1fr); }
@@ -2554,6 +2560,8 @@ Le partite non sono ancora iniziate. Torna il 4 Luglio!</div>
     const nav = document.getElementById('navbar');
     if (mobileExtraNav && nav) {
       document.documentElement.style.setProperty('--top-extra-nav', `${nav.offsetHeight}px`);
+      document.documentElement.style.setProperty('--page-offset', `${nav.offsetHeight + mobileExtraNav.offsetHeight}px`);
+      mobileExtraNav.classList.add('ready');
     }
   };
   const updateNavPadding = () => {
