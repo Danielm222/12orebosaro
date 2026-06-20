@@ -912,7 +912,7 @@
   }
 
   .top-extra-links {
-    display: none;
+    display: block;
     position: fixed;
     top: var(--top-extra-nav, 4.3rem);
     left: 0;
@@ -922,8 +922,8 @@
     background: rgba(8,8,8,0.96);
     border-bottom: 1px solid var(--border);
     transition: top 0.25s ease, padding 0.25s ease, background 0.25s ease, opacity 0.25s ease;
-    opacity: 0;
-    visibility: hidden;
+    opacity: 1 !important;
+    visibility: visible !important;
   }
   .top-extra-links.ready {
     opacity: 1;
@@ -2910,6 +2910,8 @@ async function loadTournamentData() {
 }
 
 window.addEventListener('load', loadTournamentData);
+// Also try to load tournament data as soon as the script runs (don't wait for full window load)
+try { loadTournamentData(); } catch(e) { /* ignore if not defined yet */ }
 </script>
 
 <script>
@@ -2980,6 +2982,8 @@ async function loadSquadreAuto() {
   }
 }
 window.addEventListener('load', loadSquadreAuto);
+// Also attempt to load squads immediately to populate the overlay sooner
+try { loadSquadreAuto(); } catch(e) { /* ignore if not defined yet */ }
 </script>
 
 </body>
