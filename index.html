@@ -2709,42 +2709,50 @@ async function loadTournamentData() {
         }
       });
 
-      const home = gruppi[g][m.Casa];
-      const away = gruppi[g][m.Trasferta];
+      // Controlla se la partita ha risultati (GolCasa e GolTrasferta non vuoti)
+      const golCasa = String(m.GolCasa || '').trim();
+      const golTrasferta = String(m.GolTrasferta || '').trim();
+      const hasResult = golCasa !== '' && golTrasferta !== '';
 
-      const hs = Number(m.GolCasa);
-      const as = Number(m.GolTrasferta);
+      // Conta le statistiche SOLO se la partita ha un risultato
+      if (hasResult) {
+        const home = gruppi[g][m.Casa];
+        const away = gruppi[g][m.Trasferta];
 
-      home.g++;
-      away.g++;
+        const hs = Number(m.GolCasa);
+        const as = Number(m.GolTrasferta);
 
-      home.gf += hs;
-      home.gs += as;
+        home.g++;
+        away.g++;
 
-      away.gf += as;
-      away.gs += hs;
+        home.gf += hs;
+        home.gs += as;
 
-      if (esito === 'RigoriCasa') {
-        home.pt += 2;
-        away.pt += 1;
-        home.vr++;
-        away.sr++;
-      } else if (esito === 'RigoriTrasferta') {
-        away.pt += 2;
-        home.pt += 1;
-        away.vr++;
-        home.sr++;
-      } else if (hs > as) {
-        home.pt += 3;
-        home.v++;
-        away.s++;
-      } else if (as > hs) {
-        away.pt += 3;
-        away.v++;
-        home.s++;
-      } else {
-        home.pt += 1;
-        away.pt += 1;
+        away.gf += as;
+        away.gs += hs;
+
+        if (esito === 'RigoriCasa') {
+          home.pt += 2;
+          away.pt += 1;
+          home.vr++;
+          away.sr++;
+        } else if (esito === 'RigoriTrasferta') {
+          away.pt += 2;
+          home.pt += 1;
+          away.vr++;
+          home.sr++;
+        } else if (hs > as) {
+          home.pt += 3;
+          home.v++;
+          away.s++;
+        } else if (as > hs) {
+          away.pt += 3;
+          away.v++;
+          home.s++;
+        } else {
+          home.pt += 1;
+          away.pt += 1;
+        }
       }
     });
 
@@ -2841,14 +2849,32 @@ async function loadTournamentData() {
 
     if (groupCards) {
       groupCards.innerHTML = gironi.map(m=>{
+        const golCasa = String(m.GolCasa || '').trim();
+        const golTrasferta = String(m.GolTrasferta || '').trim();
+        const hasResult = golCasa !== '' && golTrasferta !== '';
+        
         const esito = (m.Esito || m['Esito (RigoriCasa/RigoriTrasferta)'] || '').toString().trim();
-        return `
-        <div class="partita-card">
-          <div class="partita-team">${m.Casa}</div>
-          <div class="partita-score">${m.GolCasa} - ${m.GolTrasferta}${esito === 'RigoriCasa' ? `<br><small>Vinta ai rigori da ${m.Casa}</small>` : esito === 'RigoriTrasferta' ? `<br><small>Vinta ai rigori da ${m.Trasferta}</small>` : ''}</div>
-          <div class="partita-team away">${m.Trasferta}</div>
-        </div>
-      `}).join('');
+        
+        if (hasResult) {
+          // Partita con risultato
+          return `
+          <div class="partita-card">
+            <div class="partita-team">${m.Casa}</div>
+            <div class="partita-score">${m.GolCasa} - ${m.GolTrasferta}${esito === 'RigoriCasa' ? `<br><small>Vinta ai rigori da ${m.Casa}</small>` : esito === 'RigoriTrasferta' ? `<br><small>Vinta ai rigori da ${m.Trasferta}</small>` : ''}</div>
+            <div class="partita-team away">${m.Trasferta}</div>
+          </div>
+        `;
+        } else {
+          // Partita senza risultato
+          return `
+          <div class="partita-card">
+            <div class="partita-team">${m.Casa}</div>
+            <div class="partita-score tbd">—</div>
+            <div class="partita-team away">${m.Trasferta}</div>
+          </div>
+        `;
+        }
+      }).join('');
     }
 
     // ===== FASI FINALI =====
@@ -2862,36 +2888,72 @@ async function loadTournamentData() {
 
     if (quartiGrid) {
       const quartiHTML = quarti.map(m=>{
+        const golCasa = String(m.GolCasa || '').trim();
+        const golTrasferta = String(m.GolTrasferta || '').trim();
+        const hasResult = golCasa !== '' && golTrasferta !== '';
         const esito = (m.Esito || m['Esito (RigoriCasa/RigoriTrasferta)'] || '').toString().trim();
-        return `<div class="partita-card">
-          <div class="partita-team">${m.Casa}</div>
-          <div class="partita-score">${m.GolCasa} - ${m.GolTrasferta}${esito === 'RigoriCasa' ? `<br><small>Vinta ai rigori da ${m.Casa}</small>` : esito === 'RigoriTrasferta' ? `<br><small>Vinta ai rigori da ${m.Trasferta}</small>` : ''}</div>
-          <div class="partita-team away">${m.Trasferta}</div>
-        </div>`;
+        
+        if (hasResult) {
+          return `<div class="partita-card">
+            <div class="partita-team">${m.Casa}</div>
+            <div class="partita-score">${m.GolCasa} - ${m.GolTrasferta}${esito === 'RigoriCasa' ? `<br><small>Vinta ai rigori da ${m.Casa}</small>` : esito === 'RigoriTrasferta' ? `<br><small>Vinta ai rigori da ${m.Trasferta}</small>` : ''}</div>
+            <div class="partita-team away">${m.Trasferta}</div>
+          </div>`;
+        } else {
+          return `<div class="partita-card">
+            <div class="partita-team">${m.Casa}</div>
+            <div class="partita-score tbd">—</div>
+            <div class="partita-team away">${m.Trasferta}</div>
+          </div>`;
+        }
       }).join('');
       if (quartiHTML) quartiGrid.innerHTML = quartiHTML;
     }
 
     if (semiGrid) {
       const semiHTML = semifinali.map(m=>{
+        const golCasa = String(m.GolCasa || '').trim();
+        const golTrasferta = String(m.GolTrasferta || '').trim();
+        const hasResult = golCasa !== '' && golTrasferta !== '';
         const esito = (m.Esito || m['Esito (RigoriCasa/RigoriTrasferta)'] || '').toString().trim();
-        return `<div class="partita-card">
-          <div class="partita-team">${m.Casa}</div>
-          <div class="partita-score">${m.GolCasa} - ${m.GolTrasferta}${esito === 'RigoriCasa' ? `<br><small>Vinta ai rigori da ${m.Casa}</small>` : esito === 'RigoriTrasferta' ? `<br><small>Vinta ai rigori da ${m.Trasferta}</small>` : ''}</div>
-          <div class="partita-team away">${m.Trasferta}</div>
-        </div>`;
+        
+        if (hasResult) {
+          return `<div class="partita-card">
+            <div class="partita-team">${m.Casa}</div>
+            <div class="partita-score">${m.GolCasa} - ${m.GolTrasferta}${esito === 'RigoriCasa' ? `<br><small>Vinta ai rigori da ${m.Casa}</small>` : esito === 'RigoriTrasferta' ? `<br><small>Vinta ai rigori da ${m.Trasferta}</small>` : ''}</div>
+            <div class="partita-team away">${m.Trasferta}</div>
+          </div>`;
+        } else {
+          return `<div class="partita-card">
+            <div class="partita-team">${m.Casa}</div>
+            <div class="partita-score tbd">—</div>
+            <div class="partita-team away">${m.Trasferta}</div>
+          </div>`;
+        }
       }).join('');
       if (semiHTML) semiGrid.innerHTML = semiHTML;
     }
 
     if (finalGrid) {
       const finalHTML = finalMatch.map(m=>{
+        const golCasa = String(m.GolCasa || '').trim();
+        const golTrasferta = String(m.GolTrasferta || '').trim();
+        const hasResult = golCasa !== '' && golTrasferta !== '';
         const esito = (m.Esito || m['Esito (RigoriCasa/RigoriTrasferta)'] || '').toString().trim();
-        return `<div class="partita-card">
-          <div class="partita-team">${m.Casa}</div>
-          <div class="partita-score">${m.GolCasa} - ${m.GolTrasferta}${esito === 'RigoriCasa' ? `<br><small>Vinta ai rigori da ${m.Casa}</small>` : esito === 'RigoriTrasferta' ? `<br><small>Vinta ai rigori da ${m.Trasferta}</small>` : ''}</div>
-          <div class="partita-team away">${m.Trasferta}</div>
-        </div>`;
+        
+        if (hasResult) {
+          return `<div class="partita-card">
+            <div class="partita-team">${m.Casa}</div>
+            <div class="partita-score">${m.GolCasa} - ${m.GolTrasferta}${esito === 'RigoriCasa' ? `<br><small>Vinta ai rigori da ${m.Casa}</small>` : esito === 'RigoriTrasferta' ? `<br><small>Vinta ai rigori da ${m.Trasferta}</small>` : ''}</div>
+            <div class="partita-team away">${m.Trasferta}</div>
+          </div>`;
+        } else {
+          return `<div class="partita-card">
+            <div class="partita-team">${m.Casa}</div>
+            <div class="partita-score tbd">—</div>
+            <div class="partita-team away">${m.Trasferta}</div>
+          </div>`;
+        }
       }).join('');
       if (finalHTML) finalGrid.innerHTML = finalHTML;
     }
