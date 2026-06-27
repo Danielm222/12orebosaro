@@ -14,7 +14,7 @@
 
   function loadWorkbook() {
     if (!workbookPromise) {
-      workbookPromise = fetch('./12HBosaro_manager.xlsx', { cache: 'no-store' })
+      workbookPromise = fetch('./12HBosaro_manager.xlsx?v=' + Date.now(), { cache: 'no-store' })
         .then(function (response) {
           if (!response.ok) throw new Error('Workbook manager non disponibile (' + response.status + ')');
           return response.arrayBuffer();
@@ -259,4 +259,7 @@
       }).join('');
     }).catch(function (error) { console.error('Errore caricamento squadre dal manager:', error); });
   };
+
+  // Le tab devono restare cliccabili anche se il workbook è momentaneamente irraggiungibile.
+  setupTabs();
 }());
