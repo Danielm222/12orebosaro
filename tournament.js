@@ -14,12 +14,30 @@
 
   function loadWorkbook() {
     if (!workbookPromise) {
-      workbookPromise = fetch('./12HBosaro_manager.xlsx?v=' + Date.now(), { cache: 'no-store' })
-        .then(function (response) {
-          if (!response.ok) throw new Error('Workbook manager non disponibile (' + response.status + ')');
-          return response.arrayBuffer();
-        })
-        .then(function (buffer) { return XLSX.read(buffer, { type: 'array' }); });
+      var embeddedWorkbook = function () {
+        if (!window.TOURNAMENT_WORKBOOK_BASE64) {
+          throw new Error('Dati incorporati del torneo non disponibili.');
+        }
+        var binary = atob(window.TOURNAMENT_WORKBOOK_BASE64);
+        var bytes = new Uint8Array(binary.length);
+        for (var i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+        return XLSX.read(bytes, { type: 'array' });
+      };
+
+      if (window.location.protocol === 'file:') {
+        workbookPromise = Promise.resolve().then(embeddedWorkbook);
+      } else {
+        workbookPromise = fetch('./12HBosaro_manager.xlsx?v=' + Date.now(), { cache: 'no-store' })
+          .then(function (response) {
+            if (!response.ok) throw new Error('Workbook manager non disponibile (' + response.status + ')');
+            return response.arrayBuffer();
+          })
+          .then(function (buffer) { return XLSX.read(buffer, { type: 'array' }); })
+          .catch(function (error) {
+            console.warn('Uso i dati incorporati del torneo:', error);
+            return embeddedWorkbook();
+          });
+      }
     }
     return workbookPromise;
   }
