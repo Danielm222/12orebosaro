@@ -9,6 +9,7 @@
 <link rel="manifest" href="assets/site.webmanifest" />
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="deploy-version" content="development">
 <title>12 ORE BOSARO — Torneo di Calcio a 5</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
@@ -3019,6 +3020,11 @@ async function loadTournamentData() {
       const live = isMatchLive(m);
       const penNote = hasResult && penalty ? `<br><small>Rigori: ${penalty}</small>` : '';
       const score = hasResult ? `${m.HomeGoals} - ${m.AwayGoals}${penNote}` : '—';
+      const homeScorers = hasResult ? scorerNamesForMatch(m, home) : '';
+      const awayScorers = hasResult ? scorerNamesForMatch(m, away) : '';
+      const scorers = homeScorers || awayScorers
+        ? `<div class="partita-scorers"><div>${homeScorers || '—'}</div><div class="away">${awayScorers || '—'}</div></div>`
+        : '';
       return `<div class="partita-card${live ? ' live' : ''}"${style}>
         <div class="partita-header">
           <div class="partita-meta">
@@ -3029,6 +3035,7 @@ async function loadTournamentData() {
           <div class="partita-score${hasResult ? '' : ' tbd'}">${score}</div>
           <div class="partita-team away">${away}</div>
         </div>
+        ${scorers}
       </div>`;
     }
 
@@ -3200,6 +3207,10 @@ try { loadSquadreAuto(); } catch(e) {}
         if (!sheet) throw new Error(`Foglio "${name}" mancante`);
         return XLSX.utils.sheet_to_json(sheet, { defval: '', raw: false });
       };
+      const readOptionalSheet = name => {
+        const sheet = workbook.Sheets[name];
+        return sheet ? XLSX.utils.sheet_to_json(sheet, { defval: '', raw: false }) : [];
+      };
 
       window.TOURNAMENT_DATA = {
         standings: readSheet('Standings'),
@@ -3207,7 +3218,7 @@ try { loadSquadreAuto(); } catch(e) {}
         knockout: readSheet('Knockout'),
         teams: readSheet('Teams'),
         players: readSheet('Players'),
-        goals: readSheet('Goals')
+        goals: readSheet('Goals').concat(readOptionalSheet('KnockoutGoals'))
       };
 
       await loadTournamentData();

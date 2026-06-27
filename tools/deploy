@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$ROOT"
+
+for command in git curl sed; do
+  command -v "$command" >/dev/null 2>&1 || {
+    echo "Errore: comando richiesto non trovato: $command" >&2
+    exit 1
+  }
+done
+
+CURRENT_BRANCH="$(git branch --show-current)"
+DEPLOY_BRANCH="${DEPLOY_BRANCH:-main}"
+if [[ -z "$CURRENT_BRANCH" ]]; then
+  echo "Errore: HEAD scollegato. Passa prima a develop o main." >&2
+  exit 1
+fi
+
+DEPLOY_TOKEN="$(date -u +'%Y%m%dT%H%M%SZ')"
+sed -E -i \
+  "s/(<meta name=\"deploy-version\" content=\")[^\"]*(\">)/\\1${DEPLOY_TOKEN}\\2/" \
+  index.html
+
+git add -A
+if ! git diff --cached --quiet; then
+  COMMIT_MESSAGE="${*:-Deploy sito ${DEPLOY_TOKEN}}"
+  git commit -m "$COMMIT_MESSAGE"
+else
+  echo "Nessuna modifica da registrare."
+fi
+
+echo "Allineamento con origin/${DEPLOY_BRANCH}..."
+git fetch origin "$DEPLOY_BRANCH"
+if ! git merge-base --is-ancestor "origin/${DEPLOY_BRANCH}" HEAD; then
+  git merge --no-edit "origin/${DEPLOY_BRANCH}"
+fi
+
+echo "Push di ${CURRENT_BRANCH}..."
+git push origin "$CURRENT_BRANCH"
+if [[ "$CURRENT_BRANCH" != "$DEPLOY_BRANCH" ]]; then
+  echo "Pubblicazione di HEAD su ${DEPLOY_BRANCH}..."
+  git push origin "HEAD:${DEPLOY_BRANCH}"
+fi
+
+DOMAIN="$(tr -d '\r\n ' < CNAME)"
+SITE_URL="${SITE_URL:-https://${DOMAIN}/}"
+echo "Attendo la pubblicazione di ${SITE_URL}..."
+
+for attempt in $(seq 1 36); do
+  PAGE="$(curl -fsSL "${SITE_URL}?deploy=${DEPLOY_TOKEN}" 2>/dev/null || true)"
+  if grep -Fq "name=\"deploy-version\" content=\"${DEPLOY_TOKEN}\"" <<<"$PAGE"; then
+    echo "Deploy verificato: ${SITE_URL}"
+    echo "Commit online: $(git rev-parse --short HEAD)"
+    exit 0
+  fi
+  echo "Tentativo ${attempt}/36: versione non ancora disponibile."
+  sleep 10
+done
+
+echo "Errore: GitHub ha ricevuto il push, ma la versione ${DEPLOY_TOKEN} non è apparsa entro 6 minuti." >&2
+exit 1

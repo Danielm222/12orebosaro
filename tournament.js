@@ -73,7 +73,8 @@
         gf: row[9], ga: row[10], gd: row[11]
       };
     });
-    var matches = recordsBetween(rows, 'matches', 'match_goals');
+    var matches = recordsBetween(rows, 'matches', 'knockout');
+    var knockout = recordsBetween(rows, 'knockout', 'match_goals');
     var goals = recordsBetween(rows, 'match_goals');
     var matchMap = {};
 
@@ -105,7 +106,7 @@
         topScorers.push({ position: row[13], player: row[14], team: row[15], goals: row[16] });
       }
     });
-    return { standings: standings, matches: matches, topScorers: topScorers };
+    return { standings: standings, matches: matches, knockout: knockout, topScorers: topScorers };
   }
 
   function rankClass(position) {

@@ -1,0 +1,5 @@
+~$*.xlsx
+*.tmp.xlsx
+.codex-openpyxl/
+__pycache__/
+*.pyc
