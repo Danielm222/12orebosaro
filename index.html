@@ -1222,8 +1222,11 @@ body {
     background: var(--dark2);
     border: 1px solid rgba(255,255,255,0.06);
     padding: 1.2rem 1.5rem;
-    display: flex; align-items: center; justify-content: space-between;
+    display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: center;
+    transition: border-color 0.25s;
   }
+  .partita-card.live { border-color: rgba(255,55,55,0.55); }
   .partita-team {
     font-family: 'Barlow Condensed', sans-serif;
     font-size: 0.9rem; font-weight: 700;
@@ -1265,6 +1268,40 @@ body {
     text-transform: uppercase;
     letter-spacing: 0.05em;
   }
+  .risultati-tabs { display:flex; flex-wrap:wrap; gap:0.65rem; margin-bottom:1.5rem; }
+  .risultati-tab {
+    border:1px solid var(--border); background:var(--dark2); color:rgba(255,255,255,0.65);
+    padding:0.7rem 1.25rem; cursor:pointer;
+    font-family:'Barlow Condensed',sans-serif; font-size:0.8rem; font-weight:700;
+    letter-spacing:0.14em; text-transform:uppercase;
+    transition:color 0.2s, background 0.2s, border-color 0.2s;
+  }
+  .risultati-tab:hover, .risultati-tab.active { color:var(--black); background:var(--neon); border-color:var(--neon); }
+  .partita-meta {
+    grid-column:1/-1; display:flex; align-items:center; justify-content:center; gap:0.8rem;
+    margin-bottom:0.75rem; color:var(--gray);
+    font-family:'Barlow Condensed',sans-serif; font-size:0.7rem;
+    letter-spacing:0.12em; text-transform:uppercase;
+  }
+  .live-badge { display:inline-flex; align-items:center; gap:0.35rem; color:#ff5b5b; font-weight:700; }
+  .live-dot {
+    width:8px; height:8px; border-radius:50%; background:#ff3030;
+    box-shadow:0 0 0 0 rgba(255,48,48,0.6); animation:livePulse 1.4s infinite;
+  }
+  @keyframes livePulse {
+    70% { box-shadow:0 0 0 7px rgba(255,48,48,0); }
+    100% { box-shadow:0 0 0 0 rgba(255,48,48,0); }
+  }
+  .partita-scorers {
+    grid-column:1/-1; display:grid; grid-template-columns:minmax(0,1fr) 70px minmax(0,1fr);
+    gap:1rem; margin-top:0.9rem; padding-top:0.8rem;
+    border-top:1px solid rgba(255,255,255,0.06); color:rgba(255,255,255,0.52);
+    font-family:'Barlow Condensed',sans-serif; font-size:0.76rem; line-height:1.45;
+  }
+  .partita-scorers .away { grid-column:3; text-align:right; }
+  .marcatori-wrap { max-width:760px; }
+  .marcatori-table td:first-child, .marcatori-table th:first-child { width:55px; text-align:center; }
+  .marcatori-table td:last-child, .marcatori-table th:last-child { width:65px; text-align:center; }
 
   /* ALBO D'ORO PAGE */
   .albo-grid {
@@ -2273,11 +2310,27 @@ body {
     <!-- RISULTATI PARTITE -->
     <div class="risultati-section">
       <div class="risultati-section-title">⚽ Risultati Partite — Gironi</div>
-      <div class="partite-grid">
-        <!-- Le partite verranno caricate qui -->
+      <div class="risultati-tabs" id="risultatiTabs" role="tablist" aria-label="Filtra risultati per girone">
+        <button class="risultati-tab active" type="button" data-group="all" role="tab" aria-selected="true">Tutti</button>
+        <button class="risultati-tab" type="button" data-group="A" role="tab" aria-selected="false">Girone A</button>
+        <button class="risultati-tab" type="button" data-group="B" role="tab" aria-selected="false">Girone B</button>
+        <button class="risultati-tab" type="button" data-group="C" role="tab" aria-selected="false">Girone C</button>
+        <button class="risultati-tab" type="button" data-group="D" role="tab" aria-selected="false">Girone D</button>
       </div>
-<div class="risultati-empty" style="margin-top:2rem;">
-Le partite non sono ancora iniziate. Torna il 4 Luglio!</div>
+      <div class="partite-grid" id="groupMatches"></div>
+      <div class="risultati-empty" id="groupMatchesEmpty" style="display:none; margin-top:2rem;">Nessuna partita disponibile.</div>
+    </div>
+
+    <!-- CLASSIFICA MARCATORI -->
+    <div class="risultati-section">
+      <div class="risultati-section-title">⚽ Classifica Marcatori</div>
+      <div class="classifica-table-wrap marcatori-wrap">
+        <table class="classifica-table marcatori-table">
+          <thead><tr><th>#</th><th>Giocatore</th><th>Squadra</th><th>Gol</th></tr></thead>
+          <tbody id="topScorersBody"></tbody>
+        </table>
+      </div>
+      <div class="risultati-empty" id="topScorersEmpty" style="display:none;">La classifica marcatori sarà disponibile dopo i primi gol.</div>
     </div>
 
     <!-- FASI FINALI -->
@@ -2285,19 +2338,19 @@ Le partite non sono ancora iniziate. Torna il 4 Luglio!</div>
       <div class="risultati-section-title">⚡ Fasi Finali</div>
       <div style="display:grid; gap:1rem;">
         <div style="font-family:'Barlow Condensed',sans-serif; font-size:0.8rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--gray); margin-bottom:0.5rem;">Quarti di Finale</div>
-        <div class="partite-grid">
+        <div class="partite-grid" id="quarterFinals">
           <div class="partita-card"><div class="partita-team">TBD</div><div class="partita-score tbd">vs</div><div class="partita-team away">TBD</div></div>
           <div class="partita-card"><div class="partita-team">TBD</div><div class="partita-score tbd">vs</div><div class="partita-team away">TBD</div></div>
           <div class="partita-card"><div class="partita-team">TBD</div><div class="partita-score tbd">vs</div><div class="partita-team away">TBD</div></div>
           <div class="partita-card"><div class="partita-team">TBD</div><div class="partita-score tbd">vs</div><div class="partita-team away">TBD</div></div>
         </div>
         <div style="font-family:'Barlow Condensed',sans-serif; font-size:0.8rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--gray); margin:1rem 0 0.5rem;">Semifinali</div>
-        <div class="partite-grid">
+        <div class="partite-grid" id="semiFinals">
           <div class="partita-card"><div class="partita-team">TBD</div><div class="partita-score tbd">vs</div><div class="partita-team away">TBD</div></div>
           <div class="partita-card"><div class="partita-team">TBD</div><div class="partita-score tbd">vs</div><div class="partita-team away">TBD</div></div>
         </div>
         <div style="font-family:'Barlow Condensed',sans-serif; font-size:0.8rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--gray); margin:1rem 0 0.5rem;">🔥 Finalissima</div>
-        <div class="partite-grid">
+        <div class="partite-grid" id="tournamentFinal">
           <div class="partita-card" style="border-color:rgba(232,255,0,0.2);"><div class="partita-team">TBD</div><div class="partita-score tbd">vs</div><div class="partita-team away">TBD</div></div>
         </div>
       </div>
@@ -2693,10 +2746,12 @@ Le partite non sono ancora iniziate. Torna il 4 Luglio!</div>
 
 
 
+<script src="./tournament.js"></script>
 <script>
 async function loadTournamentData() {
+  return window.loadTournamentManagerData();
   try {
-    const response = await fetch('./risultati.xlsx');
+    const response = null; // codice storico non eseguito: il loader corrente è in tournament.js
     const buffer = await response.arrayBuffer();
 
     const workbook = XLSX.read(buffer, { type: 'array' });
@@ -3054,14 +3109,15 @@ function renderSquadreFromWorkbook(wb) {
 }
 
 async function loadSquadreAuto() {
+  return window.loadTeamsManagerData();
   try {
-    var response = await fetch('./squadre.xlsx');
+    var response = null; // codice storico non eseguito: il loader corrente è in tournament.js
     if (!response.ok) return;
     var buffer = await response.arrayBuffer();
     var wb = XLSX.read(new Uint8Array(buffer), { type: 'array' });
     renderSquadreFromWorkbook(wb);
   } catch(err) {
-    // squadre.xlsx non trovato: nessun messaggio, resta il banner predefinito
+    // In caso di errore resta il banner predefinito.
   }
 }
 window.addEventListener('load', loadSquadreAuto);
