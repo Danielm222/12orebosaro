@@ -78,6 +78,17 @@
     transition: opacity 0.2s, color 0.2s;
   }
   .nav-links a:hover { opacity: 1; color: var(--neon); }
+  .nav-links a.nav-results {
+    opacity: 1;
+    color: var(--black);
+    background: var(--neon);
+    padding: 0.45rem 0.8rem;
+    border-radius: 0;
+  }
+  .nav-links a.nav-results:hover {
+    color: var(--black);
+    background: var(--neon2);
+  }
   .nav-cta {
     font-family: 'Barlow Condensed', sans-serif;
     font-weight: 700;
@@ -232,6 +243,64 @@
   }
   .hero-btn:hover { background: var(--neon2); transform: translateY(-2px); }
   .hero-btn svg { width: 18px; animation: bounce 1.5s ease infinite; }
+  .hero-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+  }
+  .hero-btn.hero-btn-secondary {
+    color: var(--white);
+    background: rgba(8,8,8,0.45);
+    border: 1px solid rgba(255,255,255,0.38);
+  }
+  .hero-btn.hero-btn-secondary:hover {
+    color: var(--neon);
+    background: rgba(8,8,8,0.75);
+    border-color: var(--neon);
+  }
+  .hero-results-btn {
+    min-width: 0;
+    justify-content: center;
+    padding: 1rem 2.5rem;
+    text-align: center;
+  }
+  .hero-results-icon {
+    display: grid;
+    flex: 0 0 42px;
+    width: 42px;
+    height: 42px;
+    place-items: center;
+    background: var(--black);
+    color: var(--neon);
+    font-size: 1.25rem;
+  }
+  .hero-results-copy {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 0.12rem;
+    line-height: 1;
+  }
+  .hero-results-title {
+    font-size: 1rem;
+    letter-spacing: 0.16em;
+  }
+  .hero-results-subtitle {
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    opacity: 0.65;
+  }
+  .hero-results-arrow {
+    flex: 0 0 auto;
+    font-size: 1.25rem;
+    transition: transform 0.2s;
+  }
+  .hero-results-btn:hover .hero-results-arrow {
+    transform: translateX(4px);
+  }
   @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(5px)} }
 
   .hero-scroll {
@@ -979,6 +1048,16 @@
     color: var(--black);
     border-color: var(--neon);
   }
+  .top-extra-links .extra-link.featured {
+    color: var(--black);
+    background: var(--neon);
+    border-color: var(--neon);
+    flex-grow: 1.25;
+    max-width: 25%;
+  }
+  .top-extra-links .extra-link.featured:hover {
+    background: var(--neon2);
+  }
   .top-extra-links.compact {
     top: var(--top-extra-nav, 5.1rem);
     padding: 0.35rem 0.35rem 0.4rem;
@@ -1505,6 +1584,16 @@ body {
   }
   .filter-btn:hover { color: var(--neon); border-color: var(--neon); }
   .filter-btn.active { background: var(--neon); color: var(--black); border-color: var(--neon); }
+  .filter-btn.filter-link {
+    margin-left: auto;
+    color: var(--black);
+    background: var(--neon);
+    border-color: var(--neon);
+  }
+  .filter-btn.filter-link:hover { background: var(--neon2); color: var(--black); }
+  @media (max-width: 600px) {
+    .filter-btn.filter-link { margin-left: 0; }
+  }
 
   /* MARCATORI */
   .marcatori-table {
@@ -1562,8 +1651,8 @@ window.TOURNAMENT_DATA = {"standings": [{"Group": "A", "Pos": 1, "Team": "Fatine
     <li><a href="#regolamento">Regolamento</a></li>
     <li><a href="#location">Location</a></li>
     <li><a href="#experience">Esperienza</a></li>
+    <li><a href="#" class="nav-results" onclick="openPage('risultati'); return false;">Risultati</a></li>
     <li><a href="#" onclick="openPage('squadre'); return false;">Squadre</a></li>
-    <li><a href="#" onclick="openPage('risultati'); return false;">Risultati</a></li>
     <li><a href="#" onclick="openPage('marcatori'); return false;">Marcatori</a></li>
     <li><a href="#" onclick="openPage('albodoro'); return false;">Albo d'Oro</a></li>
     <li><a href="#" onclick="openPage('sponsor'); return false;">Sponsor</a></li>
@@ -1577,8 +1666,8 @@ window.TOURNAMENT_DATA = {"standings": [{"Group": "A", "Pos": 1, "Team": "Fatine
 <div class="top-extra-links">
   <div class="extra-title">Sezioni extra</div>
   <div class="extra-links">
+    <a href="#" class="extra-link featured" onclick="goToPage('risultati'); return false;"><span class="link-icon">🏅</span><span class="link-label">Risultati</span></a>
     <a href="#" class="extra-link" onclick="goToPage('squadre'); return false;"><span class="link-icon">👕</span><span class="link-label">Squadre</span></a>
-    <a href="#" class="extra-link" onclick="goToPage('risultati'); return false;"><span class="link-icon">🏅</span><span class="link-label">Risultati</span></a>
     <a href="#" class="extra-link" onclick="goToPage('marcatori'); return false;"><span class="link-icon">🎯</span><span class="link-label">Marcatori</span></a>
     <a href="#" class="extra-link" onclick="goToPage('albodoro'); return false;"><span class="link-icon">🏆</span><span class="link-label">Albo d'Oro</span></a>
     <a href="#" class="extra-link" onclick="goToPage('sponsor'); return false;"><span class="link-icon">⭐</span><span class="link-label">Sponsor</span></a>
@@ -1600,8 +1689,8 @@ window.TOURNAMENT_DATA = {"standings": [{"Group": "A", "Pos": 1, "Team": "Fatine
   <div class="mob-divider"></div>
   <div class="mob-section-title">— Sezioni extra</div>
   <div class="mob-links-row">
+    <a href="#" class="mob-link-small" style="color:var(--black);background:var(--neon);border-color:var(--neon);" onclick="goToPage('risultati'); return false;">🏅 Risultati</a>
     <a href="#" class="mob-link-small" onclick="goToPage('squadre'); return false;">👕 Squadre</a>
-    <a href="#" class="mob-link-small" onclick="goToPage('risultati'); return false;">🏅 Risultati</a>
     <a href="#" class="mob-link-small" onclick="goToPage('marcatori'); return false;">🎯 Marcatori</a>
     <a href="#" class="mob-link-small" onclick="goToPage('albodoro'); return false;">🏆 Albo d'Oro</a>
     <a href="#" class="mob-link-small" onclick="goToPage('sponsor'); return false;">⭐ Sponsor</a>
@@ -1630,10 +1719,13 @@ window.TOURNAMENT_DATA = {"standings": [{"Group": "A", "Pos": 1, "Team": "Fatine
       <div class="cd-unit"><span class="cd-num" id="cd-mins">00</span><span class="cd-label">Minuti</span></div>
       <div class="cd-unit"><span class="cd-num" id="cd-secs">00</span><span class="cd-label">Secondi</span></div>
     </div>
-    <a href="#torneo" class="hero-btn">
-      Scopri di più
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
-    </a>
+    <div class="hero-actions">
+      <a href="#" class="hero-btn hero-results-btn" onclick="openPage('risultati'); return false;">Risultati</a>
+      <a href="#torneo" class="hero-btn hero-btn-secondary">
+        Scopri di più
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+      </a>
+    </div>
   </div>
   <div class="hero-scroll">
     <div class="scroll-line"></div>
@@ -2362,14 +2454,16 @@ window.TOURNAMENT_DATA = {"standings": [{"Group": "A", "Pos": 1, "Team": "Fatine
     </div>
 
     <!-- RISULTATI PARTITE -->
-    <div class="risultati-section">
-      <div class="risultati-section-title">⚽ Risultati Partite — Gironi</div>
+    <div class="risultati-section" id="risultatiGironiSection">
+      <div class="risultati-section-title" id="risultatiGironiTitle">⚽ Risultati Partite — Gironi</div>
       <div class="partite-filter-bar">
         <button class="filter-btn active" onclick="filterPartite('all', this)">Tutte</button>
         <button class="filter-btn" onclick="filterPartite('A', this)">Girone A</button>
         <button class="filter-btn" onclick="filterPartite('B', this)">Girone B</button>
         <button class="filter-btn" onclick="filterPartite('C', this)">Girone C</button>
         <button class="filter-btn" onclick="filterPartite('D', this)">Girone D</button>
+        <button class="filter-btn" onclick="filterPartite('finals', this)">Fasi finali</button>
+        <button class="filter-btn filter-link" onclick="openPage('marcatori')">🎯 Classifica marcatori</button>
       </div>
       <div class="partite-grid" id="partiteGironiGrid">
         <!-- Le partite verranno caricate qui -->
@@ -2379,7 +2473,7 @@ Le partite non sono ancora iniziate. Torna il 4 Luglio!</div>
     </div>
 
     <!-- FASI FINALI -->
-    <div class="risultati-section">
+    <div class="risultati-section" id="fasiFinaliSection">
       <div class="risultati-section-title">⚡ Fasi Finali</div>
       <div style="display:grid; gap:1rem;">
         <div style="font-family:'Barlow Condensed',sans-serif; font-size:0.8rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--gray); margin-bottom:0.5rem;">Quarti di Finale</div>
@@ -2836,14 +2930,27 @@ let _selectedPartiteGroup = 'all';
 
 function filterPartite(group, btn) {
   _selectedPartiteGroup = group;
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.partite-filter-bar .filter-btn:not(.filter-link)').forEach(b => b.classList.remove('active'));
   if (btn) btn.classList.add('active');
   const grid = document.getElementById('partiteGironiGrid');
   if (!grid) return;
-  const filtered = group === 'all' ? _allPartiteCards : _allPartiteCards.filter(c => c.group === group);
+  const gironiTitle = document.getElementById('risultatiGironiTitle');
+  const finaliSection = document.getElementById('fasiFinaliSection');
+  const showGironi = group !== 'finals';
+  grid.style.display = showGironi ? '' : 'none';
+  if (gironiTitle) gironiTitle.style.display = showGironi ? '' : 'none';
+  if (finaliSection) finaliSection.style.display = (group === 'all' || group === 'finals') ? '' : 'none';
+  const filtered = group === 'all'
+    ? _allPartiteCards
+    : group === 'finals'
+      ? []
+      : _allPartiteCards.filter(c => c.group === group);
   grid.innerHTML = filtered.map(c => c.html).join('');
   const empty = document.getElementById('partiteEmpty');
-  if (empty) empty.style.display = filtered.length === 0 ? '' : 'none';
+  if (empty) empty.style.display = showGironi && filtered.length === 0 ? '' : 'none';
+  if (group === 'finals' && finaliSection) {
+    finaliSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
 }
 
 // ========== LOAD FROM 12HBosaro_manager.xlsx ==========

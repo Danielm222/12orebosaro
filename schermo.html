@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>12 Ore Bosaro — Schermo risultati</title>
+  <link rel="icon" href="assets/favicon-96x96.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --black: #080808;
+      --dark: #0f0f0f;
+      --panel: #161616;
+      --panel-2: #1e1e1e;
+      --neon: #e8ff00;
+      --neon-2: #c8e600;
+      --white: #f5f5f5;
+      --gray: #929292;
+      --border: rgba(232, 255, 0, 0.16);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      background: var(--black);
+      color: var(--white);
+    }
+
+    body {
+      display: grid;
+      grid-template-rows: 86px minmax(0, 1fr) 102px;
+      font-family: 'Barlow', sans-serif;
+      background:
+        radial-gradient(circle at 18% 0%, rgba(232,255,0,.07), transparent 30%),
+        linear-gradient(135deg, #080808 0%, #101010 55%, #080808 100%);
+    }
+
+    .screen-header {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      padding: 10px 24px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(8,8,8,.92);
+    }
+
+    .logo {
+      width: 62px;
+      height: 62px;
+      object-fit: contain;
+      flex: 0 0 auto;
+    }
+
+    .brand {
+      min-width: 0;
+      line-height: .9;
+    }
+
+    .brand strong {
+      display: block;
+      color: var(--neon);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(30px, 2.6vw, 48px);
+      letter-spacing: .08em;
+      white-space: nowrap;
+    }
+
+    .brand span {
+      color: var(--gray);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+    }
+
+    .header-title {
+      margin-left: auto;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(25px, 2vw, 38px);
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .sync {
+      min-width: 155px;
+      color: var(--gray);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-align: right;
+      text-transform: uppercase;
+    }
+
+    .sync::before {
+      content: '';
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      margin-right: 7px;
+      border-radius: 50%;
+      background: var(--neon);
+      box-shadow: 0 0 9px rgba(232,255,0,.85);
+    }
+
+    .sync.error::before { background: #ff4b4b; box-shadow: 0 0 9px #ff4b4b; }
+
+    main {
+      min-height: 0;
+      display: grid;
+      grid-template-rows: minmax(180px, .68fr) minmax(360px, 1fr);
+      gap: 14px;
+      padding: 14px 18px;
+    }
+
+    .panel {
+      min-width: 0;
+      min-height: 0;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.07);
+      background: rgba(22,22,22,.88);
+    }
+
+    .panel-heading {
+      height: 42px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 14px;
+      border-bottom: 1px solid var(--border);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 24px;
+      letter-spacing: .08em;
+      color: var(--neon);
+      text-transform: uppercase;
+    }
+
+    .standings-grid {
+      display: contents;
+    }
+
+    .group {
+      min-height: 0;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.07);
+      background: var(--dark);
+    }
+
+    .group-title {
+      height: 35px;
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      color: var(--neon);
+      background: var(--panel-2);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 21px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      font-family: 'Barlow Condensed', sans-serif;
+    }
+
+    th {
+      height: 26px;
+      color: var(--gray);
+      font-size: 10px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    td {
+      height: clamp(27px, 3.2vh, 35px);
+      padding: 3px 5px;
+      border-top: 1px solid rgba(255,255,255,.055);
+      font-size: clamp(12px, 1vw, 17px);
+      font-weight: 600;
+      text-align: center;
+    }
+
+    th:nth-child(1), td:nth-child(1) { width: 30px; }
+    th:nth-child(2), td:nth-child(2) { width: auto; text-align: left; }
+    th:nth-child(n+3), td:nth-child(n+3) { width: 34px; }
+    th:last-child, td:last-child { width: 42px; }
+    td:nth-child(2) { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    td:last-child { color: var(--neon); font-size: 1.12em; font-weight: 900; }
+
+    .rank {
+      color: var(--gray);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.1em;
+    }
+
+    .rank.first { color: #ffd700; }
+    .rank.second { color: #c0c0c0; }
+    .rank.third { color: #cd7f32; }
+
+    .dashboard-bottom {
+      min-height: 360px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-rows: repeat(2, minmax(175px, 1fr));
+      gap: 10px;
+    }
+
+    .scorers-panel {
+      grid-column: 3;
+      grid-row: 1 / 3;
+    }
+
+    .results-panel {
+      display: grid;
+      grid-template-rows: 42px minmax(0, 1fr);
+    }
+
+    .slide-label {
+      margin-left: auto;
+      color: var(--white);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .14em;
+    }
+
+    .slide-dots {
+      display: flex;
+      gap: 5px;
+    }
+
+    .slide-dot {
+      width: 6px;
+      height: 6px;
+      border: 0;
+      border-radius: 50%;
+      padding: 0;
+      background: #555;
+      transition: width .3s, border-radius .3s, background .3s;
+    }
+
+    .slide-dot.active {
+      width: 18px;
+      border-radius: 6px;
+      background: var(--neon);
+    }
+
+    .results-viewport {
+      min-width: 0;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .results-track {
+      height: 100%;
+      display: flex;
+      transition: transform .65s cubic-bezier(.65, 0, .35, 1);
+      will-change: transform;
+    }
+
+    .results-slide {
+      min-width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .match-list {
+      display: grid;
+      grid-template-columns: repeat(var(--result-cols, 2), minmax(0, 1fr));
+      grid-template-rows: repeat(var(--result-rows, 3), minmax(0, 1fr));
+      height: 100%;
+      gap: 6px;
+      padding: 8px;
+    }
+
+    .match {
+      position: relative;
+      min-width: 0;
+      min-height: 0;
+      display: grid;
+      grid-template-columns: 64px minmax(0, 1fr) 58px minmax(0, 1fr);
+      align-items: center;
+      border-left: 2px solid var(--border);
+      background: var(--dark);
+      font-family: 'Barlow Condensed', sans-serif;
+    }
+
+    .match-meta {
+      padding: 0 7px;
+      color: var(--gray);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .06em;
+      line-height: 1.25;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    .team {
+      min-width: 0;
+      overflow: hidden;
+      padding: 0 5px;
+      font-size: clamp(14px, 1.05vw, 19px);
+      font-weight: 700;
+      text-overflow: ellipsis;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .team.away { text-align: right; }
+
+    .score {
+      color: var(--neon);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 27px;
+      letter-spacing: .04em;
+      text-align: center;
+    }
+
+    .score small {
+      display: block;
+      overflow: hidden;
+      color: var(--gray);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: .04em;
+      line-height: 1.05;
+      text-overflow: ellipsis;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .penalty-winner {
+      position: absolute;
+      right: 6px;
+      bottom: 3px;
+      left: 64px;
+      color: var(--neon);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .06em;
+      line-height: 1.1;
+      text-align: center;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .match.has-penalties { padding-bottom: 14px; }
+
+    .live-mark {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 3px;
+      color: #ff4b4b;
+      font-size: 9px;
+      font-weight: 900;
+    }
+
+    .live-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #ff3030;
+      box-shadow: 0 0 7px rgba(255,48,48,.95);
+      animation: live-pulse 1.2s ease-in-out infinite;
+    }
+
+    @keyframes live-pulse {
+      50% { opacity: .4; transform: scale(.8); }
+    }
+
+    .empty {
+      padding: 24px 12px;
+      color: var(--gray);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 13px;
+      letter-spacing: .12em;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    .scorers {
+      padding: 4px 7px 7px;
+    }
+
+    .scorers td {
+      height: clamp(28px, 3.1vh, 34px);
+      font-size: clamp(12px, .85vw, 15px);
+    }
+
+    .scorers th:nth-child(1), .scorers td:nth-child(1) { width: 31px; }
+    .scorers th:nth-child(2), .scorers td:nth-child(2) { width: 39%; }
+    .scorers th:nth-child(3), .scorers td:nth-child(3) { width: auto; }
+    .scorers th:last-child, .scorers td:last-child { width: 38px; text-align: center; }
+
+    .sponsor-strip {
+      min-width: 0;
+      overflow: hidden;
+      border-top: 3px solid var(--neon);
+      background: #efefef;
+    }
+
+    .sponsor-label {
+      position: absolute;
+      z-index: 2;
+      height: 99px;
+      display: grid;
+      place-items: center;
+      padding: 0 18px;
+      color: var(--black);
+      background: var(--neon);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 21px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      clip-path: polygon(0 0, 86% 0, 100% 50%, 86% 100%, 0 100%);
+    }
+
+    .ticker {
+      height: 99px;
+      display: flex;
+      align-items: center;
+      width: max-content;
+      margin-left: 132px;
+      animation: sponsor-scroll 54s linear infinite;
+      will-change: transform;
+    }
+
+    .ticker-set {
+      display: flex;
+      align-items: center;
+      gap: 34px;
+      padding-right: 34px;
+    }
+
+    .sponsor-item {
+      width: 145px;
+      height: 80px;
+      display: grid;
+      grid-template-rows: 55px 1fr;
+      align-items: center;
+      flex: 0 0 auto;
+      color: #111;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 1;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    .sponsor-item img {
+      width: 100%;
+      height: 52px;
+      object-fit: contain;
+      mix-blend-mode: multiply;
+    }
+
+    .sponsor-item.dark-logo img {
+      padding: 5px;
+      background: #151515;
+      mix-blend-mode: normal;
+    }
+
+    @keyframes sponsor-scroll {
+      to { transform: translateX(-50%); }
+    }
+
+    @media (max-aspect-ratio: 4/3) {
+      body { overflow: auto; grid-template-rows: auto auto 102px; }
+      main { grid-template-rows: auto auto; }
+      .dashboard-bottom { grid-template-columns: repeat(2, minmax(280px, 1fr)); grid-template-rows: auto; }
+      .scorers-panel { grid-column: 1 / -1; grid-row: auto; }
+      .match-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .screen-header { position: sticky; top: 0; z-index: 5; }
+    }
+
+    @media (max-height: 850px) and (min-aspect-ratio: 4/3) {
+      body { grid-template-rows: 70px minmax(0, 1fr) 80px; }
+      .screen-header { gap: 12px; padding: 4px 18px; }
+      .logo { width: 54px; height: 54px; }
+      .brand strong { font-size: 32px; }
+      .brand span { font-size: 10px; }
+      .header-title { font-size: 26px; }
+      main {
+        grid-template-rows: minmax(170px, 1fr) minmax(360px, 2.1fr);
+        gap: 8px;
+        padding: 8px 12px;
+      }
+      .panel-heading { height: 36px; font-size: 21px; }
+      .results-panel { grid-template-rows: 36px minmax(0, 1fr); }
+      .match-list { gap: 4px; padding: 6px; }
+      .match { min-height: 0; }
+      .match-meta { font-size: 9px; }
+      .team { font-size: 13px; }
+      .score { font-size: 22px; }
+      .penalty-winner { padding-bottom: 2px; font-size: 9px; }
+      .sponsor-label,
+      .ticker { height: 77px; }
+      .sponsor-item { height: 64px; grid-template-rows: 43px 1fr; font-size: 12px; }
+      .sponsor-item img { height: 41px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .ticker { animation-duration: 100s; }
+    }
+  </style>
+</head>
+<body>
+  <header class="screen-header">
+    <img class="logo" src="assets/LOGO 12 ORE.png" alt="12 Ore Bosaro">
+    <div class="brand">
+      <strong>12 Ore Bosaro</strong>
+      <span>Torneo di calcio a 5 · 4 luglio 2026</span>
+    </div>
+    <div class="header-title">Risultati in tempo reale</div>
+    <div class="sync" id="syncStatus">Caricamento dati…</div>
+  </header>
+
+  <main>
+    <section class="panel results-panel">
+      <div class="panel-heading">
+        <span>Risultati</span>
+        <span class="slide-label" id="slideLabel">Girone A</span>
+        <span class="slide-dots" id="slideDots" aria-hidden="true"></span>
+      </div>
+      <div class="results-viewport">
+        <div class="results-track" id="resultsTrack"></div>
+      </div>
+    </section>
+
+    <div class="dashboard-bottom">
+      <div class="standings-grid" id="standingsGrid"></div>
+      <section class="panel scorers-panel">
+        <div class="panel-heading">Top 10 marcatori</div>
+        <div class="scorers">
+          <table>
+            <thead><tr><th>#</th><th>Giocatore</th><th>Squadra</th><th>Gol</th></tr></thead>
+            <tbody id="scorersBody"></tbody>
+          </table>
+          <div class="empty" id="scorersEmpty" hidden>Nessun marcatore disponibile</div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="sponsor-strip" aria-label="Sponsor">
+    <div class="sponsor-label">Sponsor</div>
+    <div class="ticker">
+      <div class="ticker-set">
+        <div class="sponsor-item dark-logo"><img src="assets/NAZZA.png" alt=""><span>Nazza The Barber</span></div>
+        <div class="sponsor-item"><img src="assets/LOGO VETRERIA ALBERTINI.jpg" alt=""><span>Vetreria Albertini</span></div>
+        <div class="sponsor-item"><img src="assets/PASSO.jpg" alt=""><span>Snack Bar Al Passo</span></div>
+        <div class="sponsor-item"><img src="assets/BENAZZO s.r.l..jpg" alt=""><span>Benazzo s.r.l.</span></div>
+        <div class="sponsor-item"><img src="assets/BAROZZI.jpg" alt=""><span>Barozzi Bevande</span></div>
+        <div class="sponsor-item"><img src="assets/LOGO CELIO.jpeg" alt=""><span>Trattoria da Celio</span></div>
+        <div class="sponsor-item"><img src="assets/PIZZERIA DA NICOLA.jpg" alt=""><span>Pizzeria da Nicola</span></div>
+        <div class="sponsor-item"><img src="assets/ROSSI COSTRUZIONI.jpg" alt=""><span>Rossi Costruzioni</span></div>
+        <div class="sponsor-item"><img src="assets/BARIN.jpeg" alt=""><span>Bar-in da Alex</span></div>
+        <div class="sponsor-item"><img src="assets/BOMBONIERE MARY.jpg" alt=""><span>Bomboniere Mary</span></div>
+        <div class="sponsor-item"><img src="assets/TRATTORIA AL BOSCO.jpg" alt=""><span>Trattoria Al Bosco</span></div>
+        <div class="sponsor-item"><img src="assets/EMA CAFE.jpeg" alt=""><span>EMA Cafè</span></div>
+        <div class="sponsor-item"><img src="assets/AGRITURISMO I QUARTI.jpeg" alt=""><span>Agriturismo i Quarti</span></div>
+        <div class="sponsor-item"><img src="assets/VENCO.jpeg" alt=""><span>Supermercato F.lli Venco</span></div>
+      </div>
+      <div class="ticker-set" aria-hidden="true">
+        <div class="sponsor-item dark-logo"><img src="assets/NAZZA.png" alt=""><span>Nazza The Barber</span></div>
+        <div class="sponsor-item"><img src="assets/LOGO VETRERIA ALBERTINI.jpg" alt=""><span>Vetreria Albertini</span></div>
+        <div class="sponsor-item"><img src="assets/PASSO.jpg" alt=""><span>Snack Bar Al Passo</span></div>
+        <div class="sponsor-item"><img src="assets/BENAZZO s.r.l..jpg" alt=""><span>Benazzo s.r.l.</span></div>
+        <div class="sponsor-item"><img src="assets/BAROZZI.jpg" alt=""><span>Barozzi Bevande</span></div>
+        <div class="sponsor-item"><img src="assets/LOGO CELIO.jpeg" alt=""><span>Trattoria da Celio</span></div>
+        <div class="sponsor-item"><img src="assets/PIZZERIA DA NICOLA.jpg" alt=""><span>Pizzeria da Nicola</span></div>
+        <div class="sponsor-item"><img src="assets/ROSSI COSTRUZIONI.jpg" alt=""><span>Rossi Costruzioni</span></div>
+        <div class="sponsor-item"><img src="assets/BARIN.jpeg" alt=""><span>Bar-in da Alex</span></div>
+        <div class="sponsor-item"><img src="assets/BOMBONIERE MARY.jpg" alt=""><span>Bomboniere Mary</span></div>
+        <div class="sponsor-item"><img src="assets/TRATTORIA AL BOSCO.jpg" alt=""><span>Trattoria Al Bosco</span></div>
+        <div class="sponsor-item"><img src="assets/EMA CAFE.jpeg" alt=""><span>EMA Cafè</span></div>
+        <div class="sponsor-item"><img src="assets/AGRITURISMO I QUARTI.jpeg" alt=""><span>Agriturismo i Quarti</span></div>
+        <div class="sponsor-item"><img src="assets/VENCO.jpeg" alt=""><span>Supermercato F.lli Venco</span></div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/xlsx.full.min.js"></script>
+  <script src="assets/tournament-workbook.js"></script>
+  <script>
+    (() => {
+      'use strict';
+
+      const slideDefinitions = [
+        { key: 'A', label: 'Girone A' },
+        { key: 'B', label: 'Girone B' },
+        { key: 'C', label: 'Girone C' },
+        { key: 'D', label: 'Girone D' },
+        { key: 'finals', label: 'Fasi finali' }
+      ];
+      const requestedSlide = location.hash.replace('#', '').toLowerCase();
+      let slideIndex = Math.max(0, slideDefinitions.findIndex(slide =>
+        slide.key.toLowerCase() === requestedSlide
+      ));
+      let carouselTimer;
+      let liveReferenceDate = '2026-07-04';
+
+      const esc = value => String(value ?? '').replace(/[&<>"']/g, char => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
+      }[char]));
+
+      function recordsBetween(rows, marker, nextMarker) {
+        const start = rows.findIndex(row => String(row[0]).trim() === marker);
+        if (start < 0 || !rows[start + 1]) return [];
+        const headers = rows[start + 1].map(cell => String(cell).trim());
+        let end = nextMarker
+          ? rows.findIndex((row, index) => index > start && String(row[0]).trim() === nextMarker)
+          : rows.length;
+        if (end < 0) end = rows.length;
+        return rows.slice(start + 2, end)
+          .filter(row => row.some(cell => cell !== '') && String(row[0]).trim() !== '#REF!')
+          .map(row => {
+            const record = {};
+            headers.forEach((header, index) => { if (header) record[header] = row[index]; });
+            return record;
+          });
+      }
+
+      function parseWorkbook(workbook) {
+        if (!workbook.Sheets.Export) throw new Error('Foglio Export non trovato');
+        const rows = XLSX.utils.sheet_to_json(workbook.Sheets.Export, { header: 1, defval: '', raw: false });
+        const standingsStart = rows.findIndex(row => String(row[0]).trim() === 'standings');
+        const matchesStart = rows.findIndex(row => String(row[0]).trim() === 'matches');
+        const standings = rows.slice(standingsStart + 2, matchesStart)
+          .filter(row => row[0] !== '' && row[2] !== '')
+          .map(row => ({
+            group: row[0], position: row[1], team: row[2], points: row[3],
+            played: row[4], won: row[5], wonPen: row[6], lostPen: row[7],
+            lost: row[8], gf: row[9], ga: row[10], gd: row[11]
+          }));
+        const groupMatches = recordsBetween(rows, 'matches', 'knockout');
+        let knockout = recordsBetween(rows, 'knockout', 'match_goals');
+
+        if (workbook.Sheets.Knockout) {
+          knockout = XLSX.utils.sheet_to_json(workbook.Sheets.Knockout, { defval: '', raw: false })
+            .filter(row => ['quarter-final', 'semi-final', 'final']
+              .includes(String(row.Stage || '').trim().toLowerCase()))
+            .map(row => ({
+              match_id: row.MatchID,
+              stage: row.Stage,
+              group: '',
+              field: row.Field,
+              time: row.Time,
+              home_team: row.HomeTeam,
+              away_team: row.AwayTeam,
+              home_goals: row.HomeGoals,
+              away_goals: row.AwayGoals,
+              penalty_winner: row.PenaltyWinner,
+              status: row.HomeGoals !== '' && row.AwayGoals !== '' ? 'Complete' : 'Pending'
+            }));
+        }
+
+        const scorers = [];
+        rows.forEach(row => {
+          const position = Number(row[13]);
+          const goals = Number(row[16]);
+          if (position > 0 && row[14] !== '' && row[15] !== '' && goals > 0) {
+            scorers.push({ position, player: row[14], team: row[15], goals });
+          }
+        });
+
+        let referenceDate = '';
+        if (workbook.Sheets.Settings) {
+          const settings = XLSX.utils.sheet_to_json(workbook.Sheets.Settings, { defval: '', raw: false });
+          const liveSetting = settings.find(row =>
+            String(row.Setting || '').trim().toLowerCase() === 'livereferencedate'
+          );
+          referenceDate = liveSetting ? String(liveSetting.Value || '').trim() : '';
+        }
+
+        return { standings, matches: groupMatches.concat(knockout), scorers, referenceDate };
+      }
+
+      function rankClass(position) {
+        return Number(position) === 1 ? 'first' : Number(position) === 2 ? 'second' : Number(position) === 3 ? 'third' : '';
+      }
+
+      function renderStandings(standings) {
+        const grid = document.getElementById('standingsGrid');
+        grid.innerHTML = ['A', 'B', 'C', 'D'].map(group => {
+          const teams = standings.filter(team => String(team.group) === group);
+          const rows = teams.map(team => `<tr>
+            <td><span class="rank ${rankClass(team.position)}">${esc(team.position)}</span></td>
+            <td title="${esc(team.team)}">${esc(team.team)}</td>
+            <td>${esc(team.played)}</td><td>${esc(team.won)}</td>
+            <td>${esc(team.wonPen)}</td><td>${esc(team.lostPen)}</td>
+            <td>${esc(team.gd)}</td><td>${esc(team.points)}</td>
+          </tr>`).join('');
+          return `<article class="group">
+            <div class="group-title">Girone ${group}</div>
+            <table>
+              <thead><tr><th>#</th><th>Squadra</th><th>G</th><th>V</th><th>VR</th><th>SR</th><th>DR</th><th>PT</th></tr></thead>
+              <tbody>${rows || '<tr><td colspan="8">Dati in attesa</td></tr>'}</tbody>
+            </table>
+          </article>`;
+        }).join('');
+      }
+
+      function isComplete(match) {
+        return String(match.status).toLowerCase() === 'complete' ||
+          (match.home_goals !== '' && match.home_goals != null &&
+           match.away_goals !== '' && match.away_goals != null);
+      }
+
+      function stageLabel(match) {
+        const stage = String(match.stage || '').trim().toLowerCase();
+        if (stage === 'quarter-final') return 'Quarti';
+        if (stage === 'semi-final') return 'Semif.';
+        if (stage === 'final') return 'Finale';
+        return match.group ? `Gir. ${match.group}` : 'Partita';
+      }
+
+      function isMatchLive(match) {
+        if (String(match.status || '').trim().toLowerCase() === 'live') return true;
+        const time = String(match.time || '').match(/^(\d{1,2}):(\d{2})/);
+        if (!time) return false;
+        const now = new Date();
+        const normalizedDate = normalizeReferenceDate(liveReferenceDate);
+        const start = new Date(`${normalizedDate}T${time[1].padStart(2, '0')}:${time[2]}:00+02:00`);
+        const duration = String(match.stage || '').trim().toLowerCase() === 'group' ? 20 : 30;
+        return now >= start && now < new Date(start.getTime() + duration * 60000);
+      }
+
+      function normalizeReferenceDate(value) {
+        const text = String(value || '').trim();
+        if (/^\d{4}-\d{2}-\d{2}$/.test(text)) return text;
+        const italianDate = text.match(/^(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{4})$/);
+        if (italianDate) {
+          return `${italianDate[3]}-${italianDate[2].padStart(2, '0')}-${italianDate[1].padStart(2, '0')}`;
+        }
+        const today = new Date();
+        return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+      }
+
+      function matchCard(match) {
+        const complete = isComplete(match);
+        const live = isMatchLive(match);
+        const penalties = match.penalty_winner
+          ? `<div class="penalty-winner">Vincente ai rigori: ${esc(match.penalty_winner)}</div>`
+          : '';
+        const score = complete
+          ? `${esc(match.home_goals)} - ${esc(match.away_goals)}`
+          : 'VS';
+        const liveBadge = live
+          ? '<span class="live-mark"><span class="live-dot"></span>LIVE</span>'
+          : '';
+        return `<div class="match${match.penalty_winner ? ' has-penalties' : ''}">
+            <div class="match-meta">${esc(stageLabel(match))}<br>${esc(match.time || '—')}${liveBadge}</div>
+            <div class="team" title="${esc(match.home_team)}">${esc(match.home_team || 'TBD')}</div>
+            <div class="score">${score}</div>
+            <div class="team away" title="${esc(match.away_team)}">${esc(match.away_team || 'TBD')}</div>
+            ${penalties}
+          </div>`;
+      }
+
+      function applySlide(index) {
+        slideIndex = (index + slideDefinitions.length) % slideDefinitions.length;
+        const track = document.getElementById('resultsTrack');
+        if (track) track.style.transform = `translateX(-${slideIndex * 100}%)`;
+        const label = document.getElementById('slideLabel');
+        if (label) label.textContent = slideDefinitions[slideIndex].label;
+        document.querySelectorAll('.slide-dot').forEach((dot, dotIndex) => {
+          dot.classList.toggle('active', dotIndex === slideIndex);
+        });
+      }
+
+      function startCarousel() {
+        clearInterval(carouselTimer);
+        carouselTimer = setInterval(() => applySlide(slideIndex + 1), 8000);
+      }
+
+      function renderMatches(matches) {
+        const track = document.getElementById('resultsTrack');
+        const dots = document.getElementById('slideDots');
+        track.innerHTML = slideDefinitions.map(definition => {
+          const selected = matches.filter(match => definition.key === 'finals'
+            ? String(match.stage || '').trim().toLowerCase() !== 'group'
+            : String(match.group || '').trim().toUpperCase() === definition.key);
+          const columns = definition.key === 'finals' ? 3 : 2;
+          const rows = Math.max(1, Math.ceil(selected.length / columns));
+          const content = selected.length
+            ? selected.map(matchCard).join('')
+            : '<div class="empty">Partite non disponibili</div>';
+          return `<div class="results-slide" data-slide="${esc(definition.key)}">
+            <div class="match-list" style="--result-cols:${columns};--result-rows:${rows}">${content}</div>
+          </div>`;
+        }).join('');
+        dots.innerHTML = slideDefinitions.map((definition, index) =>
+          `<button class="slide-dot" type="button" aria-label="${esc(definition.label)}" data-slide-index="${index}"></button>`
+        ).join('');
+        dots.querySelectorAll('.slide-dot').forEach(dot => {
+          dot.addEventListener('click', () => {
+            applySlide(Number(dot.dataset.slideIndex));
+            startCarousel();
+          });
+        });
+        applySlide(slideIndex);
+        if (!carouselTimer) startCarousel();
+      }
+
+      function renderScorers(scorers) {
+        const topTen = scorers.slice(0, 10);
+        const body = document.getElementById('scorersBody');
+        const empty = document.getElementById('scorersEmpty');
+        body.innerHTML = topTen.map(scorer => `<tr>
+          <td><span class="rank ${rankClass(scorer.position)}">${esc(scorer.position)}</span></td>
+          <td title="${esc(scorer.player)}">${esc(scorer.player)}</td>
+          <td title="${esc(scorer.team)}">${esc(scorer.team)}</td>
+          <td>${esc(scorer.goals)}</td>
+        </tr>`).join('');
+        empty.hidden = topTen.length > 0;
+      }
+
+      function embeddedWorkbook() {
+        if (!window.TOURNAMENT_WORKBOOK_BASE64) throw new Error('Fallback locale non disponibile');
+        const binary = atob(window.TOURNAMENT_WORKBOOK_BASE64);
+        const bytes = new Uint8Array(binary.length);
+        for (let index = 0; index < binary.length; index++) bytes[index] = binary.charCodeAt(index);
+        return XLSX.read(bytes, { type: 'array' });
+      }
+
+      async function loadWorkbook() {
+        if (location.protocol === 'file:') return embeddedWorkbook();
+        const response = await fetch(`./12HBosaro_manager.xlsx?v=${Date.now()}`, { cache: 'no-store' });
+        if (!response.ok) throw new Error(`Workbook non disponibile (${response.status})`);
+        return XLSX.read(await response.arrayBuffer(), { type: 'array' });
+      }
+
+      async function refresh() {
+        const status = document.getElementById('syncStatus');
+        try {
+          const data = parseWorkbook(await loadWorkbook());
+          liveReferenceDate = data.referenceDate || liveReferenceDate;
+          renderStandings(data.standings);
+          renderMatches(data.matches);
+          renderScorers(data.scorers);
+          status.classList.remove('error');
+          status.innerHTML = `Aggiornato<br>${new Date().toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' })}`;
+        } catch (error) {
+          console.error('Errore aggiornamento schermo:', error);
+          try {
+            const data = parseWorkbook(embeddedWorkbook());
+            liveReferenceDate = data.referenceDate || liveReferenceDate;
+            renderStandings(data.standings);
+            renderMatches(data.matches);
+            renderScorers(data.scorers);
+            status.classList.remove('error');
+            status.innerHTML = 'Dati locali<br>in uso';
+          } catch (fallbackError) {
+            status.classList.add('error');
+            status.innerHTML = 'Errore<br>sincronizzazione';
+          }
+        }
+      }
+
+      refresh();
+      setInterval(refresh, 15000);
+    })();
+  </script>
+</body>
+</html>

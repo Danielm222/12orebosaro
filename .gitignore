@@ -1,5 +1,6 @@
 ~$*.xlsx
 *.tmp.xlsx
+assets/backups/
 .codex-openpyxl/
 __pycache__/
 *.pyc

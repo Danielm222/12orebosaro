@@ -4,7 +4,7 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT"
 
-for command in git curl sed; do
+for command in git curl sed python; do
   command -v "$command" >/dev/null 2>&1 || {
     echo "Errore: comando richiesto non trovato: $command" >&2
     exit 1
@@ -19,6 +19,7 @@ if [[ -z "$CURRENT_BRANCH" ]]; then
 fi
 
 DEPLOY_TOKEN="$(date -u +'%Y%m%dT%H%M%SZ')"
+python tools/embed_workbook.py
 sed -E -i \
   "s/(<meta name=\"deploy-version\" content=\")[^\"]*(\">)/\\1${DEPLOY_TOKEN}\\2/" \
   index.html
