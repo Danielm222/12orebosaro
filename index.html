@@ -2981,6 +2981,7 @@ async function loadTournamentData() {
     const matchesRows   = D.matches;
     const goalsRows     = D.goals;
     const knockoutRows  = D.knockout;
+    const settingsRows  = D.settings || [];
 
     // ===== CLASSIFICHE GIRONI =====
     ['A','B','C','D'].forEach(groupName => {
@@ -3061,21 +3062,67 @@ async function loadTournamentData() {
       return time ? time.label : '—';
     }
 
+    function getSetting(name) {
+      const key = String(name || '').trim().toLowerCase();
+      const row = settingsRows.find(r => String(r.Setting || '').trim().toLowerCase() === key);
+      return row ? row.Value : '';
+    }
+
+    function normalizeExcelDate(value) {
+      if (value instanceof Date && !Number.isNaN(value.getTime())) {
+        return {
+          year: value.getFullYear(),
+          month: value.getMonth() + 1,
+          day: value.getDate()
+        };
+      }
+
+      if (typeof value === 'number' && Number.isFinite(value)) {
+        const excelEpoch = Date.UTC(1899, 11, 30);
+        const date = new Date(excelEpoch + Math.floor(value) * 86400000);
+        return {
+          year: date.getUTCFullYear(),
+          month: date.getUTCMonth() + 1,
+          day: date.getUTCDate()
+        };
+      }
+
+      const text = String(value ?? '').trim();
+      if (!text) return null;
+
+      let match = text.match(/^(\d{4})[-/](\d{1,2})[-/](\d{1,2})/);
+      if (!match) match = text.match(/^(\d{1,2})[/-](\d{1,2})[/-](\d{4})/);
+      if (!match) return null;
+
+      const year = match[1].length === 4 ? Number(match[1]) : Number(match[3]);
+      const month = Number(match[2]);
+      const day = match[1].length === 4 ? Number(match[3]) : Number(match[1]);
+      if (!year || month < 1 || month > 12 || day < 1 || day > 31) return null;
+      return { year, month, day };
+    }
+
+    function matchDurationMinutes(m) {
+      const explicitMinutes = Number(String(m.DurationMinutes || '').replace(',', '.'));
+      if (Number.isFinite(explicitMinutes) && explicitMinutes > 0) return explicitMinutes;
+
+      const rawDuration = m.Duration || '';
+      const explicitDuration = Number(String(rawDuration).replace(',', '.'));
+      if (Number.isFinite(explicitDuration) && explicitDuration >= 1) return explicitDuration;
+      const durationTime = normalizeExcelTime(rawDuration);
+      if (durationTime) return (durationTime.hours * 60) + durationTime.minutes;
+      return String(m.Stage || '').trim() === 'Group' ? 20 : 30;
+    }
+
     function isMatchLive(m) {
       const time = normalizeExcelTime(m.Time);
       if (!time) return false;
+      if (String(m.Status || '').trim().toLowerCase() === 'complete') return false;
       const now = new Date();
-      let start;
-      const isLocalPreview = window.location.protocol === 'file:' ||
-        window.location.hostname === 'localhost' ||
-        window.location.hostname === '127.0.0.1';
-      if (isLocalPreview) {
-        start = new Date(now);
-        start.setHours(time.hours, time.minutes, 0, 0);
-      } else {
-        start = new Date(`2026-07-04T${String(time.hours).padStart(2, '0')}:${String(time.minutes).padStart(2, '0')}:00+02:00`);
-      }
-      const duration = String(m.Stage || '').trim() === 'Group' ? 20 : 30;
+      const referenceDate = normalizeExcelDate(m.Date || m.MatchDate || getSetting('LiveReferenceDate'));
+      const start = referenceDate
+        ? new Date(referenceDate.year, referenceDate.month - 1, referenceDate.day, time.hours, time.minutes, 0, 0)
+        : new Date(now.getFullYear(), now.getMonth(), now.getDate(), time.hours, time.minutes, 0, 0);
+      const duration = matchDurationMinutes(m);
       return now >= start && now < new Date(start.getTime() + duration * 60000);
     }
 
@@ -3236,6 +3283,9 @@ async function loadTournamentData() {
 
 window.addEventListener('load', loadTournamentData);
 try { loadTournamentData(); } catch(e) {}
+setInterval(() => {
+  try { loadTournamentData(); } catch(e) {}
+}, 30000);
 </script>
 
 <script>
@@ -3340,6 +3390,7 @@ try { loadSquadreAuto(); } catch(e) {}
       };
 
       window.TOURNAMENT_DATA = {
+        settings: readOptionalSheet('Settings'),
         standings: readSheet('Standings'),
         matches: readSheet('Matches'),
         knockout: readSheet('Knockout'),
