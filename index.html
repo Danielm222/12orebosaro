@@ -1003,10 +1003,9 @@
     display: none;
   }
   .top-extra-links .extra-links {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 0.3rem;
-    justify-content: space-between;
-    flex-wrap: nowrap;
     overflow-x: auto;
     padding: 0 0.2rem;
   }
@@ -1015,10 +1014,11 @@
   }
   .top-extra-links .extra-link {
     display: inline-flex;
-    flex: 1 1 22%;
-    max-width: 22%;
+    box-sizing: border-box;
+    width: 100%;
     min-width: 0;
-    white-space: nowrap;
+    min-height: 2.15rem;
+    white-space: normal;
     align-items: center;
     justify-content: center;
     gap: 0.25rem;
@@ -1028,20 +1028,25 @@
     background: rgba(255,255,255,0.03);
     color: var(--white);
     font-family: 'Barlow Condensed', sans-serif;
-    font-size: 0.65rem;
+    font-size: 0.68rem;
     font-weight: 700;
-    letter-spacing: 0.08em;
+    letter-spacing: 0;
+    line-height: 1.05;
     text-transform: uppercase;
     text-decoration: none;
+    text-align: center;
     transition: background 0.2s, color 0.2s, border-color 0.2s, padding 0.2s;
   }
   .top-extra-links .extra-link .link-icon {
     display: inline-flex;
+    flex: 0 0 auto;
     font-size: 1rem;
     line-height: 1;
   }
   .top-extra-links .extra-link .link-label {
     display: inline-block;
+    min-width: 0;
+    overflow-wrap: anywhere;
   }
   .top-extra-links .extra-link:hover {
     background: var(--neon);
@@ -1052,8 +1057,6 @@
     color: var(--black);
     background: var(--neon);
     border-color: var(--neon);
-    flex-grow: 1.25;
-    max-width: 25%;
   }
   .top-extra-links .extra-link.featured:hover {
     background: var(--neon2);
@@ -1071,6 +1074,34 @@
   }
   .top-extra-links.compact .link-label {
     display: none;
+  }
+
+  @media (max-width: 430px) {
+    .top-extra-links {
+      padding-left: 0.45rem;
+      padding-right: 0.45rem;
+    }
+    .top-extra-links .extra-links {
+      gap: 0.2rem;
+      padding: 0;
+    }
+    .top-extra-links .extra-link {
+      flex-direction: column;
+      gap: 0.12rem;
+      min-height: 2.8rem;
+      padding: 0.32rem 0.18rem;
+      font-size: 0.58rem;
+      letter-spacing: 0;
+    }
+    .top-extra-links .extra-link .link-icon {
+      font-size: 0.9rem;
+    }
+  }
+
+  @media (max-width: 340px) {
+    .top-extra-links .extra-link {
+      font-size: 0.52rem;
+    }
   }
 
   /* ============ OVERLAY PAGES ============ */
