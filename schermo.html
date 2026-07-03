@@ -10,15 +10,19 @@
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@400;500&display=swap" rel="stylesheet">
   <style>
     :root {
-      --black: #080808;
-      --dark: #0f0f0f;
-      --panel: #161616;
-      --panel-2: #1e1e1e;
+      /* Palette diurna ad alto contrasto, nei colori nero/lime del torneo. */
+      --black: #050600;
+      --dark: #f3f5e8;
+      --panel: #ffffff;
+      --panel-2: #090a05;
       --neon: #e8ff00;
-      --neon-2: #c8e600;
-      --white: #f5f5f5;
-      --gray: #929292;
-      --border: rgba(232, 255, 0, 0.16);
+      --neon-2: #c9df00;
+      --accent-text: #4b5900;
+      --white: #080a05;
+      --gray: #3c4034;
+      --border: #718000;
+      --tv-safe-x: clamp(14px, 1.25vw, 26px);
+      --tv-safe-y: clamp(8px, 1.15vh, 14px);
     }
 
     * { box-sizing: border-box; }
@@ -28,26 +32,44 @@
       height: 100%;
       margin: 0;
       overflow: hidden;
-      background: var(--black);
+      background: #eef1df;
       color: var(--white);
     }
 
     body {
       display: grid;
       grid-template-rows: 86px minmax(0, 1fr) 102px;
+      padding: var(--tv-safe-y) var(--tv-safe-x);
       font-family: 'Barlow', sans-serif;
       background:
-        radial-gradient(circle at 18% 0%, rgba(232,255,0,.07), transparent 30%),
-        linear-gradient(135deg, #080808 0%, #101010 55%, #080808 100%);
+        radial-gradient(circle at 18% 0%, rgba(232,255,0,.32), transparent 34%),
+        repeating-linear-gradient(135deg, transparent 0 22px, rgba(32,37,26,.035) 22px 24px),
+        linear-gradient(135deg, #ffffff 0%, #edf1dc 55%, #ffffff 100%);
     }
 
     .screen-header {
+      position: relative;
       display: flex;
       align-items: center;
       gap: 18px;
+      overflow: hidden;
       padding: 10px 24px;
-      border-bottom: 1px solid var(--border);
-      background: rgba(8,8,8,.92);
+      border-bottom: 4px solid var(--neon);
+      background: var(--black);
+      color: #ffffff;
+    }
+
+    .screen-header::after {
+      content: '';
+      position: absolute;
+      top: -45px;
+      right: 18%;
+      width: 150px;
+      height: 180px;
+      border-right: 18px solid rgba(232,255,0,.17);
+      border-left: 5px solid rgba(232,255,0,.5);
+      transform: skewX(-22deg);
+      pointer-events: none;
     }
 
     .logo {
@@ -55,6 +77,7 @@
       height: 62px;
       object-fit: contain;
       flex: 0 0 auto;
+      filter: drop-shadow(3px 3px 0 #596500);
     }
 
     .brand {
@@ -68,11 +91,12 @@
       font-family: 'Bebas Neue', sans-serif;
       font-size: clamp(30px, 2.6vw, 48px);
       letter-spacing: .08em;
+      text-shadow: 3px 3px 0 #3e4700;
       white-space: nowrap;
     }
 
     .brand span {
-      color: var(--gray);
+      color: #ffffff;
       font-family: 'Barlow Condensed', sans-serif;
       font-size: 12px;
       font-weight: 700;
@@ -81,7 +105,11 @@
     }
 
     .header-title {
+      position: relative;
+      z-index: 1;
       margin-left: auto;
+      padding-left: 20px;
+      border-left: 5px solid var(--neon);
       font-family: 'Bebas Neue', sans-serif;
       font-size: clamp(25px, 2vw, 38px);
       letter-spacing: .08em;
@@ -89,8 +117,10 @@
     }
 
     .sync {
+      position: relative;
+      z-index: 1;
       min-width: 155px;
-      color: var(--gray);
+      color: #ffffff;
       font-family: 'Barlow Condensed', sans-serif;
       font-size: 12px;
       font-weight: 600;
@@ -124,8 +154,9 @@
       min-width: 0;
       min-height: 0;
       overflow: hidden;
-      border: 1px solid rgba(255,255,255,.07);
-      background: rgba(22,22,22,.88);
+      border: 2px solid #20251a;
+      background: var(--panel);
+      box-shadow: 4px 4px 0 rgba(32,37,26,.2);
     }
 
     .panel-heading {
@@ -134,12 +165,22 @@
       align-items: center;
       gap: 12px;
       padding: 0 14px;
-      border-bottom: 1px solid var(--border);
+      border-bottom: 3px solid var(--neon);
+      background: var(--black);
       font-family: 'Bebas Neue', sans-serif;
       font-size: 24px;
       letter-spacing: .08em;
       color: var(--neon);
       text-transform: uppercase;
+    }
+
+    .panel-heading::before {
+      content: '';
+      width: 9px;
+      height: 22px;
+      flex: 0 0 auto;
+      background: var(--neon);
+      clip-path: polygon(35% 0, 100% 0, 65% 100%, 0 100%);
     }
 
     .standings-grid {
@@ -149,8 +190,9 @@
     .group {
       min-height: 0;
       overflow: hidden;
-      border: 1px solid rgba(255,255,255,.07);
+      border: 2px solid #20251a;
       background: var(--dark);
+      box-shadow: 3px 3px 0 rgba(32,37,26,.16);
     }
 
     .group-title {
@@ -166,6 +208,15 @@
       text-transform: uppercase;
     }
 
+    .group-title::before {
+      content: '';
+      width: 5px;
+      height: 18px;
+      margin-right: 9px;
+      background: var(--neon);
+      transform: skewX(-14deg);
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
@@ -175,7 +226,8 @@
 
     th {
       height: 26px;
-      color: var(--gray);
+      color: #20241a;
+      background: #e1e5d3;
       font-size: 10px;
       letter-spacing: .08em;
       text-transform: uppercase;
@@ -184,18 +236,21 @@
     td {
       height: clamp(27px, 3.2vh, 35px);
       padding: 3px 5px;
-      border-top: 1px solid rgba(255,255,255,.055);
+      border-top: 1px solid #aeb49e;
       font-size: clamp(12px, 1vw, 17px);
       font-weight: 600;
       text-align: center;
     }
+
+    tbody tr:nth-child(even) { background: #ffffff; }
+    tbody tr:first-child { background: #f1f7c8; }
 
     th:nth-child(1), td:nth-child(1) { width: 30px; }
     th:nth-child(2), td:nth-child(2) { width: auto; text-align: left; }
     th:nth-child(n+3), td:nth-child(n+3) { width: 34px; }
     th:last-child, td:last-child { width: 42px; }
     td:nth-child(2) { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    td:last-child { color: var(--neon); font-size: 1.12em; font-weight: 900; }
+    td:last-child { color: var(--accent-text); font-size: 1.12em; font-weight: 900; }
 
     .rank {
       color: var(--gray);
@@ -203,9 +258,9 @@
       font-size: 1.1em;
     }
 
-    .rank.first { color: #ffd700; }
-    .rank.second { color: #c0c0c0; }
-    .rank.third { color: #cd7f32; }
+    .rank.first { color: #755f00; }
+    .rank.second { color: #4e5658; }
+    .rank.third { color: #7a3f0d; }
 
     .dashboard-bottom {
       min-height: 360px;
@@ -227,7 +282,7 @@
 
     .slide-label {
       margin-left: auto;
-      color: var(--white);
+      color: #ffffff;
       font-family: 'Barlow Condensed', sans-serif;
       font-size: 12px;
       font-weight: 700;
@@ -245,7 +300,7 @@
       border: 0;
       border-radius: 50%;
       padding: 0;
-      background: #555;
+      background: #ffffff;
       transition: width .3s, border-radius .3s, background .3s;
     }
 
@@ -290,9 +345,23 @@
       display: grid;
       grid-template-columns: 64px minmax(0, 1fr) 58px minmax(0, 1fr);
       align-items: center;
-      border-left: 2px solid var(--border);
+      border: 1px solid #9da48d;
+      border-left: 5px solid var(--border);
       background: var(--dark);
+      box-shadow: 3px 3px 0 #c8ccba;
       font-family: 'Barlow Condensed', sans-serif;
+    }
+
+    .match.live {
+      border-left-color: #ff3030;
+      background: linear-gradient(90deg, #ffd9d5, #ffffff 45%);
+      box-shadow: inset 0 0 0 2px rgba(190,0,0,.35);
+    }
+
+    .match.live .score {
+      color: #ffffff;
+      background: #a90000;
+      text-shadow: none;
     }
 
     .match-meta {
@@ -320,7 +389,12 @@
     .team.away { text-align: right; }
 
     .score {
+      align-self: stretch;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
       color: var(--neon);
+      background: var(--black);
       font-family: 'Bebas Neue', sans-serif;
       font-size: 27px;
       letter-spacing: .04em;
@@ -330,7 +404,7 @@
     .score small {
       display: block;
       overflow: hidden;
-      color: var(--gray);
+      color: #ffffff;
       font-family: 'Barlow Condensed', sans-serif;
       font-size: 9px;
       font-weight: 700;
@@ -346,7 +420,7 @@
       right: 6px;
       bottom: 3px;
       left: 64px;
-      color: var(--neon);
+      color: var(--accent-text);
       font-family: 'Barlow Condensed', sans-serif;
       font-size: 11px;
       font-weight: 700;
@@ -359,12 +433,175 @@
 
     .match.has-penalties { padding-bottom: 14px; }
 
+    .knockout-bracket {
+      height: 100%;
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) minmax(0, .95fr) minmax(0, 1.1fr) minmax(0, .95fr) minmax(0, 1.25fr);
+      align-items: stretch;
+      gap: 22px;
+      padding: 8px 14px;
+    }
+
+    .bracket-column {
+      position: relative;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      gap: 8px;
+    }
+
+    .bracket-stage {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      color: var(--gray);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      transform: translateX(-50%);
+      white-space: nowrap;
+    }
+
+    .bracket-match {
+      position: relative;
+      z-index: 1;
+      min-width: 0;
+      overflow: visible;
+      border: 1px solid #929987;
+      border-left: 5px solid var(--border);
+      background: var(--dark);
+      box-shadow: 3px 3px 0 #c8ccba;
+      font-family: 'Barlow Condensed', sans-serif;
+    }
+
+    .bracket-final .bracket-match {
+      z-index: 2;
+      border-color: #526000;
+      box-shadow: 0 0 0 3px rgba(113,128,0,.28);
+      transform: scale(1.16);
+      transform-origin: center;
+    }
+
+    .bracket-final-left .bracket-match,
+    .bracket-final-right .bracket-match {
+      transform: scale(1.06);
+      transform-origin: center;
+    }
+
+    .bracket-match.live {
+      border-color: #b50000;
+      border-left-color: #ff3030;
+      background: linear-gradient(90deg, #ffd9d5, #ffffff);
+      box-shadow: 0 0 0 2px rgba(181,0,0,.18);
+    }
+
+    .bracket-match.live .bracket-meta { color: #b50000; }
+
+    .bracket-team-row {
+      min-width: 0;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 30px;
+      align-items: center;
+      min-height: 32px;
+      padding: 2px 7px;
+      border-bottom: 1px solid #aeb49e;
+      font-size: clamp(11px, .82vw, 15px);
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .bracket-team-row:last-of-type { border-bottom: 0; }
+    .bracket-team-row.winner {
+      color: #364100;
+      background: #edf5b6;
+    }
+
+    .bracket-team-name {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .bracket-team-score {
+      color: #526000;
+      margin-left: 3px;
+      padding: 1px 4px;
+      color: var(--neon);
+      background: var(--black);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 20px;
+      text-align: right;
+    }
+
+    .bracket-meta {
+      position: absolute;
+      top: -10px;
+      left: 5px;
+      color: var(--gray);
+      font-size: 8px;
+      font-weight: 700;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+    }
+
+    .bracket-penalty {
+      padding: 2px 5px;
+      color: var(--accent-text);
+      font-size: 8px;
+      font-weight: 700;
+      text-align: center;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .bracket-final .bracket-team-row {
+      min-height: 38px;
+      font-size: clamp(13px, 1vw, 18px);
+    }
+
+    .bracket-final .bracket-team-score { font-size: 26px; }
+
+    .bracket-left .bracket-match::after,
+    .bracket-final-left .bracket-match::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 100%;
+      width: 12px;
+      border-top: 2px solid #718000;
+    }
+
+    .bracket-right .bracket-match::before,
+    .bracket-final-right .bracket-match::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      right: 100%;
+      width: 12px;
+      border-top: 2px solid #718000;
+    }
+
+    .bracket-quarter-left::after,
+    .bracket-quarter-right::before {
+      content: '';
+      position: absolute;
+      top: 25%;
+      bottom: 25%;
+      border-right: 2px solid #718000;
+    }
+
+    .bracket-quarter-left::after { right: -12px; }
+    .bracket-quarter-right::before { left: -12px; }
+
     .live-mark {
       display: inline-flex;
       align-items: center;
       gap: 4px;
       margin-top: 3px;
-      color: #ff4b4b;
+      color: #a90000;
       font-size: 9px;
       font-weight: 900;
     }
@@ -373,8 +610,8 @@
       width: 6px;
       height: 6px;
       border-radius: 50%;
-      background: #ff3030;
-      box-shadow: 0 0 7px rgba(255,48,48,.95);
+      background: #c40000;
+      box-shadow: none;
       animation: live-pulse 1.2s ease-in-out infinite;
     }
 
@@ -405,26 +642,37 @@
     .scorers th:nth-child(2), .scorers td:nth-child(2) { width: 39%; }
     .scorers th:nth-child(3), .scorers td:nth-child(3) { width: auto; }
     .scorers th:last-child, .scorers td:last-child { width: 38px; text-align: center; }
+    .scorers td:last-child {
+      color: var(--neon);
+      background: var(--black);
+      border-top-color: #596500;
+    }
 
     .sponsor-strip {
+      position: relative;
       min-width: 0;
       overflow: hidden;
-      border-top: 3px solid var(--neon);
-      background: #efefef;
+      border-top: 4px solid var(--black);
+      background:
+        repeating-linear-gradient(135deg, transparent 0 28px, rgba(113,128,0,.07) 28px 30px),
+        #ffffff;
     }
 
     .sponsor-label {
       position: absolute;
+      top: 0;
+      left: 0;
       z-index: 2;
       height: 99px;
       display: grid;
       place-items: center;
       padding: 0 18px;
       color: var(--black);
-      background: var(--neon);
+      background: linear-gradient(115deg, var(--neon), #c9df00);
       font-family: 'Bebas Neue', sans-serif;
       font-size: 21px;
       letter-spacing: .08em;
+      text-shadow: 1px 1px 0 rgba(255,255,255,.6);
       text-transform: uppercase;
       clip-path: polygon(0 0, 86% 0, 100% 50%, 86% 100%, 0 100%);
     }
@@ -508,6 +756,21 @@
       .team { font-size: 13px; }
       .score { font-size: 22px; }
       .penalty-winner { padding-bottom: 2px; font-size: 9px; }
+      .knockout-bracket { gap: 12px; padding: 5px 8px; }
+      .bracket-stage { display: none; }
+      .bracket-column { gap: 4px; }
+      .bracket-team-row { min-height: 24px; padding: 1px 4px; font-size: 11px; }
+      .bracket-team-score { font-size: 18px; }
+      .bracket-final .bracket-team-row { min-height: 30px; font-size: 13px; }
+      .bracket-final .bracket-team-score { font-size: 22px; }
+      .bracket-meta { top: -8px; font-size: 8px; }
+      .bracket-penalty { font-size: 8px; }
+      .bracket-left .bracket-match::after,
+      .bracket-final-left .bracket-match::after,
+      .bracket-right .bracket-match::before,
+      .bracket-final-right .bracket-match::before { width: 7px; }
+      .bracket-quarter-left::after { right: -7px; }
+      .bracket-quarter-right::before { left: -7px; }
       .sponsor-label,
       .ticker { height: 77px; }
       .sponsor-item { height: 64px; grid-template-rows: 43px 1fr; font-size: 12px; }
@@ -764,13 +1027,95 @@
         const liveBadge = live
           ? '<span class="live-mark"><span class="live-dot"></span>LIVE</span>'
           : '';
-        return `<div class="match${match.penalty_winner ? ' has-penalties' : ''}">
-            <div class="match-meta">${esc(stageLabel(match))}<br>${esc(match.time || '—')}${liveBadge}</div>
+        const matchReference = live ? `Campo ${match.field || '—'}` : (match.time || '—');
+        return `<div class="match${live ? ' live' : ''}${match.penalty_winner ? ' has-penalties' : ''}">
+            <div class="match-meta">${esc(stageLabel(match))}<br>${esc(matchReference)}${liveBadge}</div>
             <div class="team" title="${esc(match.home_team)}">${esc(match.home_team || 'TBD')}</div>
             <div class="score">${score}</div>
             <div class="team away" title="${esc(match.away_team)}">${esc(match.away_team || 'TBD')}</div>
             ${penalties}
           </div>`;
+      }
+
+      function bracketWinner(match) {
+        const penaltyWinner = String(match.penalty_winner || '').trim();
+        if (penaltyWinner) return penaltyWinner;
+        if (!isComplete(match)) return '';
+        const homeGoals = Number(match.home_goals);
+        const awayGoals = Number(match.away_goals);
+        if (homeGoals > awayGoals) return String(match.home_team || '');
+        if (awayGoals > homeGoals) return String(match.away_team || '');
+        return '';
+      }
+
+      function bracketMatch(match, fallbackId) {
+        const item = match || {};
+        const complete = isComplete(item);
+        const winner = bracketWinner(item);
+        const home = String(item.home_team || 'TBD');
+        const away = String(item.away_team || 'TBD');
+        const homeScore = complete ? item.home_goals : '—';
+        const awayScore = complete ? item.away_goals : '—';
+        const live = isMatchLive(item);
+        const matchReference = live ? `Campo ${item.field || '—'} · LIVE` : (item.time || '—');
+        const penalty = item.penalty_winner
+          ? `<div class="bracket-penalty">Rigori: ${esc(item.penalty_winner)}</div>`
+          : '';
+        return `<div class="bracket-match${live ? ' live' : ''}">
+          <div class="bracket-meta">${esc(item.match_id || fallbackId)} · ${esc(matchReference)}</div>
+          <div class="bracket-team-row${winner === home ? ' winner' : ''}">
+            <span class="bracket-team-name" title="${esc(home)}">${esc(home)}</span>
+            <span class="bracket-team-score">${esc(homeScore)}</span>
+          </div>
+          <div class="bracket-team-row${winner === away ? ' winner' : ''}">
+            <span class="bracket-team-name" title="${esc(away)}">${esc(away)}</span>
+            <span class="bracket-team-score">${esc(awayScore)}</span>
+          </div>
+          ${penalty}
+        </div>`;
+      }
+
+      function knockoutMatchesById(matches) {
+        const result = {};
+        ['QF1', 'QF2', 'QF3', 'QF4', 'SF1', 'SF2', 'FIN'].forEach(id => {
+          const candidates = matches.filter(match =>
+            String(match.match_id || '').trim().toUpperCase() === id
+          );
+          result[id] = candidates.sort((a, b) => {
+            const quality = item =>
+              (item.home_team ? 2 : 0) + (item.away_team ? 2 : 0) + (isComplete(item) ? 4 : 0);
+            return quality(b) - quality(a);
+          })[0] || null;
+        });
+        return result;
+      }
+
+      function renderKnockoutBracket(matches) {
+        const bracket = knockoutMatchesById(matches);
+        return `<div class="knockout-bracket">
+          <div class="bracket-column bracket-left bracket-quarter-left">
+            <span class="bracket-stage">Quarti</span>
+            ${bracketMatch(bracket.QF1, 'QF1')}
+            ${bracketMatch(bracket.QF2, 'QF2')}
+          </div>
+          <div class="bracket-column bracket-left bracket-final-left">
+            <span class="bracket-stage">Semifinale</span>
+            ${bracketMatch(bracket.SF1, 'SF1')}
+          </div>
+          <div class="bracket-column bracket-final">
+            <span class="bracket-stage">Finale</span>
+            ${bracketMatch(bracket.FIN, 'FIN')}
+          </div>
+          <div class="bracket-column bracket-right bracket-final-right">
+            <span class="bracket-stage">Semifinale</span>
+            ${bracketMatch(bracket.SF2, 'SF2')}
+          </div>
+          <div class="bracket-column bracket-right bracket-quarter-right">
+            <span class="bracket-stage">Quarti</span>
+            ${bracketMatch(bracket.QF3, 'QF3')}
+            ${bracketMatch(bracket.QF4, 'QF4')}
+          </div>
+        </div>`;
       }
 
       function applySlide(index) {
@@ -785,8 +1130,14 @@
       }
 
       function startCarousel() {
-        clearInterval(carouselTimer);
-        carouselTimer = setInterval(() => applySlide(slideIndex + 1), 8000);
+        clearTimeout(carouselTimer);
+        const afterTwenty = new Date().getHours() >= 20;
+        const isFinals = slideDefinitions[slideIndex].key === 'finals';
+        const duration = afterTwenty ? (isFinals ? 100000000 : 1) : 8000;
+        carouselTimer = setTimeout(() => {
+          applySlide(slideIndex + 1);
+          startCarousel();
+        }, duration);
       }
 
       function renderMatches(matches) {
@@ -796,6 +1147,9 @@
           const selected = matches.filter(match => definition.key === 'finals'
             ? String(match.stage || '').trim().toLowerCase() !== 'group'
             : String(match.group || '').trim().toUpperCase() === definition.key);
+          if (definition.key === 'finals') {
+            return `<div class="results-slide" data-slide="finals">${renderKnockoutBracket(selected)}</div>`;
+          }
           const columns = definition.key === 'finals' ? 3 : 2;
           const rows = Math.max(1, Math.ceil(selected.length / columns));
           const content = selected.length
