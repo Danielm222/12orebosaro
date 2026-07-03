@@ -1643,6 +1643,59 @@ body {
     font-family: 'Bebas Neue', sans-serif;
     font-size: 1.2rem; color: var(--neon);
   }
+
+  /* NO BOUNCE CHALLENGE */
+  .challenge-summary {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    margin: 0 0 1.5rem;
+  }
+  .challenge-rule {
+    background: var(--dark2);
+    border: 1px solid rgba(255,255,255,0.08);
+    padding: 1rem;
+  }
+  .challenge-rule-label {
+    display: block;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--neon);
+    margin-bottom: 0.35rem;
+  }
+  .challenge-rule strong {
+    display: block;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.6rem;
+    letter-spacing: 0.04em;
+    color: var(--white);
+    margin-bottom: 0.35rem;
+  }
+  .challenge-rule p,
+  .challenge-note,
+  .challenge-empty {
+    color: rgba(255,255,255,0.55);
+    font-size: 0.95rem;
+    line-height: 1.7;
+  }
+  .challenge-note {
+    margin: 0 0 1.5rem;
+    padding: 1rem;
+    background: rgba(232,255,0,0.05);
+    border-left: 2px solid var(--neon);
+  }
+  .challenge-empty {
+    margin-top: 1rem;
+    font-family: 'Barlow Condensed', sans-serif;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  @media (max-width: 760px) {
+    .challenge-summary { grid-template-columns: 1fr; }
+  }
 </style>
 <script src="./assets/xlsx.full.min.js?v=20260627"></script>
 <!-- Google tag (gtag.js) -->
@@ -1717,6 +1770,7 @@ window.TOURNAMENT_DATA = {"standings": [{"Group": "A", "Pos": 1, "Team": "Fatine
     <a href="#" class="mob-link-small" onclick="goToPage('marcatori'); return false;">🎯 Marcatori</a>
     <a href="#" class="mob-link-small" onclick="goToPage('albodoro'); return false;">🏆 Albo d'Oro</a>
     <a href="#" class="mob-link-small" onclick="goToPage('sponsor'); return false;">⭐ Sponsor</a>
+    <a href="#" class="mob-link-small" onclick="goToPage('noBounce'); return false;">⚽ No Bounce Challenge</a>
   </div>
 </div>
 
@@ -2739,6 +2793,66 @@ Le partite non sono ancora iniziate. Torna il 4 Luglio!</div>
 
 
 <!-- ============================================================ -->
+<!-- OVERLAY PAGE: NO BOUNCE CHALLENGE -->
+<!-- ============================================================ -->
+<div class="overlay-page" id="noBounce">
+  <div class="overlay-header">
+    <button class="overlay-back" onclick="closePage('noBounce')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      Torna alla home
+    </button>
+    <div class="overlay-title-bar">No Bounce Challenge</div>
+    <button class="overlay-hamburger" onclick="openMobileMenuFromOverlay()">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="overlay-content">
+    <p class="section-label">— Sfida parallela</p>
+    <h2 class="section-title">No Bounce Challenge</h2>
+    <div class="section-divider"></div>
+
+    <div class="challenge-summary">
+      <div class="challenge-rule">
+        <span class="challenge-rule-label">Costo</span>
+        <strong>2€</strong>
+        <p>Ogni partecipazione dà diritto a 10 tiri.</p>
+      </div>
+      <div class="challenge-rule">
+        <span class="challenge-rule-label">Obiettivo</span>
+        <strong>Gol diretto</strong>
+        <p>Il pallone deve entrare nella porticina senza rimbalzare prima a terra.</p>
+      </div>
+      <div class="challenge-rule">
+        <span class="challenge-rule-label">Premio</span>
+        <strong>Piadina + birra</strong>
+        <p>Offerte dallo Staff al giocatore con più gol validi.</p>
+      </div>
+    </div>
+
+    <div class="challenge-note">
+      In caso di parità al primo posto, i giocatori con lo stesso numero di gol validi si sfidano con tentativi ad oltranza fino a decretare un unico vincitore.
+    </div>
+
+    <div class="classifica-table-wrap">
+      <table class="marcatori-table" id="noBounceTable">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Nome</th>
+            <th>Cognome</th>
+            <th>Gol validi</th>
+          </tr>
+        </thead>
+        <tbody id="noBounceBody">
+          <tr><td colspan="4" style="text-align:center; color:var(--gray); padding:2rem; font-family:'Barlow Condensed',sans-serif; letter-spacing:0.1em;">Nessun risultato disponibile</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+<!-- ============================================================ -->
 <!-- OVERLAY PAGE: SQUADRE ISCRITTE -->
 <!-- ============================================================ -->
 <div class="overlay-page" id="squadre">
@@ -2803,7 +2917,7 @@ Le partite non sono ancora iniziate. Torna il 4 Luglio!</div>
   // MOBILE MENU
   const hamburger = document.getElementById('hamburger');
   const mobileMenu = document.getElementById('mobileMenu');
-  const OVERLAY_IDS = ['risultati', 'albodoro', 'sponsor', 'squadre', 'marcatori'];
+  const OVERLAY_IDS = ['risultati', 'albodoro', 'sponsor', 'squadre', 'marcatori', 'noBounce'];
 
   hamburger.addEventListener('click', () => {
     if (mobileMenu.classList.contains('open')) {
@@ -2928,7 +3042,7 @@ Le partite non sono ancora iniziate. Torna il 4 Luglio!</div>
   // Chiudi overlay con tasto ESC
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
-      ['risultati', 'albodoro', 'sponsor', 'squadre', 'marcatori'].forEach(id => {
+      OVERLAY_IDS.forEach(id => {
         document.getElementById(id).classList.remove('open');
       });
       ['menuModal'].forEach(id => {
