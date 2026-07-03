@@ -481,13 +481,13 @@
       z-index: 2;
       border-color: #526000;
       box-shadow: 0 0 0 3px rgba(113,128,0,.28);
-      transform: scale(1.16);
+      transform: scale(1.04);
       transform-origin: center;
     }
 
     .bracket-final-left .bracket-match,
     .bracket-final-right .bracket-match {
-      transform: scale(1.06);
+      transform: scale(1.02);
       transform-origin: center;
     }
 
@@ -558,11 +558,11 @@
     }
 
     .bracket-final .bracket-team-row {
-      min-height: 38px;
-      font-size: clamp(13px, 1vw, 18px);
+      min-height: 34px;
+      font-size: clamp(12px, .9vw, 16px);
     }
 
-    .bracket-final .bracket-team-score { font-size: 26px; }
+    .bracket-final .bracket-team-score { font-size: 23px; }
 
     .bracket-left .bracket-match::after,
     .bracket-final-left .bracket-match::after {
@@ -570,7 +570,7 @@
       position: absolute;
       top: 50%;
       left: 100%;
-      width: 12px;
+      width: 20px;
       border-top: 2px solid #718000;
     }
 
@@ -580,7 +580,7 @@
       position: absolute;
       top: 50%;
       right: 100%;
-      width: 12px;
+      width: 20px;
       border-top: 2px solid #718000;
     }
 
@@ -768,9 +768,9 @@
       .bracket-left .bracket-match::after,
       .bracket-final-left .bracket-match::after,
       .bracket-right .bracket-match::before,
-      .bracket-final-right .bracket-match::before { width: 7px; }
-      .bracket-quarter-left::after { right: -7px; }
-      .bracket-quarter-right::before { left: -7px; }
+      .bracket-final-right .bracket-match::before { width: 11px; }
+      .bracket-quarter-left::after { right: -11px; }
+      .bracket-quarter-right::before { left: -11px; }
       .sponsor-label,
       .ticker { height: 77px; }
       .sponsor-item { height: 64px; grid-template-rows: 43px 1fr; font-size: 12px; }

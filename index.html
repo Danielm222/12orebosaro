@@ -1003,10 +1003,9 @@
     display: none;
   }
   .top-extra-links .extra-links {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 0.3rem;
-    justify-content: space-between;
-    flex-wrap: nowrap;
     overflow-x: auto;
     padding: 0 0.2rem;
   }
@@ -1015,10 +1014,11 @@
   }
   .top-extra-links .extra-link {
     display: inline-flex;
-    flex: 1 1 22%;
-    max-width: 22%;
+    box-sizing: border-box;
+    width: 100%;
     min-width: 0;
-    white-space: nowrap;
+    min-height: 2.15rem;
+    white-space: normal;
     align-items: center;
     justify-content: center;
     gap: 0.25rem;
@@ -1028,35 +1028,30 @@
     background: rgba(255,255,255,0.03);
     color: var(--white);
     font-family: 'Barlow Condensed', sans-serif;
-    font-size: 0.65rem;
+    font-size: 0.68rem;
     font-weight: 700;
-    letter-spacing: 0.08em;
+    letter-spacing: 0;
+    line-height: 1.05;
     text-transform: uppercase;
     text-decoration: none;
+    text-align: center;
     transition: background 0.2s, color 0.2s, border-color 0.2s, padding 0.2s;
   }
   .top-extra-links .extra-link .link-icon {
     display: inline-flex;
+    flex: 0 0 auto;
     font-size: 1rem;
     line-height: 1;
   }
   .top-extra-links .extra-link .link-label {
     display: inline-block;
+    min-width: 0;
+    overflow-wrap: anywhere;
   }
   .top-extra-links .extra-link:hover {
     background: var(--neon);
     color: var(--black);
     border-color: var(--neon);
-  }
-  .top-extra-links .extra-link.featured {
-    color: var(--black);
-    background: var(--neon);
-    border-color: var(--neon);
-    flex-grow: 1.25;
-    max-width: 25%;
-  }
-  .top-extra-links .extra-link.featured:hover {
-    background: var(--neon2);
   }
   .top-extra-links.compact {
     top: var(--top-extra-nav, 5.1rem);
@@ -1071,6 +1066,34 @@
   }
   .top-extra-links.compact .link-label {
     display: none;
+  }
+
+  @media (max-width: 430px) {
+    .top-extra-links {
+      padding-left: 0.45rem;
+      padding-right: 0.45rem;
+    }
+    .top-extra-links .extra-links {
+      gap: 0.2rem;
+      padding: 0;
+    }
+    .top-extra-links .extra-link {
+      flex-direction: column;
+      gap: 0.12rem;
+      min-height: 2.8rem;
+      padding: 0.32rem 0.18rem;
+      font-size: 0.58rem;
+      letter-spacing: 0;
+    }
+    .top-extra-links .extra-link .link-icon {
+      font-size: 0.9rem;
+    }
+  }
+
+  @media (max-width: 340px) {
+    .top-extra-links .extra-link {
+      font-size: 0.52rem;
+    }
   }
 
   /* ============ OVERLAY PAGES ============ */
@@ -1620,6 +1643,59 @@ body {
     font-family: 'Bebas Neue', sans-serif;
     font-size: 1.2rem; color: var(--neon);
   }
+
+  /* NO BOUNCE CHALLENGE */
+  .challenge-summary {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    margin: 0 0 1.5rem;
+  }
+  .challenge-rule {
+    background: var(--dark2);
+    border: 1px solid rgba(255,255,255,0.08);
+    padding: 1rem;
+  }
+  .challenge-rule-label {
+    display: block;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--neon);
+    margin-bottom: 0.35rem;
+  }
+  .challenge-rule strong {
+    display: block;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.6rem;
+    letter-spacing: 0.04em;
+    color: var(--white);
+    margin-bottom: 0.35rem;
+  }
+  .challenge-rule p,
+  .challenge-note,
+  .challenge-empty {
+    color: rgba(255,255,255,0.55);
+    font-size: 0.95rem;
+    line-height: 1.7;
+  }
+  .challenge-note {
+    margin: 0 0 1.5rem;
+    padding: 1rem;
+    background: rgba(232,255,0,0.05);
+    border-left: 2px solid var(--neon);
+  }
+  .challenge-empty {
+    margin-top: 1rem;
+    font-family: 'Barlow Condensed', sans-serif;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  @media (max-width: 760px) {
+    .challenge-summary { grid-template-columns: 1fr; }
+  }
 </style>
 <script src="./assets/xlsx.full.min.js?v=20260627"></script>
 <!-- Google tag (gtag.js) -->
@@ -1634,6 +1710,12 @@ body {
 </head>
 <body>
 <script>
+window.NO_BOUNCE_DATA = [
+  {"Nome":"Daniel","Cognome":"Marchi","Punti":10},
+  {"Nome":"Daniele","Cognome":"Moretto","Punti":8},
+  {"Nome":"Nicola","Cognome":"Caniato","Punti":5},
+  {"Nome":"Lorenzo","Cognome":"Braggiato","Punti":15}
+];
 window.TOURNAMENT_DATA = {"standings": [{"Group": "A", "Pos": 1, "Team": "Fatine FC", "Pts": 3, "P": 1, "W": 1, "WP": 0, "LP": 0, "L": 0, "GF": 6, "GA": 0, "GD": 6}, {"Group": "A", "Pos": 2, "Team": "Astolfi Impianti Elettrici", "Pts": 3, "P": 1, "W": 1, "WP": 0, "LP": 0, "L": 0, "GF": 5, "GA": 2, "GD": 3}, {"Group": "A", "Pos": 3, "Team": "Moviola Utd", "Pts": 0, "P": 1, "W": 0, "WP": 0, "LP": 0, "L": 1, "GF": 2, "GA": 5, "GD": -3}, {"Group": "A", "Pos": 4, "Team": "FC Internazionale Rovigo", "Pts": 0, "P": 1, "W": 0, "WP": 0, "LP": 0, "L": 1, "GF": 0, "GA": 6, "GD": -6}, {"Group": "B", "Pos": 1, "Team": "AS Bancatore", "Pts": 6, "P": 2, "W": 2, "WP": 0, "LP": 0, "L": 0, "GF": 4, "GA": 2, "GD": 2}, {"Group": "B", "Pos": 2, "Team": "Vecchie Glorie Rovigo", "Pts": 3, "P": 1, "W": 1, "WP": 0, "LP": 0, "L": 0, "GF": 1, "GA": 0, "GD": 1}, {"Group": "B", "Pos": 3, "Team": "Beverton", "Pts": 0, "P": 1, "W": 0, "WP": 0, "LP": 0, "L": 1, "GF": 0, "GA": 1, "GD": -1}, {"Group": "B", "Pos": 4, "Team": "Totani", "Pts": 0, "P": 2, "W": 0, "WP": 0, "LP": 0, "L": 2, "GF": 2, "GA": 4, "GD": -2}, {"Group": "C", "Pos": 1, "Team": "Leoni di Ricky", "Pts": 3, "P": 1, "W": 1, "WP": 0, "LP": 0, "L": 0, "GF": 3, "GA": 2, "GD": 1}, {"Group": "C", "Pos": 2, "Team": "Barrio Boys", "Pts": 2, "P": 1, "W": 0, "WP": 1, "LP": 0, "L": 0, "GF": 2, "GA": 2, "GD": 0}, {"Group": "C", "Pos": 3, "Team": "Cani", "Pts": 1, "P": 1, "W": 0, "WP": 0, "LP": 1, "L": 0, "GF": 2, "GA": 2, "GD": 0}, {"Group": "C", "Pos": 4, "Team": "Pink 5ive", "Pts": 0, "P": 1, "W": 0, "WP": 0, "LP": 0, "L": 1, "GF": 2, "GA": 3, "GD": -1}, {"Group": "D", "Pos": 1, "Team": "Coca Juniors", "Pts": 6, "P": 2, "W": 2, "WP": 0, "LP": 0, "L": 0, "GF": 9, "GA": 4, "GD": 5}, {"Group": "D", "Pos": 2, "Team": "Boldò Glimt", "Pts": 2, "P": 1, "W": 0, "WP": 1, "LP": 0, "L": 0, "GF": 1, "GA": 1, "GD": 0}, {"Group": "D", "Pos": 3, "Team": "All Blacks", "Pts": 1, "P": 2, "W": 0, "WP": 0, "LP": 1, "L": 1, "GF": 4, "GA": 5, "GD": -1}, {"Group": "D", "Pos": 4, "Team": "Piadineria la Salsiccia", "Pts": 0, "P": 1, "W": 0, "WP": 0, "LP": 0, "L": 1, "GF": 1, "GA": 5, "GD": -4}], "matches": [{"MatchID": "M01", "Stage": "Group", "Group": "D", "Round": 1, "Field": "1", "Time": "14:15", "HomeTeam": "All Blacks", "AwayTeam": "Boldò Glimt", "HomeGoals": 1, "AwayGoals": 1, "PenaltyWinner": "Boldò Glimt", "Status": "Complete", "HomePoints": 1, "AwayPoints": 2, "Winner": "Boldò Glimt", "ScoreLabel": "All Blacks 1 - 1 Boldò Glimt (rigori: Boldò Glimt)"}, {"MatchID": "M02", "Stage": "Group", "Group": "D", "Round": 1, "Field": "2", "Time": "14:15", "HomeTeam": "Coca Juniors", "AwayTeam": "Piadineria la Salsiccia", "HomeGoals": 5, "AwayGoals": 1, "Status": "Complete", "HomePoints": 3, "AwayPoints": 0, "Winner": "Coca Juniors", "ScoreLabel": "Coca Juniors 5 - 1 Piadineria la Salsiccia"}, {"MatchID": "M03", "Stage": "Group", "Group": "B", "Round": 1, "Field": "3 (S)", "Time": "14:15", "HomeTeam": "Totani", "AwayTeam": "Vecchie Glorie Rovigo", "HomeGoals": 0, "AwayGoals": 1, "Status": "Complete", "HomePoints": 0, "AwayPoints": 3, "Winner": "Vecchie Glorie Rovigo", "ScoreLabel": "Totani 0 - 1 Vecchie Glorie Rovigo"}, {"MatchID": "M04", "Stage": "Group", "Group": "C", "Round": 1, "Field": "1", "Time": "14:45", "HomeTeam": "Leoni di Ricky", "AwayTeam": "Pink 5ive", "HomeGoals": 3, "AwayGoals": 2, "Status": "Complete", "HomePoints": 3, "AwayPoints": 0, "Winner": "Leoni di Ricky", "ScoreLabel": "Leoni di Ricky 3 - 2 Pink 5ive"}, {"MatchID": "M05", "Stage": "Group", "Group": "C", "Round": 1, "Field": "2", "Time": "14:45", "HomeTeam": "Barrio Boys", "AwayTeam": "Cani", "HomeGoals": 2, "AwayGoals": 2, "PenaltyWinner": "Barrio Boys", "Status": "Complete", "HomePoints": 2, "AwayPoints": 1, "Winner": "Barrio Boys", "ScoreLabel": "Barrio Boys 2 - 2 Cani (rigori: Barrio Boys)"}, {"MatchID": "M06", "Stage": "Group", "Group": "B", "Round": 1, "Field": "3 (S)", "Time": "14:45", "HomeTeam": "AS Bancatore", "AwayTeam": "Beverton", "HomeGoals": 1, "AwayGoals": 0, "Status": "Complete", "HomePoints": 3, "AwayPoints": 0, "Winner": "AS Bancatore", "ScoreLabel": "AS Bancatore 1 - 0 Beverton"}, {"MatchID": "M07", "Stage": "Group", "Group": "A", "Round": 1, "Field": "1", "Time": "15:15", "HomeTeam": "Fatine FC", "AwayTeam": "FC Internazionale Rovigo", "HomeGoals": 6, "AwayGoals": 0, "Status": "Complete", "HomePoints": 3, "AwayPoints": 0, "Winner": "Fatine FC", "ScoreLabel": "Fatine FC 6 - 0 FC Internazionale Rovigo"}, {"MatchID": "M08", "Stage": "Group", "Group": "A", "Round": 1, "Field": "2", "Time": "15:15", "HomeTeam": "Moviola Utd", "AwayTeam": "Astolfi Impianti Elettrici", "HomeGoals": 2, "AwayGoals": 5, "Status": "Complete", "HomePoints": 0, "AwayPoints": 3, "Winner": "Astolfi Impianti Elettrici", "ScoreLabel": "Moviola Utd 2 - 5 Astolfi Impianti Elettrici"}, {"MatchID": "M09", "Stage": "Group", "Group": "D", "Round": 2, "Field": "3 (S)", "Time": "15:15", "HomeTeam": "All Blacks", "AwayTeam": "Coca Juniors", "HomeGoals": 3, "AwayGoals": 4, "Status": "Complete", "HomePoints": 0, "AwayPoints": 3, "Winner": "Coca Juniors", "ScoreLabel": "All Blacks 3 - 4 Coca Juniors"}, {"MatchID": "M10", "Stage": "Group", "Group": "B", "Round": 2, "Field": "1", "Time": "15:45", "HomeTeam": "Totani", "AwayTeam": "AS Bancatore", "HomeGoals": 2, "AwayGoals": 3, "Status": "Complete", "HomePoints": 0, "AwayPoints": 3, "Winner": "AS Bancatore", "ScoreLabel": "Totani 2 - 3 AS Bancatore"}, {"MatchID": "M11", "Stage": "Group", "Group": "B", "Round": 2, "Field": "2", "Time": "15:45", "HomeTeam": "Vecchie Glorie Rovigo", "AwayTeam": "Beverton", "Status": "Pending"}, {"MatchID": "M12", "Stage": "Group", "Group": "D", "Round": 2, "Field": "3 (S)", "Time": "15:45", "HomeTeam": "Boldò Glimt", "AwayTeam": "Piadineria la Salsiccia", "Status": "Pending"}, {"MatchID": "M13", "Stage": "Group", "Group": "C", "Round": 2, "Field": "1", "Time": "16:30", "HomeTeam": "Leoni di Ricky", "AwayTeam": "Barrio Boys", "Status": "Pending"}, {"MatchID": "M14", "Stage": "Group", "Group": "C", "Round": 2, "Field": "2", "Time": "16:30", "HomeTeam": "Pink 5ive", "AwayTeam": "Cani", "Status": "Pending"}, {"MatchID": "M15", "Stage": "Group", "Group": "A", "Round": 2, "Field": "3 (S)", "Time": "16:30", "HomeTeam": "Fatine FC", "AwayTeam": "Moviola Utd", "Status": "Pending"}, {"MatchID": "M16", "Stage": "Group", "Group": "D", "Round": 3, "Field": "1", "Time": "17:00", "HomeTeam": "All Blacks", "AwayTeam": "Piadineria la Salsiccia", "Status": "Pending"}, {"MatchID": "M17", "Stage": "Group", "Group": "D", "Round": 3, "Field": "2", "Time": "17:00", "HomeTeam": "Boldò Glimt", "AwayTeam": "Coca Juniors", "Status": "Pending"}, {"MatchID": "M18", "Stage": "Group", "Group": "A", "Round": 2, "Field": "3 (S)", "Time": "17:00", "HomeTeam": "FC Internazionale Rovigo", "AwayTeam": "Astolfi Impianti Elettrici", "Status": "Pending"}, {"MatchID": "M19", "Stage": "Group", "Group": "B", "Round": 3, "Field": "1", "Time": "17:30", "HomeTeam": "Totani", "AwayTeam": "Beverton", "Status": "Pending"}, {"MatchID": "M20", "Stage": "Group", "Group": "B", "Round": 3, "Field": "2", "Time": "17:30", "HomeTeam": "Vecchie Glorie Rovigo", "AwayTeam": "AS Bancatore", "Status": "Pending"}, {"MatchID": "M21", "Stage": "Group", "Group": "C", "Round": 3, "Field": "3 (S)", "Time": "17:30", "HomeTeam": "Leoni di Ricky", "AwayTeam": "Cani", "Status": "Pending"}, {"MatchID": "M22", "Stage": "Group", "Group": "A", "Round": 3, "Field": "1", "Time": "18:00", "HomeTeam": "Fatine FC", "AwayTeam": "Astolfi Impianti Elettrici", "Status": "Pending"}, {"MatchID": "M23", "Stage": "Group", "Group": "A", "Round": 3, "Field": "2", "Time": "18:00", "HomeTeam": "FC Internazionale Rovigo", "AwayTeam": "Moviola Utd", "Status": "Pending"}, {"MatchID": "M24", "Stage": "Group", "Group": "C", "Round": 3, "Field": "3 (S)", "Time": "18:00", "HomeTeam": "Pink 5ive", "AwayTeam": "Barrio Boys", "Status": "Pending"}], "knockout": [{"MatchID": "QF1", "Stage": "Quarter-final", "Field": "1", "Time": "20:00"}, {"MatchID": "QF2", "Stage": "Quarter-final", "Field": "2", "Time": "20:00"}, {"MatchID": "QF3", "Stage": "Quarter-final", "Field": "1", "Time": "20:45"}, {"MatchID": "QF4", "Stage": "Quarter-final", "Field": "2", "Time": "20:45"}, {"MatchID": "SF1", "Stage": "Semi-final", "Field": "1", "Time": "21:45"}, {"MatchID": "SF2", "Stage": "Semi-final", "Field": "2", "Time": "21:45"}, {"MatchID": "FIN", "Stage": "Final", "Time": "22:45"}], "teams": [{"TeamID": "T01", "Group": "A", "TeamName": "Fatine FC", "Players": 10}, {"TeamID": "T02", "Group": "A", "TeamName": "FC Internazionale Rovigo", "Players": 10}, {"TeamID": "T03", "Group": "A", "TeamName": "Moviola Utd", "Players": 12}, {"TeamID": "T04", "Group": "A", "TeamName": "Astolfi Impianti Elettrici", "Players": 9}, {"TeamID": "T05", "Group": "B", "TeamName": "Totani", "Players": 9}, {"TeamID": "T06", "Group": "B", "TeamName": "Vecchie Glorie Rovigo", "Players": 11}, {"TeamID": "T07", "Group": "B", "TeamName": "AS Bancatore", "Players": 11}, {"TeamID": "T08", "Group": "B", "TeamName": "Beverton", "Players": 6}, {"TeamID": "T09", "Group": "C", "TeamName": "Leoni di Ricky", "Players": 8}, {"TeamID": "T10", "Group": "C", "TeamName": "Pink 5ive", "Players": 10}, {"TeamID": "T11", "Group": "C", "TeamName": "Barrio Boys", "Players": 10}, {"TeamID": "T12", "Group": "C", "TeamName": "Cani", "Players": 10}, {"TeamID": "T13", "Group": "D", "TeamName": "All Blacks", "Players": 11}, {"TeamID": "T14", "Group": "D", "TeamName": "Boldò Glimt", "Players": 10}, {"TeamID": "T15", "Group": "D", "TeamName": "Coca Juniors", "Players": 10}, {"TeamID": "T16", "Group": "D", "TeamName": "Piadineria la Salsiccia", "Players": 10}], "players": [{"PlayerID": "P001", "TeamID": "T01", "TeamName": "Fatine FC", "ShirtNumber": 1, "PlayerName": "PIETRO SEGATO", "Captain": "No", "DisplayName": "1 - PIETRO SEGATO"}, {"PlayerID": "P002", "TeamID": "T01", "TeamName": "Fatine FC", "ShirtNumber": 4, "PlayerName": "GIOVANNI BALLO", "Captain": "No", "DisplayName": "4 - GIOVANNI BALLO"}, {"PlayerID": "P003", "TeamID": "T01", "TeamName": "Fatine FC", "ShirtNumber": 5, "PlayerName": "DANIELE MARZOLLA", "Captain": "No", "DisplayName": "5 - DANIELE MARZOLLA"}, {"PlayerID": "P004", "TeamID": "T01", "TeamName": "Fatine FC", "ShirtNumber": 7, "PlayerName": "NICHOLAS MILAN", "Captain": "No", "DisplayName": "7 - NICHOLAS MILAN"}, {"PlayerID": "P005", "TeamID": "T01", "TeamName": "Fatine FC", "ShirtNumber": 8, "PlayerName": "ALESSIO MILAN", "Captain": "No", "DisplayName": "8 - ALESSIO MILAN"}, {"PlayerID": "P006", "TeamID": "T01", "TeamName": "Fatine FC", "ShirtNumber": 10, "PlayerName": "LUCA MARINI", "Captain": "No", "DisplayName": "10 - LUCA MARINI"}, {"PlayerID": "P007", "TeamID": "T01", "TeamName": "Fatine FC", "ShirtNumber": 11, "PlayerName": "DAVIDE GHIRARDI", "Captain": "No", "DisplayName": "11 - DAVIDE GHIRARDI"}, {"PlayerID": "P008", "TeamID": "T01", "TeamName": "Fatine FC", "ShirtNumber": 23, "PlayerName": "NICOLA MARINI", "Captain": "Yes", "DisplayName": "23 - NICOLA MARINI (C)"}, {"PlayerID": "P009", "TeamID": "T01", "TeamName": "Fatine FC", "ShirtNumber": 69, "PlayerName": "LUCA ROSSETTO", "Captain": "No", "DisplayName": "69 - LUCA ROSSETTO"}, {"PlayerID": "P010", "TeamID": "T01", "TeamName": "Fatine FC", "ShirtNumber": 90, "PlayerName": "MANUEL MEDEA", "Captain": "No", "DisplayName": "90 - MANUEL MEDEA"}, {"PlayerID": "P011", "TeamID": "T02", "TeamName": "FC Internazionale Rovigo", "PlayerName": "BOGDAN ATAMANYUK", "Captain": "No", "DisplayName": "BOGDAN ATAMANYUK"}, {"PlayerID": "P012", "TeamID": "T02", "TeamName": "FC Internazionale Rovigo", "PlayerName": "IVAN DENIS SHEVERAK", "Captain": "No", "DisplayName": "IVAN DENIS SHEVERAK"}, {"PlayerID": "P013", "TeamID": "T02", "TeamName": "FC Internazionale Rovigo", "PlayerName": "MOHAMED IAICH", "Captain": "No", "DisplayName": "MOHAMED IAICH"}, {"PlayerID": "P014", "TeamID": "T02", "TeamName": "FC Internazionale Rovigo", "PlayerName": "NICOLÒ ANDOLFO", "Captain": "No", "DisplayName": "NICOLÒ ANDOLFO"}, {"PlayerID": "P015", "TeamID": "T02", "TeamName": "FC Internazionale Rovigo", "PlayerName": "AHMED ZOUZAF", "Captain": "No", "DisplayName": "AHMED ZOUZAF"}, {"PlayerID": "P016", "TeamID": "T02", "TeamName": "FC Internazionale Rovigo", "PlayerName": "YOUSSEF IAICH", "Captain": "No", "DisplayName": "YOUSSEF IAICH"}, {"PlayerID": "P017", "TeamID": "T02", "TeamName": "FC Internazionale Rovigo", "PlayerName": "HAMZA AGRIBI", "Captain": "Yes", "DisplayName": "HAMZA AGRIBI (C)"}, {"PlayerID": "P018", "TeamID": "T02", "TeamName": "FC Internazionale Rovigo", "PlayerName": "KHALID BENNOUNE", "Captain": "No", "DisplayName": "KHALID BENNOUNE"}, {"PlayerID": "P019", "TeamID": "T02", "TeamName": "FC Internazionale Rovigo", "PlayerName": "YASSINE SOHAYB", "Captain": "No", "DisplayName": "YASSINE SOHAYB"}, {"PlayerID": "P020", "TeamID": "T02", "TeamName": "FC Internazionale Rovigo", "PlayerName": "ABDESSAMAD BAGHROUCH", "Captain": "No", "DisplayName": "ABDESSAMAD BAGHROUCH"}, {"PlayerID": "P021", "TeamID": "T03", "TeamName": "Moviola Utd", "PlayerName": "FILIPPO ZANFORLIN", "Captain": "No", "DisplayName": "FILIPPO ZANFORLIN"}, {"PlayerID": "P022", "TeamID": "T03", "TeamName": "Moviola Utd", "PlayerName": "MICHAEL STRENGHETTO", "Captain": "Yes", "DisplayName": "MICHAEL STRENGHETTO (C)"}, {"PlayerID": "P023", "TeamID": "T03", "TeamName": "Moviola Utd", "PlayerName": "LUCA BACCO", "Captain": "No", "DisplayName": "LUCA BACCO"}, {"PlayerID": "P024", "TeamID": "T03", "TeamName": "Moviola Utd", "PlayerName": "FILIPPO SCARANELLO", "Captain": "No", "DisplayName": "FILIPPO SCARANELLO"}, {"PlayerID": "P025", "TeamID": "T03", "TeamName": "Moviola Utd", "PlayerName": "LORENZO NOVENTA", "Captain": "No", "DisplayName": "LORENZO NOVENTA"}, {"PlayerID": "P026", "TeamID": "T03", "TeamName": "Moviola Utd", "PlayerName": "MATTIA BORGATO", "Captain": "No", "DisplayName": "MATTIA BORGATO"}, {"PlayerID": "P027", "TeamID": "T03", "TeamName": "Moviola Utd", "PlayerName": "MARCO CASAROTTI", "Captain": "No", "DisplayName": "MARCO CASAROTTI"}, {"PlayerID": "P028", "TeamID": "T03", "TeamName": "Moviola Utd", "PlayerName": "MATTEO NATALI", "Captain": "No", "DisplayName": "MATTEO NATALI"}, {"PlayerID": "P029", "TeamID": "T03", "TeamName": "Moviola Utd", "PlayerName": "FRANCESCO DADDATO", "Captain": "No", "DisplayName": "FRANCESCO DADDATO"}, {"PlayerID": "P030", "TeamID": "T03", "TeamName": "Moviola Utd", "PlayerName": "NICHOLAS LANZONI", "Captain": "No", "DisplayName": "NICHOLAS LANZONI"}, {"PlayerID": "P031", "TeamID": "T03", "TeamName": "Moviola Utd", "PlayerName": "NICOLÒ POLITI", "Captain": "No", "DisplayName": "NICOLÒ POLITI"}, {"PlayerID": "P032", "TeamID": "T03", "TeamName": "Moviola Utd", "PlayerName": "MATTEO SENO", "Captain": "No", "DisplayName": "MATTEO SENO"}, {"PlayerID": "P033", "TeamID": "T04", "TeamName": "Astolfi Impianti Elettrici", "ShirtNumber": 1, "PlayerName": "NICOLAS ANDRIOTTO", "Captain": "No", "DisplayName": "1 - NICOLAS ANDRIOTTO"}, {"PlayerID": "P034", "TeamID": "T04", "TeamName": "Astolfi Impianti Elettrici", "ShirtNumber": 4, "PlayerName": "GIANLUCA PAVAN", "Captain": "No", "DisplayName": "4 - GIANLUCA PAVAN"}, {"PlayerID": "P035", "TeamID": "T04", "TeamName": "Astolfi Impianti Elettrici", "ShirtNumber": 6, "PlayerName": "NICOLA CAVALLIERI", "Captain": "No", "DisplayName": "6 - NICOLA CAVALLIERI"}, {"PlayerID": "P036", "TeamID": "T04", "TeamName": "Astolfi Impianti Elettrici", "ShirtNumber": 7, "PlayerName": "ALBAN AHMATI", "Captain": "No", "DisplayName": "7 - ALBAN AHMATI"}, {"PlayerID": "P037", "TeamID": "T04", "TeamName": "Astolfi Impianti Elettrici", "ShirtNumber": 8, "PlayerName": "MARCO PREVIATO", "Captain": "No", "DisplayName": "8 - MARCO PREVIATO"}, {"PlayerID": "P038", "TeamID": "T04", "TeamName": "Astolfi Impianti Elettrici", "ShirtNumber": 9, "PlayerName": "LUCA SIMEONE", "Captain": "No", "DisplayName": "9 - LUCA SIMEONE"}, {"PlayerID": "P039", "TeamID": "T04", "TeamName": "Astolfi Impianti Elettrici", "ShirtNumber": 10, "PlayerName": "ELIA NAGLIERI", "Captain": "No", "DisplayName": "10 - ELIA NAGLIERI"}, {"PlayerID": "P040", "TeamID": "T04", "TeamName": "Astolfi Impianti Elettrici", "ShirtNumber": 11, "PlayerName": "FILIPPO ZANINI", "Captain": "Yes", "DisplayName": "11 - FILIPPO ZANINI (C)"}, {"PlayerID": "P041", "TeamID": "T04", "TeamName": "Astolfi Impianti Elettrici", "ShirtNumber": 14, "PlayerName": "ALBERTO MUNERATO", "Captain": "No", "DisplayName": "14 - ALBERTO MUNERATO"}, {"PlayerID": "P042", "TeamID": "T05", "TeamName": "Totani", "ShirtNumber": 5, "PlayerName": "DANIEL TARGA", "Captain": "No", "DisplayName": "5 - DANIEL TARGA"}, {"PlayerID": "P043", "TeamID": "T05", "TeamName": "Totani", "ShirtNumber": 6, "PlayerName": "RICCARDO DAVÌ", "Captain": "No", "DisplayName": "6 - RICCARDO DAVÌ"}, {"PlayerID": "P044", "TeamID": "T05", "TeamName": "Totani", "ShirtNumber": 7, "PlayerName": "RICCARDO SANTARATO", "Captain": "No", "DisplayName": "7 - RICCARDO SANTARATO"}, {"PlayerID": "P045", "TeamID": "T05", "TeamName": "Totani", "ShirtNumber": 9, "PlayerName": "RICCARDO STIEVANO", "Captain": "No", "DisplayName": "9 - RICCARDO STIEVANO"}, {"PlayerID": "P046", "TeamID": "T05", "TeamName": "Totani", "ShirtNumber": 10, "PlayerName": "LUCA CHERUBIN", "Captain": "Yes", "DisplayName": "10 - LUCA CHERUBIN (C)"}, {"PlayerID": "P047", "TeamID": "T05", "TeamName": "Totani", "ShirtNumber": 12, "PlayerName": "FILIPPO CREPALDI", "Captain": "No", "DisplayName": "12 - FILIPPO CREPALDI"}, {"PlayerID": "P048", "TeamID": "T05", "TeamName": "Totani", "ShirtNumber": 15, "PlayerName": "LUCA PAPARELLA", "Captain": "No", "DisplayName": "15 - LUCA PAPARELLA"}, {"PlayerID": "P049", "TeamID": "T05", "TeamName": "Totani", "ShirtNumber": 18, "PlayerName": "LUCA POLATO", "Captain": "No", "DisplayName": "18 - LUCA POLATO"}, {"PlayerID": "P050", "TeamID": "T05", "TeamName": "Totani", "ShirtNumber": 71, "PlayerName": "DANIELE SECCO", "Captain": "No", "DisplayName": "71 - DANIELE SECCO"}, {"PlayerID": "P051", "TeamID": "T06", "TeamName": "Vecchie Glorie Rovigo", "PlayerName": "DAVIDE ZAGHI", "Captain": "No", "DisplayName": "DAVIDE ZAGHI"}, {"PlayerID": "P052", "TeamID": "T06", "TeamName": "Vecchie Glorie Rovigo", "PlayerName": "JACOPO VOLTOLINA", "Captain": "No", "DisplayName": "JACOPO VOLTOLINA"}, {"PlayerID": "P053", "TeamID": "T06", "TeamName": "Vecchie Glorie Rovigo", "PlayerName": "MATTEO ZAMBERLAN", "Captain": "No", "DisplayName": "MATTEO ZAMBERLAN"}, {"PlayerID": "P054", "TeamID": "T06", "TeamName": "Vecchie Glorie Rovigo", "PlayerName": "MATTEO DALL'ARA", "Captain": "No", "DisplayName": "MATTEO DALL'ARA"}, {"PlayerID": "P055", "TeamID": "T06", "TeamName": "Vecchie Glorie Rovigo", "PlayerName": "LEONARDO FUSCO", "Captain": "No", "DisplayName": "LEONARDO FUSCO"}, {"PlayerID": "P056", "TeamID": "T06", "TeamName": "Vecchie Glorie Rovigo", "PlayerName": "DENIS TIMPANARO", "Captain": "No", "DisplayName": "DENIS TIMPANARO"}, {"PlayerID": "P057", "TeamID": "T06", "TeamName": "Vecchie Glorie Rovigo", "PlayerName": "MATTEO TOSETTI", "Captain": "No", "DisplayName": "MATTEO TOSETTI"}, {"PlayerID": "P058", "TeamID": "T06", "TeamName": "Vecchie Glorie Rovigo", "PlayerName": "MATTEO AMBROSINI", "Captain": "No", "DisplayName": "MATTEO AMBROSINI"}, {"PlayerID": "P059", "TeamID": "T06", "TeamName": "Vecchie Glorie Rovigo", "PlayerName": "ANDREA BONIN", "Captain": "No", "DisplayName": "ANDREA BONIN"}, {"PlayerID": "P060", "TeamID": "T06", "TeamName": "Vecchie Glorie Rovigo", "PlayerName": "DOMENICO IACOVINO", "Captain": "Yes", "DisplayName": "DOMENICO IACOVINO (C)"}, {"PlayerID": "P061", "TeamID": "T06", "TeamName": "Vecchie Glorie Rovigo", "PlayerName": "GIACOMO PROTTI", "Captain": "No", "DisplayName": "GIACOMO PROTTI"}, {"PlayerID": "P062", "TeamID": "T07", "TeamName": "AS Bancatore", "ShirtNumber": 1, "PlayerName": "RICCARDO BROGLIO", "Captain": "No", "DisplayName": "1 - RICCARDO BROGLIO"}, {"PlayerID": "P063", "TeamID": "T07", "TeamName": "AS Bancatore", "ShirtNumber": 2, "PlayerName": "NICOLÒ MARANGONI", "Captain": "No", "DisplayName": "2 - NICOLÒ MARANGONI"}, {"PlayerID": "P064", "TeamID": "T07", "TeamName": "AS Bancatore", "ShirtNumber": 5, "PlayerName": "MATTEO LONGO", "Captain": "No", "DisplayName": "5 - MATTEO LONGO"}, {"PlayerID": "P065", "TeamID": "T07", "TeamName": "AS Bancatore", "ShirtNumber": 7, "PlayerName": "MATTIA ZAGO", "Captain": "No", "DisplayName": "7 - MATTIA ZAGO"}, {"PlayerID": "P066", "TeamID": "T07", "TeamName": "AS Bancatore", "ShirtNumber": 8, "PlayerName": "MATTEO SAVIOLI", "Captain": "Yes", "DisplayName": "8 - MATTEO SAVIOLI (C)"}, {"PlayerID": "P067", "TeamID": "T07", "TeamName": "AS Bancatore", "ShirtNumber": 9, "PlayerName": "IGNAZIO BADALÌ", "Captain": "No", "DisplayName": "9 - IGNAZIO BADALÌ"}, {"PlayerID": "P068", "TeamID": "T07", "TeamName": "AS Bancatore", "ShirtNumber": 10, "PlayerName": "GIANLUCA FREZZATI", "Captain": "No", "DisplayName": "10 - GIANLUCA FREZZATI"}, {"PlayerID": "P069", "TeamID": "T07", "TeamName": "AS Bancatore", "ShirtNumber": 11, "PlayerName": "FEDERICO MASCELLANI", "Captain": "No", "DisplayName": "11 - FEDERICO MASCELLANI"}, {"PlayerID": "P070", "TeamID": "T07", "TeamName": "AS Bancatore", "ShirtNumber": 13, "PlayerName": "ALBERTO OSTI", "Captain": "No", "DisplayName": "13 - ALBERTO OSTI"}, {"PlayerID": "P071", "TeamID": "T07", "TeamName": "AS Bancatore", "ShirtNumber": 14, "PlayerName": "LUCA ROSSI", "Captain": "No", "DisplayName": "14 - LUCA ROSSI"}, {"PlayerID": "P072", "TeamID": "T07", "TeamName": "AS Bancatore", "ShirtNumber": 20, "PlayerName": "NICOLA BARONI", "Captain": "No", "DisplayName": "20 - NICOLA BARONI"}, {"PlayerID": "P073", "TeamID": "T08", "TeamName": "Beverton", "ShirtNumber": 4, "PlayerName": "SAMUEL MATTIELLO", "Captain": "No", "DisplayName": "4 - SAMUEL MATTIELLO"}, {"PlayerID": "P074", "TeamID": "T08", "TeamName": "Beverton", "ShirtNumber": 10, "PlayerName": "SAMUEL BONSU", "Captain": "Yes", "DisplayName": "10 - SAMUEL BONSU (C)"}, {"PlayerID": "P075", "TeamID": "T08", "TeamName": "Beverton", "ShirtNumber": 11, "PlayerName": "FILIPPO VENDRAMIN", "Captain": "No", "DisplayName": "11 - FILIPPO VENDRAMIN"}, {"PlayerID": "P076", "TeamID": "T08", "TeamName": "Beverton", "ShirtNumber": 14, "PlayerName": "MARCO GREGGIO", "Captain": "No", "DisplayName": "14 - MARCO GREGGIO"}, {"PlayerID": "P077", "TeamID": "T08", "TeamName": "Beverton", "ShirtNumber": 19, "PlayerName": "CHRISTIAN ZUCCATO", "Captain": "No", "DisplayName": "19 - CHRISTIAN ZUCCATO"}, {"PlayerID": "P078", "TeamID": "T08", "TeamName": "Beverton", "ShirtNumber": 21, "PlayerName": "MATTEO BARTOLOMEI", "Captain": "No", "DisplayName": "21 - MATTEO BARTOLOMEI"}, {"PlayerID": "P079", "TeamID": "T09", "TeamName": "Leoni di Ricky", "ShirtNumber": 1, "PlayerName": "ANDREA DEGAN", "Captain": "No", "DisplayName": "1 - ANDREA DEGAN"}, {"PlayerID": "P080", "TeamID": "T09", "TeamName": "Leoni di Ricky", "ShirtNumber": 3, "PlayerName": "LEONARDO MAGGIO", "Captain": "No", "DisplayName": "3 - LEONARDO MAGGIO"}, {"PlayerID": "P081", "TeamID": "T09", "TeamName": "Leoni di Ricky", "ShirtNumber": 4, "PlayerName": "AMIN MASSAGHRI", "Captain": "Yes", "DisplayName": "4 - AMIN MASSAGHRI (C)"}, {"PlayerID": "P082", "TeamID": "T09", "TeamName": "Leoni di Ricky", "ShirtNumber": 5, "PlayerName": "PIETRO VIOLATO", "Captain": "No", "DisplayName": "5 - PIETRO VIOLATO"}, {"PlayerID": "P083", "TeamID": "T09", "TeamName": "Leoni di Ricky", "ShirtNumber": 6, "PlayerName": "MARCO THOMPSON", "Captain": "No", "DisplayName": "6 - MARCO THOMPSON"}, {"PlayerID": "P084", "TeamID": "T09", "TeamName": "Leoni di Ricky", "ShirtNumber": 8, "PlayerName": "GIACOMO BORTOLIERO", "Captain": "No", "DisplayName": "8 - GIACOMO BORTOLIERO"}, {"PlayerID": "P085", "TeamID": "T09", "TeamName": "Leoni di Ricky", "ShirtNumber": 10, "PlayerName": "ANDREA BARZAGHIDEANU", "Captain": "No", "DisplayName": "10 - ANDREA BARZAGHIDEANU"}, {"PlayerID": "P086", "TeamID": "T09", "TeamName": "Leoni di Ricky", "ShirtNumber": 14, "PlayerName": "VLAD GABRIEL DUMINICA", "Captain": "No", "DisplayName": "14 - VLAD GABRIEL DUMINICA"}, {"PlayerID": "P087", "TeamID": "T10", "TeamName": "Pink 5ive", "ShirtNumber": 4, "PlayerName": "LORENZO BOSCOLO", "Captain": "No", "DisplayName": "4 - LORENZO BOSCOLO"}, {"PlayerID": "P088", "TeamID": "T10", "TeamName": "Pink 5ive", "ShirtNumber": 7, "PlayerName": "TOMMASO FERRARESI", "Captain": "No", "DisplayName": "7 - TOMMASO FERRARESI"}, {"PlayerID": "P089", "TeamID": "T10", "TeamName": "Pink 5ive", "ShirtNumber": 9, "PlayerName": "GIOVANNI VERONESE", "Captain": "No", "DisplayName": "9 - GIOVANNI VERONESE"}, {"PlayerID": "P090", "TeamID": "T10", "TeamName": "Pink 5ive", "ShirtNumber": 10, "PlayerName": "AARON PROVITO", "Captain": "No", "DisplayName": "10 - AARON PROVITO"}, {"PlayerID": "P091", "TeamID": "T10", "TeamName": "Pink 5ive", "ShirtNumber": 15, "PlayerName": "LUCA CAVALLARO", "Captain": "No", "DisplayName": "15 - LUCA CAVALLARO"}, {"PlayerID": "P092", "TeamID": "T10", "TeamName": "Pink 5ive", "ShirtNumber": 19, "PlayerName": "MATTEO CAMPION", "Captain": "No", "DisplayName": "19 - MATTEO CAMPION"}, {"PlayerID": "P093", "TeamID": "T10", "TeamName": "Pink 5ive", "ShirtNumber": 21, "PlayerName": "LEONARDO BEDENDO", "Captain": "No", "DisplayName": "21 - LEONARDO BEDENDO"}, {"PlayerID": "P094", "TeamID": "T10", "TeamName": "Pink 5ive", "ShirtNumber": 29, "PlayerName": "LUCA BERNARDINELLO", "Captain": "No", "DisplayName": "29 - LUCA BERNARDINELLO"}, {"PlayerID": "P095", "TeamID": "T10", "TeamName": "Pink 5ive", "ShirtNumber": 63, "PlayerName": "LEONARDO VERONESE", "Captain": "Yes", "DisplayName": "63 - LEONARDO VERONESE (C)"}, {"PlayerID": "P096", "TeamID": "T10", "TeamName": "Pink 5ive", "ShirtNumber": 95, "PlayerName": "MATTIA COLTRO", "Captain": "No", "DisplayName": "95 - MATTIA COLTRO"}, {"PlayerID": "P097", "TeamID": "T11", "TeamName": "Barrio Boys", "ShirtNumber": 1, "PlayerName": "NICCOLÒ LIMAJ", "Captain": "No", "DisplayName": "1 - NICCOLÒ LIMAJ"}, {"PlayerID": "P098", "TeamID": "T11", "TeamName": "Barrio Boys", "ShirtNumber": 2, "PlayerName": "LUCA NONNATO", "Captain": "No", "DisplayName": "2 - LUCA NONNATO"}, {"PlayerID": "P099", "TeamID": "T11", "TeamName": "Barrio Boys", "ShirtNumber": 7, "PlayerName": "FRANCESCO BERARDI", "Captain": "No", "DisplayName": "7 - FRANCESCO BERARDI"}, {"PlayerID": "P100", "TeamID": "T11", "TeamName": "Barrio Boys", "ShirtNumber": 8, "PlayerName": "FRANCESCO MARANGON", "Captain": "No", "DisplayName": "8 - FRANCESCO MARANGON"}, {"PlayerID": "P101", "TeamID": "T11", "TeamName": "Barrio Boys", "ShirtNumber": 9, "PlayerName": "GIMMY MANARI", "Captain": "No", "DisplayName": "9 - GIMMY MANARI"}, {"PlayerID": "P102", "TeamID": "T11", "TeamName": "Barrio Boys", "ShirtNumber": 10, "PlayerName": "CRISTIAN MICUCCI", "Captain": "Yes", "DisplayName": "10 - CRISTIAN MICUCCI (C)"}, {"PlayerID": "P103", "TeamID": "T11", "TeamName": "Barrio Boys", "ShirtNumber": 11, "PlayerName": "RICCARDO ALESSIO", "Captain": "No", "DisplayName": "11 - RICCARDO ALESSIO"}, {"PlayerID": "P104", "TeamID": "T11", "TeamName": "Barrio Boys", "ShirtNumber": 14, "PlayerName": "EDOARDO CAVALLARI", "Captain": "No", "DisplayName": "14 - EDOARDO CAVALLARI"}, {"PlayerID": "P105", "TeamID": "T11", "TeamName": "Barrio Boys", "ShirtNumber": 18, "PlayerName": "MATTEO FERRO", "Captain": "No", "DisplayName": "18 - MATTEO FERRO"}, {"PlayerID": "P106", "TeamID": "T11", "TeamName": "Barrio Boys", "ShirtNumber": 20, "PlayerName": "ANDREA ANZOLETTI", "Captain": "No", "DisplayName": "20 - ANDREA ANZOLETTI"}, {"PlayerID": "P107", "TeamID": "T12", "TeamName": "Cani", "ShirtNumber": 4, "PlayerName": "MANUEL IMPELLICCIERI", "Captain": "No", "DisplayName": "4 - MANUEL IMPELLICCIERI"}, {"PlayerID": "P108", "TeamID": "T12", "TeamName": "Cani", "ShirtNumber": 5, "PlayerName": "MOURAD ECHCHARI", "Captain": "No", "DisplayName": "5 - MOURAD ECHCHARI"}, {"PlayerID": "P109", "TeamID": "T12", "TeamName": "Cani", "ShirtNumber": 7, "PlayerName": "OTMAN SOUATI", "Captain": "No", "DisplayName": "7 - OTMAN SOUATI"}, {"PlayerID": "P110", "TeamID": "T12", "TeamName": "Cani", "ShirtNumber": 8, "PlayerName": "KARL KABASELA", "Captain": "No", "DisplayName": "8 - KARL KABASELA"}, {"PlayerID": "P111", "TeamID": "T12", "TeamName": "Cani", "ShirtNumber": 10, "PlayerName": "ALESSIO GHIRARDELLO", "Captain": "Yes", "DisplayName": "10 - ALESSIO GHIRARDELLO (C)"}, {"PlayerID": "P112", "TeamID": "T12", "TeamName": "Cani", "ShirtNumber": 11, "PlayerName": "ISMAIL ECHCHARI", "Captain": "No", "DisplayName": "11 - ISMAIL ECHCHARI"}, {"PlayerID": "P113", "TeamID": "T12", "TeamName": "Cani", "ShirtNumber": 19, "PlayerName": "LORENZO REZZAGHI", "Captain": "No", "DisplayName": "19 - LORENZO REZZAGHI"}, {"PlayerID": "P114", "TeamID": "T12", "TeamName": "Cani", "ShirtNumber": 22, "PlayerName": "TOMMASO CALZAVARINI", "Captain": "No", "DisplayName": "22 - TOMMASO CALZAVARINI"}, {"PlayerID": "P115", "TeamID": "T12", "TeamName": "Cani", "ShirtNumber": 45, "PlayerName": "LEONARDO BULGARI", "Captain": "No", "DisplayName": "45 - LEONARDO BULGARI"}, {"PlayerID": "P116", "TeamID": "T12", "TeamName": "Cani", "ShirtNumber": 67, "PlayerName": "RICCARDO TOGNOLO", "Captain": "No", "DisplayName": "67 - RICCARDO TOGNOLO"}, {"PlayerID": "P117", "TeamID": "T13", "TeamName": "All Blacks", "ShirtNumber": 1, "PlayerName": "GIACOMO DE SIMONE", "Captain": "No", "DisplayName": "1 - GIACOMO DE SIMONE"}, {"PlayerID": "P118", "TeamID": "T13", "TeamName": "All Blacks", "ShirtNumber": 3, "PlayerName": "MARTINO GRANFO", "Captain": "No", "DisplayName": "3 - MARTINO GRANFO"}, {"PlayerID": "P119", "TeamID": "T13", "TeamName": "All Blacks", "ShirtNumber": 4, "PlayerName": "STEFANO BRAGHIN", "Captain": "No", "DisplayName": "4 - STEFANO BRAGHIN"}, {"PlayerID": "P120", "TeamID": "T13", "TeamName": "All Blacks", "ShirtNumber": 5, "PlayerName": "NICOLA BRESCIANI", "Captain": "No", "DisplayName": "5 - NICOLA BRESCIANI"}, {"PlayerID": "P121", "TeamID": "T13", "TeamName": "All Blacks", "ShirtNumber": 6, "PlayerName": "DAVIDE BEDESCHI", "Captain": "No", "DisplayName": "6 - DAVIDE BEDESCHI"}, {"PlayerID": "P122", "TeamID": "T13", "TeamName": "All Blacks", "ShirtNumber": 7, "PlayerName": "NICHOLAS MOSCHINI", "Captain": "No", "DisplayName": "7 - NICHOLAS MOSCHINI"}, {"PlayerID": "P123", "TeamID": "T13", "TeamName": "All Blacks", "ShirtNumber": 8, "PlayerName": "DAVIDE GIRARDELLO", "Captain": "No", "DisplayName": "8 - DAVIDE GIRARDELLO"}, {"PlayerID": "P124", "TeamID": "T13", "TeamName": "All Blacks", "ShirtNumber": 9, "PlayerName": "NICOLÒ BERGANTIN", "Captain": "No", "DisplayName": "9 - NICOLÒ BERGANTIN"}, {"PlayerID": "P125", "TeamID": "T13", "TeamName": "All Blacks", "ShirtNumber": 10, "PlayerName": "FILIPPO CLEMENTE", "Captain": "No", "DisplayName": "10 - FILIPPO CLEMENTE"}, {"PlayerID": "P126", "TeamID": "T13", "TeamName": "All Blacks", "ShirtNumber": 11, "PlayerName": "ALBERTO LORENZETTI", "Captain": "Yes", "DisplayName": "11 - ALBERTO LORENZETTI (C)"}, {"PlayerID": "P127", "TeamID": "T13", "TeamName": "All Blacks", "ShirtNumber": 18, "PlayerName": "MATTIA BIOLCATI", "Captain": "No", "DisplayName": "18 - MATTIA BIOLCATI"}, {"PlayerID": "P128", "TeamID": "T14", "TeamName": "Boldò Glimt", "ShirtNumber": 1, "PlayerName": "MATTIA BELLUCCO", "Captain": "No", "DisplayName": "1 - MATTIA BELLUCCO"}, {"PlayerID": "P129", "TeamID": "T14", "TeamName": "Boldò Glimt", "ShirtNumber": 2, "PlayerName": "NICOLÒ BERTIPAGLIA", "Captain": "No", "DisplayName": "2 - NICOLÒ BERTIPAGLIA"}, {"PlayerID": "P130", "TeamID": "T14", "TeamName": "Boldò Glimt", "ShirtNumber": 4, "PlayerName": "FRANCESCO CUCCATO", "Captain": "No", "DisplayName": "4 - FRANCESCO CUCCATO"}, {"PlayerID": "P131", "TeamID": "T14", "TeamName": "Boldò Glimt", "ShirtNumber": 7, "PlayerName": "ANGELO REDI", "Captain": "No", "DisplayName": "7 - ANGELO REDI"}, {"PlayerID": "P132", "TeamID": "T14", "TeamName": "Boldò Glimt", "ShirtNumber": 8, "PlayerName": "MATTEO VERZA", "Captain": "No", "DisplayName": "8 - MATTEO VERZA"}, {"PlayerID": "P133", "TeamID": "T14", "TeamName": "Boldò Glimt", "ShirtNumber": 9, "PlayerName": "MARCO NEODO", "Captain": "No", "DisplayName": "9 - MARCO NEODO"}, {"PlayerID": "P134", "TeamID": "T14", "TeamName": "Boldò Glimt", "ShirtNumber": 10, "PlayerName": "ALEX BERTIPAGLIA", "Captain": "Yes", "DisplayName": "10 - ALEX BERTIPAGLIA (C)"}, {"PlayerID": "P135", "TeamID": "T14", "TeamName": "Boldò Glimt", "ShirtNumber": 14, "PlayerName": "FABIO FERRARI", "Captain": "No", "DisplayName": "14 - FABIO FERRARI"}, {"PlayerID": "P136", "TeamID": "T14", "TeamName": "Boldò Glimt", "ShirtNumber": 17, "PlayerName": "NICOLA MORIN", "Captain": "No", "DisplayName": "17 - NICOLA MORIN"}, {"PlayerID": "P137", "TeamID": "T14", "TeamName": "Boldò Glimt", "ShirtNumber": 21, "PlayerName": "LUCA CECCONELLO", "Captain": "No", "DisplayName": "21 - LUCA CECCONELLO"}, {"PlayerID": "P138", "TeamID": "T15", "TeamName": "Coca Juniors", "ShirtNumber": 1, "PlayerName": "LUCA CAVALLARO", "Captain": "No", "DisplayName": "1 - LUCA CAVALLARO"}, {"PlayerID": "P139", "TeamID": "T15", "TeamName": "Coca Juniors", "ShirtNumber": 3, "PlayerName": "KEVIN DOBROZI", "Captain": "No", "DisplayName": "3 - KEVIN DOBROZI"}, {"PlayerID": "P140", "TeamID": "T15", "TeamName": "Coca Juniors", "ShirtNumber": 4, "PlayerName": "ANDREA PAVAN", "Captain": "No", "DisplayName": "4 - ANDREA PAVAN"}, {"PlayerID": "P141", "TeamID": "T15", "TeamName": "Coca Juniors", "ShirtNumber": 5, "PlayerName": "TOMMASO PAVAN", "Captain": "No", "DisplayName": "5 - TOMMASO PAVAN"}, {"PlayerID": "P142", "TeamID": "T15", "TeamName": "Coca Juniors", "ShirtNumber": 7, "PlayerName": "GIAN MARCO MARANGONI", "Captain": "No", "DisplayName": "7 - GIAN MARCO MARANGONI"}, {"PlayerID": "P143", "TeamID": "T15", "TeamName": "Coca Juniors", "ShirtNumber": 9, "PlayerName": "ANDREA GREGGIO", "Captain": "No", "DisplayName": "9 - ANDREA GREGGIO"}, {"PlayerID": "P144", "TeamID": "T15", "TeamName": "Coca Juniors", "ShirtNumber": 10, "PlayerName": "GIACOMO DOLCE", "Captain": "Yes", "DisplayName": "10 - GIACOMO DOLCE (C)"}, {"PlayerID": "P145", "TeamID": "T15", "TeamName": "Coca Juniors", "ShirtNumber": 11, "PlayerName": "CRISTIAN CAPUZZO", "Captain": "No", "DisplayName": "11 - CRISTIAN CAPUZZO"}, {"PlayerID": "P146", "TeamID": "T15", "TeamName": "Coca Juniors", "ShirtNumber": 23, "PlayerName": "EMANUELE VERONESE", "Captain": "No", "DisplayName": "23 - EMANUELE VERONESE"}, {"PlayerID": "P147", "TeamID": "T15", "TeamName": "Coca Juniors", "ShirtNumber": 28, "PlayerName": "NICOLA DOBROZI", "Captain": "No", "DisplayName": "28 - NICOLA DOBROZI"}, {"PlayerID": "P148", "TeamID": "T16", "TeamName": "Piadineria la Salsiccia", "ShirtNumber": 1, "PlayerName": "KEVIN CASTELLAN", "Captain": "No", "DisplayName": "1 - KEVIN CASTELLAN"}, {"PlayerID": "P149", "TeamID": "T16", "TeamName": "Piadineria la Salsiccia", "ShirtNumber": 2, "PlayerName": "SOUFIANE KHECHAB", "Captain": "No", "DisplayName": "2 - SOUFIANE KHECHAB"}, {"PlayerID": "P150", "TeamID": "T16", "TeamName": "Piadineria la Salsiccia", "ShirtNumber": 3, "PlayerName": "GABRIELE BARBIERATO", "Captain": "No", "DisplayName": "3 - GABRIELE BARBIERATO"}, {"PlayerID": "P151", "TeamID": "T16", "TeamName": "Piadineria la Salsiccia", "ShirtNumber": 4, "PlayerName": "DAVIDE DELLA VOLPE", "Captain": "Yes", "DisplayName": "4 - DAVIDE DELLA VOLPE (C)"}, {"PlayerID": "P152", "TeamID": "T16", "TeamName": "Piadineria la Salsiccia", "ShirtNumber": 5, "PlayerName": "LUCA CEDRINO", "Captain": "No", "DisplayName": "5 - LUCA CEDRINO"}, {"PlayerID": "P153", "TeamID": "T16", "TeamName": "Piadineria la Salsiccia", "ShirtNumber": 6, "PlayerName": "ALLAL SABIL", "Captain": "No", "DisplayName": "6 - ALLAL SABIL"}, {"PlayerID": "P154", "TeamID": "T16", "TeamName": "Piadineria la Salsiccia", "ShirtNumber": 8, "PlayerName": "MATTIA AYRTON MARIOTTO", "Captain": "No", "DisplayName": "8 - MATTIA AYRTON MARIOTTO"}, {"PlayerID": "P155", "TeamID": "T16", "TeamName": "Piadineria la Salsiccia", "ShirtNumber": 9, "PlayerName": "ANDREA BALDON", "Captain": "No", "DisplayName": "9 - ANDREA BALDON"}, {"PlayerID": "P156", "TeamID": "T16", "TeamName": "Piadineria la Salsiccia", "ShirtNumber": 10, "PlayerName": "RAFFAELE GAROFALO", "Captain": "No", "DisplayName": "10 - RAFFAELE GAROFALO"}, {"PlayerID": "P157", "TeamID": "T16", "TeamName": "Piadineria la Salsiccia", "ShirtNumber": 11, "PlayerName": "ALEX BERGO", "Captain": "No", "DisplayName": "11 - ALEX BERGO"}], "goals": [{"MatchID": "M01", "GoalForTeam": "All Blacks", "GoalSlot": 1, "GoalType": "Goal", "Player": "6 - DAVIDE BEDESCHI", "ScorerTeam": "All Blacks", "Status": "OK", "PlayerListRange": "Validation!$O$2:$O$12", "MatchRow": 2, "Slot": 1, "Note": "Autogol: lasciare Player vuoto; non viene conteggiato nella classifica marcatori."}, {"MatchID": "M01", "GoalForTeam": "Boldò Glimt", "GoalSlot": 1, "GoalType": "Goal", "Player": "7 - ANGELO REDI", "ScorerTeam": "Boldò Glimt", "Status": "OK", "PlayerListRange": "Validation!$P$2:$P$11", "MatchRow": 2, "Slot": 2}, {"MatchID": "M02", "GoalForTeam": "Coca Juniors", "GoalSlot": 1, "GoalType": "Goal", "Player": "5 - TOMMASO PAVAN", "ScorerTeam": "Coca Juniors", "Status": "OK", "PlayerListRange": "Validation!$Q$2:$Q$11", "MatchRow": 3, "Slot": 1}, {"MatchID": "M02", "GoalForTeam": "Coca Juniors", "GoalSlot": 2, "GoalType": "Goal", "Player": "5 - TOMMASO PAVAN", "ScorerTeam": "Coca Juniors", "Status": "OK", "PlayerListRange": "Validation!$Q$2:$Q$11", "MatchRow": 3, "Slot": 2}, {"MatchID": "M02", "GoalForTeam": "Coca Juniors", "GoalSlot": 3, "GoalType": "Goal", "Player": "7 - GIAN MARCO MARANGONI", "ScorerTeam": "Coca Juniors", "Status": "OK", "PlayerListRange": "Validation!$Q$2:$Q$11", "MatchRow": 3, "Slot": 3}, {"MatchID": "M02", "GoalForTeam": "Coca Juniors", "GoalSlot": 4, "GoalType": "Goal", "Player": "4 - ANDREA PAVAN", "ScorerTeam": "Coca Juniors", "Status": "OK", "PlayerListRange": "Validation!$Q$2:$Q$11", "MatchRow": 3, "Slot": 4}, {"MatchID": "M02", "GoalForTeam": "Coca Juniors", "GoalSlot": 5, "GoalType": "Goal", "Player": "3 - KEVIN DOBROZI", "ScorerTeam": "Coca Juniors", "Status": "OK", "PlayerListRange": "Validation!$Q$2:$Q$11", "MatchRow": 3, "Slot": 5}, {"MatchID": "M02", "GoalForTeam": "Piadineria la Salsiccia", "GoalSlot": 1, "GoalType": "Goal", "Player": "10 - RAFFAELE GAROFALO", "ScorerTeam": "Piadineria la Salsiccia", "Status": "OK", "PlayerListRange": "Validation!$R$2:$R$11", "MatchRow": 3, "Slot": 6}, {"MatchID": "M03", "GoalForTeam": "Vecchie Glorie Rovigo", "GoalSlot": 1, "GoalType": "Goal", "Player": "LEONARDO FUSCO", "ScorerTeam": "Vecchie Glorie Rovigo", "Status": "OK", "PlayerListRange": "Validation!$H$2:$H$12", "MatchRow": 4, "Slot": 1}, {"MatchID": "M04", "GoalForTeam": "Leoni di Ricky", "GoalSlot": 1, "GoalType": "Goal", "Player": "5 - PIETRO VIOLATO", "ScorerTeam": "Leoni di Ricky", "Status": "OK", "PlayerListRange": "Validation!$K$2:$K$9", "MatchRow": 5, "Slot": 1}, {"MatchID": "M04", "GoalForTeam": "Leoni di Ricky", "GoalSlot": 2, "GoalType": "Goal", "Player": "5 - PIETRO VIOLATO", "ScorerTeam": "Leoni di Ricky", "Status": "OK", "PlayerListRange": "Validation!$K$2:$K$9", "MatchRow": 5, "Slot": 2}, {"MatchID": "M04", "GoalForTeam": "Leoni di Ricky", "GoalSlot": 3, "GoalType": "Goal", "Player": "3 - LEONARDO MAGGIO", "ScorerTeam": "Leoni di Ricky", "Status": "OK", "PlayerListRange": "Validation!$K$2:$K$9", "MatchRow": 5, "Slot": 3}, {"MatchID": "M04", "GoalForTeam": "Pink 5ive", "GoalSlot": 1, "GoalType": "Goal", "Player": "21 - LEONARDO BEDENDO", "ScorerTeam": "Pink 5ive", "Status": "OK", "PlayerListRange": "Validation!$L$2:$L$11", "MatchRow": 5, "Slot": 4}, {"MatchID": "M04", "GoalForTeam": "Pink 5ive", "GoalSlot": 2, "GoalType": "Goal", "Player": "7 - TOMMASO FERRARESI", "ScorerTeam": "Pink 5ive", "Status": "OK", "PlayerListRange": "Validation!$L$2:$L$11", "MatchRow": 5, "Slot": 5}, {"MatchID": "M05", "GoalForTeam": "Barrio Boys", "GoalSlot": 1, "GoalType": "Goal", "Player": "7 - FRANCESCO BERARDI", "ScorerTeam": "Barrio Boys", "Status": "OK", "PlayerListRange": "Validation!$M$2:$M$11", "MatchRow": 6, "Slot": 1}, {"MatchID": "M05", "GoalForTeam": "Barrio Boys", "GoalSlot": 2, "GoalType": "Goal", "Player": "8 - FRANCESCO MARANGON", "ScorerTeam": "Barrio Boys", "Status": "OK", "PlayerListRange": "Validation!$M$2:$M$11", "MatchRow": 6, "Slot": 2}, {"MatchID": "M05", "GoalForTeam": "Cani", "GoalSlot": 1, "GoalType": "Goal", "Player": "10 - ALESSIO GHIRARDELLO (C)", "ScorerTeam": "Cani", "Status": "OK", "PlayerListRange": "Validation!$N$2:$N$11", "MatchRow": 6, "Slot": 3}, {"MatchID": "M05", "GoalForTeam": "Cani", "GoalSlot": 2, "GoalType": "Goal", "Player": "10 - ALESSIO GHIRARDELLO (C)", "ScorerTeam": "Cani", "Status": "OK", "PlayerListRange": "Validation!$N$2:$N$11", "MatchRow": 6, "Slot": 4}, {"MatchID": "M06", "GoalForTeam": "AS Bancatore", "GoalSlot": 1, "GoalType": "Goal", "Player": "10 - GIANLUCA FREZZATI", "ScorerTeam": "AS Bancatore", "Status": "OK", "PlayerListRange": "Validation!$I$2:$I$12", "MatchRow": 7, "Slot": 1}, {"MatchID": "M07", "GoalForTeam": "Fatine FC", "GoalSlot": 1, "GoalType": "Goal", "Player": "23 - NICOLA MARINI (C)", "ScorerTeam": "Fatine FC", "Status": "OK", "PlayerListRange": "Validation!$C$2:$C$11", "MatchRow": 8, "Slot": 1}, {"MatchID": "M07", "GoalForTeam": "Fatine FC", "GoalSlot": 2, "GoalType": "Goal", "Player": "4 - GIOVANNI BALLO", "ScorerTeam": "Fatine FC", "Status": "OK", "PlayerListRange": "Validation!$C$2:$C$11", "MatchRow": 8, "Slot": 2}, {"MatchID": "M07", "GoalForTeam": "Fatine FC", "GoalSlot": 3, "GoalType": "Goal", "Player": "5 - DANIELE MARZOLLA", "ScorerTeam": "Fatine FC", "Status": "OK", "PlayerListRange": "Validation!$C$2:$C$11", "MatchRow": 8, "Slot": 3}, {"MatchID": "M07", "GoalForTeam": "Fatine FC", "GoalSlot": 4, "GoalType": "Goal", "Player": "69 - LUCA ROSSETTO", "ScorerTeam": "Fatine FC", "Status": "OK", "PlayerListRange": "Validation!$C$2:$C$11", "MatchRow": 8, "Slot": 4}, {"MatchID": "M07", "GoalForTeam": "Fatine FC", "GoalSlot": 5, "GoalType": "Goal", "Player": "7 - NICHOLAS MILAN", "ScorerTeam": "Fatine FC", "Status": "OK", "PlayerListRange": "Validation!$C$2:$C$11", "MatchRow": 8, "Slot": 5}, {"MatchID": "M07", "GoalForTeam": "Fatine FC", "GoalSlot": 6, "GoalType": "Goal", "Player": "8 - ALESSIO MILAN", "ScorerTeam": "Fatine FC", "Status": "OK", "PlayerListRange": "Validation!$C$2:$C$11", "MatchRow": 8, "Slot": 6}, {"MatchID": "M08", "GoalForTeam": "Moviola Utd", "GoalSlot": 1, "GoalType": "Goal", "Player": "LUCA BACCO", "ScorerTeam": "Moviola Utd", "Status": "OK", "PlayerListRange": "Validation!$E$2:$E$13", "MatchRow": 9, "Slot": 1}, {"MatchID": "M08", "GoalForTeam": "Moviola Utd", "GoalSlot": 2, "GoalType": "Goal", "Player": "FILIPPO SCARANELLO", "ScorerTeam": "Moviola Utd", "Status": "OK", "PlayerListRange": "Validation!$E$2:$E$13", "MatchRow": 9, "Slot": 2}, {"MatchID": "M08", "GoalForTeam": "Astolfi Impianti Elettrici", "GoalSlot": 1, "GoalType": "Goal", "Player": "11 - FILIPPO ZANINI (C)", "ScorerTeam": "Astolfi Impianti Elettrici", "Status": "OK", "PlayerListRange": "Validation!$F$2:$F$10", "MatchRow": 9, "Slot": 3}, {"MatchID": "M08", "GoalForTeam": "Astolfi Impianti Elettrici", "GoalSlot": 2, "GoalType": "Goal", "Player": "10 - ELIA NAGLIERI", "ScorerTeam": "Astolfi Impianti Elettrici", "Status": "OK", "PlayerListRange": "Validation!$F$2:$F$10", "MatchRow": 9, "Slot": 4}, {"MatchID": "M08", "GoalForTeam": "Astolfi Impianti Elettrici", "GoalSlot": 3, "GoalType": "Goal", "Player": "9 - LUCA SIMEONE", "ScorerTeam": "Astolfi Impianti Elettrici", "Status": "OK", "PlayerListRange": "Validation!$F$2:$F$10", "MatchRow": 9, "Slot": 5}, {"MatchID": "M08", "GoalForTeam": "Astolfi Impianti Elettrici", "GoalSlot": 4, "GoalType": "Goal", "Player": "9 - LUCA SIMEONE", "ScorerTeam": "Astolfi Impianti Elettrici", "Status": "OK", "PlayerListRange": "Validation!$F$2:$F$10", "MatchRow": 9, "Slot": 6}, {"MatchID": "M08", "GoalForTeam": "Astolfi Impianti Elettrici", "GoalSlot": 5, "GoalType": "Goal", "Player": "4 - GIANLUCA PAVAN", "ScorerTeam": "Astolfi Impianti Elettrici", "Status": "OK", "PlayerListRange": "Validation!$F$2:$F$10", "MatchRow": 9, "Slot": 7}, {"MatchID": "M09", "GoalForTeam": "All Blacks", "GoalSlot": 1, "GoalType": "Goal", "Player": "3 - MARTINO GRANFO", "ScorerTeam": "All Blacks", "Status": "OK", "PlayerListRange": "Validation!$O$2:$O$12", "MatchRow": 10, "Slot": 1}, {"MatchID": "M09", "GoalForTeam": "All Blacks", "GoalSlot": 2, "GoalType": "Goal", "Player": "4 - STEFANO BRAGHIN", "ScorerTeam": "All Blacks", "Status": "OK", "PlayerListRange": "Validation!$O$2:$O$12", "MatchRow": 10, "Slot": 2}, {"MatchID": "M09", "GoalForTeam": "All Blacks", "GoalSlot": 3, "GoalType": "Goal", "Player": "5 - NICOLA BRESCIANI", "ScorerTeam": "All Blacks", "Status": "OK", "PlayerListRange": "Validation!$O$2:$O$12", "MatchRow": 10, "Slot": 3}, {"MatchID": "M09", "GoalForTeam": "Coca Juniors", "GoalSlot": 1, "GoalType": "Goal", "Player": "7 - GIAN MARCO MARANGONI", "ScorerTeam": "Coca Juniors", "Status": "OK", "PlayerListRange": "Validation!$Q$2:$Q$11", "MatchRow": 10, "Slot": 4}, {"MatchID": "M09", "GoalForTeam": "Coca Juniors", "GoalSlot": 2, "GoalType": "Goal", "Player": "1 - LUCA CAVALLARO", "ScorerTeam": "Coca Juniors", "Status": "OK", "PlayerListRange": "Validation!$Q$2:$Q$11", "MatchRow": 10, "Slot": 5}, {"MatchID": "M09", "GoalForTeam": "Coca Juniors", "GoalSlot": 3, "GoalType": "Goal", "Player": "1 - LUCA CAVALLARO", "ScorerTeam": "Coca Juniors", "Status": "OK", "PlayerListRange": "Validation!$Q$2:$Q$11", "MatchRow": 10, "Slot": 6}, {"MatchID": "M09", "GoalForTeam": "Coca Juniors", "GoalSlot": 4, "GoalType": "Goal", "Player": "3 - KEVIN DOBROZI", "ScorerTeam": "Coca Juniors", "Status": "OK", "PlayerListRange": "Validation!$Q$2:$Q$11", "MatchRow": 10, "Slot": 7}, {"MatchID": "M10", "GoalForTeam": "Totani", "GoalSlot": 1, "GoalType": "Goal", "Player": "5 - DANIEL TARGA", "ScorerTeam": "Totani", "Status": "OK", "PlayerListRange": "Validation!$G$2:$G$10", "MatchRow": 11, "Slot": 1}, {"MatchID": "M10", "GoalForTeam": "Totani", "GoalSlot": 2, "GoalType": "Goal", "Player": "7 - RICCARDO SANTARATO", "ScorerTeam": "Totani", "Status": "OK", "PlayerListRange": "Validation!$G$2:$G$10", "MatchRow": 11, "Slot": 2}, {"MatchID": "M10", "GoalForTeam": "AS Bancatore", "GoalSlot": 1, "GoalType": "Goal", "Player": "5 - MATTEO LONGO", "ScorerTeam": "AS Bancatore", "Status": "OK", "PlayerListRange": "Validation!$I$2:$I$12", "MatchRow": 11, "Slot": 3}, {"MatchID": "M10", "GoalForTeam": "AS Bancatore", "GoalSlot": 2, "GoalType": "Goal", "Player": "20 - NICOLA BARONI", "ScorerTeam": "AS Bancatore", "Status": "OK", "PlayerListRange": "Validation!$I$2:$I$12", "MatchRow": 11, "Slot": 4}, {"MatchID": "M10", "GoalForTeam": "AS Bancatore", "GoalSlot": 3, "GoalType": "Goal", "Player": "2 - NICOLÒ MARANGONI", "ScorerTeam": "AS Bancatore", "Status": "OK", "PlayerListRange": "Validation!$I$2:$I$12", "MatchRow": 11, "Slot": 5}]};
 </script>
 
@@ -1666,7 +1748,7 @@ window.TOURNAMENT_DATA = {"standings": [{"Group": "A", "Pos": 1, "Team": "Fatine
 <div class="top-extra-links">
   <div class="extra-title">Sezioni extra</div>
   <div class="extra-links">
-    <a href="#" class="extra-link featured" onclick="goToPage('risultati'); return false;"><span class="link-icon">🏅</span><span class="link-label">Risultati</span></a>
+    <a href="#" class="extra-link" onclick="goToPage('risultati'); return false;"><span class="link-icon">🏅</span><span class="link-label">Risultati</span></a>
     <a href="#" class="extra-link" onclick="goToPage('squadre'); return false;"><span class="link-icon">👕</span><span class="link-label">Squadre</span></a>
     <a href="#" class="extra-link" onclick="goToPage('marcatori'); return false;"><span class="link-icon">🎯</span><span class="link-label">Marcatori</span></a>
     <a href="#" class="extra-link" onclick="goToPage('albodoro'); return false;"><span class="link-icon">🏆</span><span class="link-label">Albo d'Oro</span></a>
@@ -1694,6 +1776,7 @@ window.TOURNAMENT_DATA = {"standings": [{"Group": "A", "Pos": 1, "Team": "Fatine
     <a href="#" class="mob-link-small" onclick="goToPage('marcatori'); return false;">🎯 Marcatori</a>
     <a href="#" class="mob-link-small" onclick="goToPage('albodoro'); return false;">🏆 Albo d'Oro</a>
     <a href="#" class="mob-link-small" onclick="goToPage('sponsor'); return false;">⭐ Sponsor</a>
+    <a href="#" class="mob-link-small" onclick="goToPage('noBounce'); return false;">⚽ No Bounce Challenge</a>
   </div>
 </div>
 
@@ -2272,10 +2355,7 @@ window.TOURNAMENT_DATA = {"standings": [{"Group": "A", "Pos": 1, "Team": "Fatine
         <div><div class="menu-item-name">Ogni aggiunta</div></div>
         <div class="menu-item-price">+€0.50</div>
       </div>
-      <div class="menu-item">
-        <div><div class="menu-item-name">Panino</div><div class="menu-item-desc">Pane, wurstel e una salsa a scelta</div></div>
-        <div class="menu-item-price">€6</div>
-      </div>
+      
     </div>
 
     <div class="menu-section">
@@ -2290,11 +2370,11 @@ window.TOURNAMENT_DATA = {"standings": [{"Group": "A", "Pos": 1, "Team": "Fatine
     <div class="menu-section">
       <div class="menu-section-title">🍺 Bevande</div>
       <div class="menu-item">
-        <div><div class="menu-item-name">Birra Media</div><div class="menu-item-desc">Bionda o Non filtrata</div></div>
+        <div><div class="menu-item-name">Birra Media</div><div class="menu-item-desc">Bionda</div></div>
         <div class="menu-item-price">€5</div>
       </div>
       <div class="menu-item">
-        <div><div class="menu-item-name">Birra Piccola</div><div class="menu-item-desc">Bionda o Non filtrata</div></div>
+        <div><div class="menu-item-name">Birra Piccola</div><div class="menu-item-desc">Bionda</div></div>
         <div class="menu-item-price">€3</div>
       </div>
       <div class="menu-item">
@@ -2698,7 +2778,7 @@ Le partite non sono ancora iniziate. Torna il 4 Luglio!</div>
     <p class="section-label">— 4 Luglio 2026</p>
     <h2 class="section-title">Classifica Marcatori</h2>
     <div class="section-divider"></div>
-    <p style="color:rgba(255,255,255,0.55); font-size:1rem; line-height:1.8; max-width:600px; margin-bottom:2rem;">I bomber del torneo. La classifica viene aggiornata in tempo reale in base ai dati inseriti nel file di gestione.</p>
+    <p style="color:rgba(255,255,255,0.55); font-size:1rem; line-height:1.8; max-width:600px; margin-bottom:2rem;">I bomber del torneo. La classifica viene aggiornata in tempo reale alla fine di ogni turno.</p>
     <div class="classifica-table-wrap">
       <table class="marcatori-table" id="marcatoriTable">
         <thead>
@@ -2711,6 +2791,66 @@ Le partite non sono ancora iniziate. Torna il 4 Luglio!</div>
         </thead>
         <tbody id="marcatoriBody">
           <tr><td colspan="4" style="text-align:center; color:var(--gray); padding:2rem; font-family:'Barlow Condensed',sans-serif; letter-spacing:0.1em;">Nessun marcatore disponibile</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+<!-- ============================================================ -->
+<!-- OVERLAY PAGE: NO BOUNCE CHALLENGE -->
+<!-- ============================================================ -->
+<div class="overlay-page" id="noBounce">
+  <div class="overlay-header">
+    <button class="overlay-back" onclick="closePage('noBounce')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      Torna alla home
+    </button>
+    <div class="overlay-title-bar">No Bounce Challenge</div>
+    <button class="overlay-hamburger" onclick="openMobileMenuFromOverlay()">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="overlay-content">
+    <p class="section-label">— Sfida parallela</p>
+    <h2 class="section-title">No Bounce Challenge</h2>
+    <div class="section-divider"></div>
+
+    <div class="challenge-summary">
+      <div class="challenge-rule">
+        <span class="challenge-rule-label">Costo</span>
+        <strong>2€</strong>
+        <p>Ogni partecipazione dà diritto a 10 tiri.</p>
+      </div>
+      <div class="challenge-rule">
+        <span class="challenge-rule-label">Obiettivo</span>
+        <strong>Gol diretto</strong>
+        <p>Il pallone deve entrare nella porticina senza rimbalzare prima a terra.</p>
+      </div>
+      <div class="challenge-rule">
+        <span class="challenge-rule-label">Premio</span>
+        <strong>Piadina + birra</strong>
+        <p>Offerte dallo Staff al giocatore con più punti.</p>
+      </div>
+    </div>
+
+    <div class="challenge-note">
+      In caso di parità al primo posto, i giocatori con lo stesso numero di punti si sfidano con tentativi ad oltranza fino a decretare un unico vincitore.
+    </div>
+
+    <div class="classifica-table-wrap">
+      <table class="marcatori-table" id="noBounceTable">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Nome</th>
+            <th>Cognome</th>
+            <th>Punti</th>
+          </tr>
+        </thead>
+        <tbody id="noBounceBody">
+          <tr><td colspan="4" style="text-align:center; color:var(--gray); padding:2rem; font-family:'Barlow Condensed',sans-serif; letter-spacing:0.1em;">Nessun risultato disponibile</td></tr>
         </tbody>
       </table>
     </div>
@@ -2783,7 +2923,7 @@ Le partite non sono ancora iniziate. Torna il 4 Luglio!</div>
   // MOBILE MENU
   const hamburger = document.getElementById('hamburger');
   const mobileMenu = document.getElementById('mobileMenu');
-  const OVERLAY_IDS = ['risultati', 'albodoro', 'sponsor', 'squadre', 'marcatori'];
+  const OVERLAY_IDS = ['risultati', 'albodoro', 'sponsor', 'squadre', 'marcatori', 'noBounce'];
 
   hamburger.addEventListener('click', () => {
     if (mobileMenu.classList.contains('open')) {
@@ -2908,7 +3048,7 @@ Le partite non sono ancora iniziate. Torna il 4 Luglio!</div>
   // Chiudi overlay con tasto ESC
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
-      ['risultati', 'albodoro', 'sponsor', 'squadre', 'marcatori'].forEach(id => {
+      OVERLAY_IDS.forEach(id => {
         document.getElementById(id).classList.remove('open');
       });
       ['menuModal'].forEach(id => {
@@ -2961,6 +3101,7 @@ async function loadTournamentData() {
     const matchesRows   = D.matches;
     const goalsRows     = D.goals;
     const knockoutRows  = D.knockout;
+    const settingsRows  = D.settings || [];
 
     // ===== CLASSIFICHE GIRONI =====
     ['A','B','C','D'].forEach(groupName => {
@@ -3041,21 +3182,67 @@ async function loadTournamentData() {
       return time ? time.label : '—';
     }
 
+    function getSetting(name) {
+      const key = String(name || '').trim().toLowerCase();
+      const row = settingsRows.find(r => String(r.Setting || '').trim().toLowerCase() === key);
+      return row ? row.Value : '';
+    }
+
+    function normalizeExcelDate(value) {
+      if (value instanceof Date && !Number.isNaN(value.getTime())) {
+        return {
+          year: value.getFullYear(),
+          month: value.getMonth() + 1,
+          day: value.getDate()
+        };
+      }
+
+      if (typeof value === 'number' && Number.isFinite(value)) {
+        const excelEpoch = Date.UTC(1899, 11, 30);
+        const date = new Date(excelEpoch + Math.floor(value) * 86400000);
+        return {
+          year: date.getUTCFullYear(),
+          month: date.getUTCMonth() + 1,
+          day: date.getUTCDate()
+        };
+      }
+
+      const text = String(value ?? '').trim();
+      if (!text) return null;
+
+      let match = text.match(/^(\d{4})[-/](\d{1,2})[-/](\d{1,2})/);
+      if (!match) match = text.match(/^(\d{1,2})[/-](\d{1,2})[/-](\d{4})/);
+      if (!match) return null;
+
+      const year = match[1].length === 4 ? Number(match[1]) : Number(match[3]);
+      const month = Number(match[2]);
+      const day = match[1].length === 4 ? Number(match[3]) : Number(match[1]);
+      if (!year || month < 1 || month > 12 || day < 1 || day > 31) return null;
+      return { year, month, day };
+    }
+
+    function matchDurationMinutes(m) {
+      const explicitMinutes = Number(String(m.DurationMinutes || '').replace(',', '.'));
+      if (Number.isFinite(explicitMinutes) && explicitMinutes > 0) return explicitMinutes;
+
+      const rawDuration = m.Duration || '';
+      const explicitDuration = Number(String(rawDuration).replace(',', '.'));
+      if (Number.isFinite(explicitDuration) && explicitDuration >= 1) return explicitDuration;
+      const durationTime = normalizeExcelTime(rawDuration);
+      if (durationTime) return (durationTime.hours * 60) + durationTime.minutes;
+      return String(m.Stage || '').trim() === 'Group' ? 20 : 30;
+    }
+
     function isMatchLive(m) {
       const time = normalizeExcelTime(m.Time);
       if (!time) return false;
+      if (String(m.Status || '').trim().toLowerCase() === 'complete') return false;
       const now = new Date();
-      let start;
-      const isLocalPreview = window.location.protocol === 'file:' ||
-        window.location.hostname === 'localhost' ||
-        window.location.hostname === '127.0.0.1';
-      if (isLocalPreview) {
-        start = new Date(now);
-        start.setHours(time.hours, time.minutes, 0, 0);
-      } else {
-        start = new Date(`2026-07-04T${String(time.hours).padStart(2, '0')}:${String(time.minutes).padStart(2, '0')}:00+02:00`);
-      }
-      const duration = String(m.Stage || '').trim() === 'Group' ? 20 : 30;
+      const referenceDate = normalizeExcelDate(m.Date || m.MatchDate || getSetting('LiveReferenceDate'));
+      const start = referenceDate
+        ? new Date(referenceDate.year, referenceDate.month - 1, referenceDate.day, time.hours, time.minutes, 0, 0)
+        : new Date(now.getFullYear(), now.getMonth(), now.getDate(), time.hours, time.minutes, 0, 0);
+      const duration = matchDurationMinutes(m);
       return now >= start && now < new Date(start.getTime() + duration * 60000);
     }
 
@@ -3216,6 +3403,9 @@ async function loadTournamentData() {
 
 window.addEventListener('load', loadTournamentData);
 try { loadTournamentData(); } catch(e) {}
+setInterval(() => {
+  try { loadTournamentData(); } catch(e) {}
+}, 30000);
 </script>
 
 <script>
@@ -3294,6 +3484,66 @@ try { loadSquadreAuto(); } catch(e) {}
 </script>
 
 <script>
+// ===== NO BOUNCE CHALLENGE (foglio NoBounce del manager) =====
+function escapeNoBounce(value) {
+  return String(value == null ? '' : value).replace(/[&<>"']/g, char => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
+  })[char]);
+}
+
+async function loadNoBounceChallenge() {
+  try {
+    const noBounceBody = document.getElementById('noBounceBody');
+    if (!noBounceBody) return;
+
+    const noBounceData = window.NO_BOUNCE_DATA || [];
+    
+    if (!noBounceData || noBounceData.length === 0) {
+      noBounceBody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:var(--gray); padding:2rem; font-family:\'Barlow Condensed\',sans-serif; letter-spacing:0.1em;">Nessun risultato disponibile</td></tr>';
+      return;
+    }
+
+    // Ordina per punti; a parità usa cognome e nome per un risultato stabile.
+    const players = noBounceData
+      .map(row => ({
+        nome: (row.Nome || '').toString().trim(),
+        cognome: (row.Cognome || '').toString().trim(),
+        punti: Number((row.Punti ?? row['Gol validi'] ?? row.GolValidi ?? 0).toString().replace(',', '.')) || 0
+      }))
+      .filter(p => p.nome || p.cognome)
+      .sort((a, b) =>
+        b.punti - a.punti ||
+        a.cognome.localeCompare(b.cognome, 'it', { sensitivity: 'base' }) ||
+        a.nome.localeCompare(b.nome, 'it', { sensitivity: 'base' })
+      );
+
+    if (players.length === 0) {
+      noBounceBody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:var(--gray); padding:2rem; font-family:\'Barlow Condensed\',sans-serif; letter-spacing:0.1em;">Nessun risultato disponibile</td></tr>';
+      return;
+    }
+
+    // Genera la tabella con posizionamento (gestisce i pareggi)
+    let pos = 1;
+    noBounceBody.innerHTML = players.map((p, i) => {
+      if (i > 0 && players[i-1].punti !== p.punti) {
+        pos = i + 1;
+      }
+      const rankClass = pos === 1 ? 'first' : pos === 2 ? 'second' : pos === 3 ? 'third' : '';
+      return `<tr>
+        <td><span class="marcatori-rank ${rankClass}">${pos}</span></td>
+        <td>${escapeNoBounce(p.nome)}</td>
+        <td>${escapeNoBounce(p.cognome)}</td>
+        <td><span class="goals-badge">${escapeNoBounce(p.punti)}</span></td>
+      </tr>`;
+    }).join('');
+
+  } catch(err) {
+    console.error('Errore caricamento No Bounce Challenge:', err);
+  }
+}
+window.addEventListener('load', loadNoBounceChallenge);
+try { loadNoBounceChallenge(); } catch(e) {}
+
 (function setupAutomaticExcelRefresh() {
   const REFRESH_INTERVAL = 15000;
   let refreshInProgress = false;
@@ -3320,6 +3570,7 @@ try { loadSquadreAuto(); } catch(e) {}
       };
 
       window.TOURNAMENT_DATA = {
+        settings: readOptionalSheet('Settings'),
         standings: readSheet('Standings'),
         matches: readSheet('Matches'),
         knockout: readSheet('Knockout'),
@@ -3327,9 +3578,11 @@ try { loadSquadreAuto(); } catch(e) {}
         players: readSheet('Players'),
         goals: readSheet('Goals').concat(readOptionalSheet('KnockoutGoals'))
       };
+      window.NO_BOUNCE_DATA = readOptionalSheet('NoBounce');
 
       await loadTournamentData();
       await loadSquadreAuto();
+      await loadNoBounceChallenge();
     } catch (error) {
       console.error('Errore aggiornamento automatico del manager:', error);
     } finally {
