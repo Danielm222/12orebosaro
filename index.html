@@ -3478,6 +3478,56 @@ try { loadSquadreAuto(); } catch(e) {}
 </script>
 
 <script>
+// ===== NO BOUNCE CHALLENGE (da no-bounce-challenge.xlsx) =====
+async function loadNoBounceChallenge() {
+  try {
+    const noBounceBody = document.getElementById('noBounceBody');
+    if (!noBounceBody) return;
+
+    const noBounceData = window.NO_BOUNCE_DATA || [];
+    
+    if (!noBounceData || noBounceData.length === 0) {
+      noBounceBody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:var(--gray); padding:2rem; font-family:\'Barlow Condensed\',sans-serif; letter-spacing:0.1em;">Nessun risultato disponibile</td></tr>';
+      return;
+    }
+
+    // Filtra e mappia i dati, convertendo GolValidi a numero
+    const players = noBounceData
+      .map(row => ({
+        nome: (row.Nome || '').toString().trim(),
+        cognome: (row.Cognome || '').toString().trim(),
+        golValidi: parseInt((row['Gol validi'] || row['GolValidi'] || '0').toString().replace(',', '.'), 10) || 0
+      }))
+      .filter(p => p.nome || p.cognome)
+      .sort((a, b) => b.golValidi - a.golValidi);
+
+    if (players.length === 0) {
+      noBounceBody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:var(--gray); padding:2rem; font-family:\'Barlow Condensed\',sans-serif; letter-spacing:0.1em;">Nessun risultato disponibile</td></tr>';
+      return;
+    }
+
+    // Genera la tabella con posizionamento (gestisce i pareggi)
+    let pos = 1;
+    noBounceBody.innerHTML = players.map((p, i) => {
+      if (i > 0 && players[i-1].golValidi !== p.golValidi) {
+        pos = i + 1;
+      }
+      const rankClass = pos === 1 ? 'first' : pos === 2 ? 'second' : pos === 3 ? 'third' : '';
+      return `<tr>
+        <td><span class="marcatori-rank ${rankClass}">${pos}</span></td>
+        <td>${p.nome}</td>
+        <td>${p.cognome}</td>
+        <td><span class="goals-badge">${p.golValidi}</span></td>
+      </tr>`;
+    }).join('');
+
+  } catch(err) {
+    console.error('Errore caricamento No Bounce Challenge:', err);
+  }
+}
+window.addEventListener('load', loadNoBounceChallenge);
+try { loadNoBounceChallenge(); } catch(e) {}
+
 (function setupAutomaticExcelRefresh() {
   const REFRESH_INTERVAL = 15000;
   let refreshInProgress = false;
@@ -3515,6 +3565,28 @@ try { loadSquadreAuto(); } catch(e) {}
 
       await loadTournamentData();
       await loadSquadreAuto();
+    } catch (error) {
+      console.error('Errore aggiornamento automatico del manager:', error);
+    }
+
+    // Carica il file no-bounce-challenge.xlsx
+    try {
+      const noBounceResponse = await fetch(`./no-bounce-challenge.xlsx?v=${Date.now()}`, {
+        cache: 'no-store',
+        headers: { 'Cache-Control': 'no-cache' }
+      });
+      if (noBounceResponse.ok) {
+        const noBounceWorkbook = XLSX.read(await noBounceResponse.arrayBuffer(), { type: 'array' });
+        const noBounceSheet = noBounceWorkbook.Sheets[Object.keys(noBounceWorkbook.Sheets)[0]];
+        if (noBounceSheet) {
+          const noBounceData = XLSX.utils.sheet_to_json(noBounceSheet, { defval: '', raw: false });
+          window.NO_BOUNCE_DATA = noBounceData;
+          await loadNoBounceChallenge();
+        }
+      }
+    } catch (error) {
+      console.error('Errore caricamento No Bounce Challenge:', error);
+    }
     } catch (error) {
       console.error('Errore aggiornamento automatico del manager:', error);
     } finally {
