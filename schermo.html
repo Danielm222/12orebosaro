@@ -1131,9 +1131,9 @@
 
       function startCarousel() {
         clearTimeout(carouselTimer);
-        const afterTwenty = new Date().getHours() >= 20;
+        const afterNineteen = new Date().getHours() >= 19;
         const isFinals = slideDefinitions[slideIndex].key === 'finals';
-        const duration = afterTwenty
+        const duration = afterNineteen
           ? (isFinals ? 100000000 : 1)
           : (isFinals ? 1000 : 8000);
         carouselTimer = setTimeout(() => {
