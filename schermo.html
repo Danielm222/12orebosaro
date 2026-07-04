@@ -145,7 +145,8 @@
     main {
       min-height: 0;
       display: grid;
-      grid-template-rows: minmax(180px, .68fr) minmax(360px, 1fr);
+      grid-template-columns: minmax(0, 1fr) minmax(300px, 22vw);
+      grid-template-rows: minmax(360px, 1fr) clamp(195px, 23vh, 245px);
       gap: 14px;
       padding: 14px 18px;
     }
@@ -184,7 +185,13 @@
     }
 
     .standings-grid {
-      display: contents;
+      min-width: 0;
+      min-height: 0;
+      display: grid;
+      grid-column: 1;
+      grid-row: 2;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
     }
 
     .group {
@@ -252,6 +259,29 @@
     td:nth-child(2) { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     td:last-child { color: var(--accent-text); font-size: 1.12em; font-weight: 900; }
 
+    .group th:first-child,
+    .group td:first-child { width: 38px; }
+
+    .group th:nth-child(2),
+    .group td:nth-child(2) {
+      width: auto;
+      padding-right: 8px;
+      padding-left: 8px;
+      overflow: visible;
+      font-size: clamp(13px, 1.02vw, 18px);
+      line-height: 1.05;
+      overflow-wrap: anywhere;
+      text-align: left;
+      text-overflow: clip;
+      white-space: normal;
+    }
+
+    .group th:last-child,
+    .group td:last-child {
+      width: 50px;
+      text-align: center;
+    }
+
     .rank {
       color: var(--gray);
       font-family: 'Bebas Neue', sans-serif;
@@ -263,19 +293,17 @@
     .rank.third { color: #7a3f0d; }
 
     .dashboard-bottom {
-      min-height: 360px;
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      grid-template-rows: repeat(2, minmax(175px, 1fr));
-      gap: 10px;
+      display: contents;
     }
 
     .scorers-panel {
-      grid-column: 3;
+      grid-column: 2;
       grid-row: 1 / 3;
     }
 
     .results-panel {
+      grid-column: 1;
+      grid-row: 1;
       display: grid;
       grid-template-rows: 42px minmax(0, 1fr);
     }
@@ -436,10 +464,10 @@
     .knockout-bracket {
       height: 100%;
       display: grid;
-      grid-template-columns: minmax(0, 1.25fr) minmax(0, .95fr) minmax(0, 1.1fr) minmax(0, .95fr) minmax(0, 1.25fr);
+      grid-template-columns: minmax(0, 1.32fr) minmax(0, 1.08fr) minmax(0, 1.18fr) minmax(0, 1.08fr) minmax(0, 1.32fr);
       align-items: stretch;
-      gap: 22px;
-      padding: 8px 14px;
+      gap: 18px;
+      padding: 16px 12px 10px;
     }
 
     .bracket-column {
@@ -505,15 +533,20 @@
       display: grid;
       grid-template-columns: minmax(0, 1fr) 30px;
       align-items: center;
-      min-height: 32px;
-      padding: 2px 7px;
-      border-bottom: 1px solid #aeb49e;
-      font-size: clamp(11px, .82vw, 15px);
+      min-height: 38px;
+      padding: 3px 7px;
+      font-size: clamp(12px, .84vw, 16px);
       font-weight: 700;
       text-transform: uppercase;
     }
 
-    .bracket-team-row:last-of-type { border-bottom: 0; }
+    .bracket-team-entry {
+      min-width: 0;
+      border-bottom: 1px solid #aeb49e;
+    }
+
+    .bracket-team-entry:last-of-type { border-bottom: 0; }
+
     .bracket-team-row.winner {
       color: #364100;
       background: #edf5b6;
@@ -535,6 +568,32 @@
       font-size: 20px;
       text-align: right;
     }
+
+    .bracket-team-scorers {
+      min-height: 24px;
+      overflow: hidden;
+      padding: 2px 7px 4px;
+      color: #3c4034;
+      background: rgba(255,255,255,.76);
+      font-size: clamp(9px, .6vw, 12px);
+      font-weight: 600;
+      line-height: 1.08;
+      text-overflow: ellipsis;
+    }
+
+    .bracket-team-scorers::before {
+      content: 'Marcatori: ';
+      color: var(--accent-text);
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .bracket-team-scorers.empty {
+      min-height: 0;
+      padding: 0;
+    }
+
+    .bracket-team-scorers.empty::before { content: none; }
 
     .bracket-meta {
       position: absolute;
@@ -558,11 +617,12 @@
     }
 
     .bracket-final .bracket-team-row {
-      min-height: 34px;
-      font-size: clamp(12px, .9vw, 16px);
+      min-height: 44px;
+      font-size: clamp(13px, .92vw, 17px);
     }
 
     .bracket-final .bracket-team-score { font-size: 23px; }
+    .bracket-final .bracket-team-scorers { min-height: 29px; font-size: clamp(10px, .68vw, 13px); }
 
     .bracket-left .bracket-match::after,
     .bracket-final-left .bracket-match::after {
@@ -729,9 +789,10 @@
 
     @media (max-aspect-ratio: 4/3) {
       body { overflow: auto; grid-template-rows: auto auto 102px; }
-      main { grid-template-rows: auto auto; }
-      .dashboard-bottom { grid-template-columns: repeat(2, minmax(280px, 1fr)); grid-template-rows: auto; }
-      .scorers-panel { grid-column: 1 / -1; grid-row: auto; }
+      main { grid-template-columns: 1fr; grid-template-rows: minmax(430px, 55vh) auto auto; }
+      .results-panel { grid-column: 1; grid-row: 1; }
+      .standings-grid { grid-column: 1; grid-row: 2; grid-template-columns: repeat(2, minmax(280px, 1fr)); }
+      .scorers-panel { grid-column: 1; grid-row: 3; }
       .match-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .screen-header { position: sticky; top: 0; z-index: 5; }
     }
@@ -744,7 +805,8 @@
       .brand span { font-size: 10px; }
       .header-title { font-size: 26px; }
       main {
-        grid-template-rows: minmax(170px, 1fr) minmax(360px, 2.1fr);
+        grid-template-columns: minmax(0, 1fr) minmax(270px, 22vw);
+        grid-template-rows: minmax(330px, 1fr) 178px;
         gap: 8px;
         padding: 8px 12px;
       }
@@ -759,9 +821,11 @@
       .knockout-bracket { gap: 12px; padding: 5px 8px; }
       .bracket-stage { display: none; }
       .bracket-column { gap: 4px; }
-      .bracket-team-row { min-height: 24px; padding: 1px 4px; font-size: 11px; }
+      .bracket-team-row { min-height: 28px; padding: 1px 4px; font-size: 11px; }
       .bracket-team-score { font-size: 18px; }
-      .bracket-final .bracket-team-row { min-height: 30px; font-size: 13px; }
+      .bracket-team-scorers { min-height: 18px; padding: 1px 4px 2px; font-size: 8px; }
+      .bracket-final .bracket-team-row { min-height: 34px; font-size: 13px; }
+      .bracket-final .bracket-team-scorers { min-height: 22px; font-size: 9px; }
       .bracket-final .bracket-team-score { font-size: 22px; }
       .bracket-meta { top: -8px; font-size: 8px; }
       .bracket-penalty { font-size: 8px; }
@@ -933,6 +997,26 @@
             }));
         }
 
+        const goalRows = ['Goals', 'KnockoutGoals'].flatMap(sheetName => {
+          const sheet = workbook.Sheets[sheetName];
+          if (!sheet) return [];
+          return XLSX.utils.sheet_to_json(sheet, { defval: '', raw: false })
+            .filter(row => row.MatchID && row.GoalForTeam)
+            .map(row => ({
+              match_id: String(row.MatchID || '').trim(),
+              team: String(row.GoalForTeam || '').trim(),
+              player: String(row.Player || '').trim(),
+              type: String(row.GoalType || '').trim().toLowerCase()
+            }));
+        });
+
+        const attachGoals = match => ({
+          ...match,
+          goals: goalRows.filter(goal =>
+            goal.match_id === String(match.match_id || '').trim()
+          )
+        });
+
         const scorers = [];
         rows.forEach(row => {
           const position = Number(row[13]);
@@ -951,7 +1035,12 @@
           referenceDate = liveSetting ? String(liveSetting.Value || '').trim() : '';
         }
 
-        return { standings, matches: groupMatches.concat(knockout), scorers, referenceDate };
+        return {
+          standings,
+          matches: groupMatches.concat(knockout).map(attachGoals),
+          scorers,
+          referenceDate
+        };
       }
 
       function rankClass(position) {
@@ -965,15 +1054,13 @@
           const rows = teams.map(team => `<tr>
             <td><span class="rank ${rankClass(team.position)}">${esc(team.position)}</span></td>
             <td title="${esc(team.team)}">${esc(team.team)}</td>
-            <td>${esc(team.played)}</td><td>${esc(team.won)}</td>
-            <td>${esc(team.wonPen)}</td><td>${esc(team.lostPen)}</td>
-            <td>${esc(team.gd)}</td><td>${esc(team.points)}</td>
+            <td>${esc(team.points)}</td>
           </tr>`).join('');
           return `<article class="group">
             <div class="group-title">Girone ${group}</div>
             <table>
-              <thead><tr><th>#</th><th>Squadra</th><th>G</th><th>V</th><th>VR</th><th>SR</th><th>DR</th><th>PT</th></tr></thead>
-              <tbody>${rows || '<tr><td colspan="8">Dati in attesa</td></tr>'}</tbody>
+              <thead><tr><th>#</th><th>Squadra</th><th>PT</th></tr></thead>
+              <tbody>${rows || '<tr><td colspan="3">Dati in attesa</td></tr>'}</tbody>
             </table>
           </article>`;
         }).join('');
@@ -1048,6 +1135,28 @@
         return '';
       }
 
+      function scorersForTeam(match, team) {
+        const counts = new Map();
+        (match.goals || [])
+          .filter(goal => String(goal.team) === String(team || ''))
+          .forEach(goal => {
+            let name = String(goal.player || '')
+              .replace(/^\d+\s*-\s*/, '')
+              .replace(/\s*\(C\)\s*$/, '')
+              .trim();
+            if (goal.type === 'autogol') name = 'Autogol';
+            if (name) counts.set(name, (counts.get(name) || 0) + 1);
+          });
+        return Array.from(counts, ([name, goals]) =>
+          `${name}${goals > 1 ? ` ×${goals}` : ''}`
+        ).join(' · ');
+      }
+
+      function bracketScorers(match, team) {
+        const scorers = scorersForTeam(match, team);
+        return `<div class="bracket-team-scorers${scorers ? '' : ' empty'}">${esc(scorers)}</div>`;
+      }
+
       function bracketMatch(match, fallbackId) {
         const item = match || {};
         const complete = isComplete(item);
@@ -1063,13 +1172,19 @@
           : '';
         return `<div class="bracket-match${live ? ' live' : ''}">
           <div class="bracket-meta">${esc(item.match_id || fallbackId)} · ${esc(matchReference)}</div>
-          <div class="bracket-team-row${winner === home ? ' winner' : ''}">
-            <span class="bracket-team-name" title="${esc(home)}">${esc(home)}</span>
-            <span class="bracket-team-score">${esc(homeScore)}</span>
+          <div class="bracket-team-entry">
+            <div class="bracket-team-row${winner === home ? ' winner' : ''}">
+              <span class="bracket-team-name" title="${esc(home)}">${esc(home)}</span>
+              <span class="bracket-team-score">${esc(homeScore)}</span>
+            </div>
+            ${bracketScorers(item, home)}
           </div>
-          <div class="bracket-team-row${winner === away ? ' winner' : ''}">
-            <span class="bracket-team-name" title="${esc(away)}">${esc(away)}</span>
-            <span class="bracket-team-score">${esc(awayScore)}</span>
+          <div class="bracket-team-entry">
+            <div class="bracket-team-row${winner === away ? ' winner' : ''}">
+              <span class="bracket-team-name" title="${esc(away)}">${esc(away)}</span>
+              <span class="bracket-team-score">${esc(awayScore)}</span>
+            </div>
+            ${bracketScorers(item, away)}
           </div>
           ${penalty}
         </div>`;
