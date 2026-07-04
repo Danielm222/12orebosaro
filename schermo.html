@@ -1133,7 +1133,9 @@
         clearTimeout(carouselTimer);
         const afterTwenty = new Date().getHours() >= 20;
         const isFinals = slideDefinitions[slideIndex].key === 'finals';
-        const duration = afterTwenty ? (isFinals ? 100000000 : 1) : 8000;
+        const duration = afterTwenty
+          ? (isFinals ? 100000000 : 1)
+          : (isFinals ? 1000 : 8000);
         carouselTimer = setTimeout(() => {
           applySlide(slideIndex + 1);
           startCarousel();
