@@ -2893,7 +2893,7 @@ Le partite non sono ancora iniziate. Torna il 4 Luglio!</div>
     const now = new Date();
     const diff = target - now;
     if (diff <= 0) {
-      document.getElementById('countdown').innerHTML = '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:2rem;color:var(--neon);letter-spacing:0.1em;">TORNEO INIZIATO! 🔥</div>';
+      document.getElementById('countdown').innerHTML = '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:2rem;color:var(--neon);letter-spacing:0.1em;">TORNEO CONCLUSO! 🔥</div>';
       return;
     }
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
@@ -3684,7 +3684,7 @@ try { loadNoBounceChallenge(); } catch(e) {}
   <canvas id="confetti-canvas" style="position:fixed;inset:0;pointer-events:none;z-index:199;"></canvas>
   <div class="modal-box" style="z-index:201;max-width:720px;text-align:center;">
     <button class="modal-close" id="winnerCloseBtn">×</button>
-    <div class="modal-title">Vincitori 6<sup>a</sup> edizione della 12OREBOSARO:</div>
+    <div class="modal-title">Vincitori 6<sup style="font-family:'Barlow Condensed',sans-serif;text-transform:none;font-size:0.45em;line-height:1;">a</sup> edizione della 12OREBOSARO:</div>
     <div id="winnerName" style="font-family:'Bebas Neue',sans-serif;font-size:2.6rem;color:var(--white);margin-top:0.6rem;color:var(--neon);">--</div>
     <p class="modal-subtitle" style="margin-top:0.6rem;color:var(--white);opacity:0.9;">Complimenti ai campioni!</p>
     <div style="margin-top:1.6rem;"><button class="nav-cta" id="visitSiteBtn">Visita il sito</button></div>
