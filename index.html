@@ -3337,7 +3337,12 @@ async function loadTournamentData() {
 
     const quarti = knockoutRows.filter(m => /quarter|quarti/i.test(String(m.Stage || '')));
     const semi   = knockoutRows.filter(m => /semi|semif/i.test(String(m.Stage || '')));
-    const finale = knockoutRows.filter(m => /final|finale/i.test(String(m.Stage || '')));
+    // match 'final' but exclude 'quarter' and 'semi' which may contain 'final' as substring
+    const finale = knockoutRows.filter(m => {
+      const s = String(m.Stage || '').toLowerCase();
+      if (!s) return false;
+      return /final/.test(s) && !/quarter|quarti|semi|semif/.test(s);
+    });
 
     const allGrids = document.querySelectorAll('.partite-grid');
     // allGrids[0] = gironi (already handled), [1] = quarti, [2] = semi, [3] = finale
