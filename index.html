@@ -2889,25 +2889,11 @@ Le partite non sono ancora iniziate. Torna il 4 Luglio!</div>
 <script>
   // COUNTDOWN
   function updateCountdown() {
-    // If a final result is present, consider tournament concluded
-    const winnerEl = document.getElementById('final-result') || document.getElementById('finalWinner') || document.getElementById('winner-name');
-    const winnerName = winnerEl ? (winnerEl.dataset && winnerEl.dataset.winner ? winnerEl.dataset.winner : (winnerEl.textContent||'').trim()) : '';
-    if (winnerName) {
-      document.getElementById('countdown').innerHTML = '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:2rem;color:var(--neon);letter-spacing:0.1em;">Torneo concluso</div>';
-      // show winner modal once per session (until tab closed) if not already closed
-      try {
-        if (!sessionStorage.getItem('winnerModalClosed') && !sessionStorage.getItem('winnerModalShown')) {
-          setTimeout(() => showWinnerModal(winnerName), 600);
-          sessionStorage.setItem('winnerModalShown', '1');
-        }
-      } catch (e) { /* sessionStorage may be unavailable */ }
-      return;
-    }
     const target = new Date('2026-07-04T14:00:00');
     const now = new Date();
     const diff = target - now;
     if (diff <= 0) {
-      document.getElementById('countdown').innerHTML = '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:2rem;color:var(--neon);letter-spacing:0.1em;">Torneo iniziato</div>';
+      document.getElementById('countdown').innerHTML = '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:2rem;color:var(--neon);letter-spacing:0.1em;">TORNEO INIZIATO! 🔥</div>';
       return;
     }
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
