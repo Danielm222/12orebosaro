@@ -2893,7 +2893,7 @@ Le partite non sono ancora iniziate. Torna il 4 Luglio!</div>
     const winnerEl = document.getElementById('final-result') || document.getElementById('finalWinner') || document.getElementById('winner-name');
     const winnerName = winnerEl ? (winnerEl.dataset && winnerEl.dataset.winner ? winnerEl.dataset.winner : (winnerEl.textContent||'').trim()) : '';
     if (winnerName) {
-      document.getElementById('countdown').innerHTML = '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:2rem;color:var(--neon);letter-spacing:0.1em;">TORNEO CONCLUSO</div>';
+      document.getElementById('countdown').innerHTML = '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:2rem;color:var(--neon);letter-spacing:0.1em;">Torneo concluso</div>';
       // show winner modal once per session (until tab closed) if not already closed
       try {
         if (!sessionStorage.getItem('winnerModalClosed') && !sessionStorage.getItem('winnerModalShown')) {
@@ -2907,7 +2907,7 @@ Le partite non sono ancora iniziate. Torna il 4 Luglio!</div>
     const now = new Date();
     const diff = target - now;
     if (diff <= 0) {
-      document.getElementById('countdown').innerHTML = '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:2rem;color:var(--neon);letter-spacing:0.1em;">TORNEO INIZIATO! 🔥</div>';
+      document.getElementById('countdown').innerHTML = '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:2rem;color:var(--neon);letter-spacing:0.1em;">Torneo iniziato</div>';
       return;
     }
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
@@ -3349,9 +3349,9 @@ async function loadTournamentData() {
       </div>`;
     }
 
-    const quarti    = knockoutRows.filter(m => (m.Stage || '').toString().trim() === 'Quarter-final');
-    const semi      = knockoutRows.filter(m => (m.Stage || '').toString().trim() === 'Semi-final');
-    const finale    = knockoutRows.filter(m => (m.Stage || '').toString().trim() === 'Final');
+    const quarti = knockoutRows.filter(m => /quarter|quarti/i.test(String(m.Stage || '')));
+    const semi   = knockoutRows.filter(m => /semi|semif/i.test(String(m.Stage || '')));
+    const finale = knockoutRows.filter(m => /final|finale/i.test(String(m.Stage || '')));
 
     const allGrids = document.querySelectorAll('.partite-grid');
     // allGrids[0] = gironi (already handled), [1] = quarti, [2] = semi, [3] = finale
@@ -3661,7 +3661,7 @@ try { loadNoBounceChallenge(); } catch(e) {}
   <canvas id="confetti-canvas" style="position:fixed;inset:0;pointer-events:none;z-index:199;"></canvas>
   <div class="modal-box" style="z-index:201;max-width:720px;text-align:center;">
     <button class="modal-close" id="winnerCloseBtn">×</button>
-    <div class="modal-title">Vincitori 6a edizione della 12OREBOSARO:</div>
+    <div class="modal-title">Vincitori 6<sup>a</sup> edizione della 12OREBOSARO:</div>
     <div id="winnerName" style="font-family:'Bebas Neue',sans-serif;font-size:2.6rem;color:var(--white);margin-top:0.6rem;color:var(--neon);">--</div>
     <p class="modal-subtitle" style="margin-top:0.6rem;color:var(--white);opacity:0.9;">Complimenti ai campioni!</p>
     <div style="margin-top:1.6rem;"><button class="nav-cta" id="visitSiteBtn">Visita il sito</button></div>
