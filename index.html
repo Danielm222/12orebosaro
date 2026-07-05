@@ -1798,6 +1798,8 @@ window.TOURNAMENT_DATA = {"standings": [{"Group": "A", "Pos": 1, "Team": "Fatine
     </div>
     <div class="countdown" id="countdown">
       <div class="cd-unit"><span class="cd-num" id="cd-days">00</span><span class="cd-label">Giorni</span></div>
+    <!-- Inserisci qui il risultato finale: imposta il testo del div o l'attributo data-winner -->
+    <div id="final-result" data-winner="" style="display:none"></div>
       <div class="cd-unit"><span class="cd-num" id="cd-hours">00</span><span class="cd-label">Ore</span></div>
       <div class="cd-unit"><span class="cd-num" id="cd-mins">00</span><span class="cd-label">Minuti</span></div>
       <div class="cd-unit"><span class="cd-num" id="cd-secs">00</span><span class="cd-label">Secondi</span></div>
@@ -2887,6 +2889,20 @@ Le partite non sono ancora iniziate. Torna il 4 Luglio!</div>
 <script>
   // COUNTDOWN
   function updateCountdown() {
+    // If a final result is present, consider tournament concluded
+    const winnerEl = document.getElementById('final-result') || document.getElementById('finalWinner') || document.getElementById('winner-name');
+    const winnerName = winnerEl ? (winnerEl.dataset && winnerEl.dataset.winner ? winnerEl.dataset.winner : (winnerEl.textContent||'').trim()) : '';
+    if (winnerName) {
+      document.getElementById('countdown').innerHTML = '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:2rem;color:var(--neon);letter-spacing:0.1em;">TORNEO CONCLUSO</div>';
+      // show winner modal once per session (until tab closed) if not already closed
+      try {
+        if (!sessionStorage.getItem('winnerModalClosed') && !sessionStorage.getItem('winnerModalShown')) {
+          setTimeout(() => showWinnerModal(winnerName), 600);
+          sessionStorage.setItem('winnerModalShown', '1');
+        }
+      } catch (e) { /* sessionStorage may be unavailable */ }
+      return;
+    }
     const target = new Date('2026-07-04T14:00:00');
     const now = new Date();
     const diff = target - now;
@@ -3349,6 +3365,47 @@ async function loadTournamentData() {
       allGrids[3].innerHTML = finale.map(m => buildKnockoutCard(m, 'border-color:rgba(232,255,0,0.2);')).join('');
     }
 
+    // --- Determina il vincitore della finale (se presente) e aggiorna #final-result
+    try {
+      if (finale && finale.length) {
+        // cerca la finale con risultato, altrimenti prendi la prima
+        const finalMatch = finale.find(m => (m.HomeGoals !== undefined && m.HomeGoals !== null && m.HomeGoals !== '' && m.AwayGoals !== undefined && m.AwayGoals !== null && m.AwayGoals !== '')) || finale[0];
+        let winner = '';
+        if (finalMatch) {
+          const pen = (finalMatch.PenaltyWinner || finalMatch.PenWinner || '').toString().trim();
+          if (pen) {
+            // PenaltyWinner può contenere il nome della squadra vincente
+            winner = pen;
+          } else if (finalMatch.HomeGoals !== undefined && finalMatch.AwayGoals !== undefined && finalMatch.HomeGoals !== '' && finalMatch.AwayGoals !== '') {
+            const hg = Number(String(finalMatch.HomeGoals).replace(',', '.'));
+            const ag = Number(String(finalMatch.AwayGoals).replace(',', '.'));
+            if (!Number.isNaN(hg) && !Number.isNaN(ag)) {
+              if (hg > ag) winner = finalMatch.HomeTeam || '';
+              else if (ag > hg) winner = finalMatch.AwayTeam || '';
+            }
+          }
+          // fallback su possibili colonne Winner / WinnerTeam
+          if (!winner) winner = (finalMatch.Winner || finalMatch.WinnerTeam || finalMatch.MatchWinner || '').toString().trim();
+        }
+        if (winner) {
+          const finalEl = document.getElementById('final-result');
+          if (finalEl) {
+            finalEl.dataset.winner = winner;
+            finalEl.textContent = winner;
+            finalEl.style.display = 'none';
+          }
+          try {
+            if (!sessionStorage.getItem('winnerModalClosed') && !sessionStorage.getItem('winnerModalShown')) {
+              if (typeof showWinnerModal === 'function') {
+                showWinnerModal(winner);
+                sessionStorage.setItem('winnerModalShown', '1');
+              }
+            }
+          } catch (e) { /* ignore */ }
+        }
+      }
+    } catch (err) { console.warn('Impossibile determinare il vincitore automatico:', err); }
+
     // Hide the results-empty notice if standings have data
     if (standingsRows.length > 0) {
       document.querySelectorAll('.risultati-empty').forEach(el => {
@@ -3597,6 +3654,101 @@ try { loadNoBounceChallenge(); } catch(e) {}
   });
   setInterval(refreshTournamentDataFromExcel, REFRESH_INTERVAL);
 }());
+</script>
+
+<!-- WINNER POPUP + CONFETTI -->
+<div class="modal-overlay" id="winnerModal" aria-hidden="true">
+  <canvas id="confetti-canvas" style="position:fixed;inset:0;pointer-events:none;z-index:199;"></canvas>
+  <div class="modal-box" style="z-index:201;max-width:720px;text-align:center;">
+    <button class="modal-close" id="winnerCloseBtn">×</button>
+    <div class="modal-title">Vincitori 6a edizione della 12OREBOSARO:</div>
+    <div id="winnerName" style="font-family:'Bebas Neue',sans-serif;font-size:2.6rem;color:var(--white);margin-top:0.6rem;color:var(--neon);">--</div>
+    <p class="modal-subtitle" style="margin-top:0.6rem;color:var(--white);opacity:0.9;">Complimenti ai campioni!</p>
+    <div style="margin-top:1.6rem;"><button class="nav-cta" id="visitSiteBtn">Visita il sito</button></div>
+  </div>
+</div>
+
+<script>
+  // Minimal confetti/coriandoli animation
+  (function(){
+    const canvas = document.getElementById('confetti-canvas');
+    let ctx, W, H, particles = [], animId, running = false;
+
+    function resize(){
+      if (!canvas) return;
+      canvas.width = W = window.innerWidth;
+      canvas.height = H = window.innerHeight;
+      ctx = canvas.getContext('2d');
+    }
+
+    function rand(min, max){ return Math.random()*(max-min)+min; }
+
+    function createParticle(){
+      return {
+        x: rand(0, W),
+        y: rand(-H, 0),
+        w: rand(6,14),
+        h: rand(8,20),
+        vx: rand(-0.6, 0.6),
+        vy: rand(1.5, 4.5),
+        r: rand(0,360),
+        vr: rand(-5,5),
+        color: `hsl(${Math.floor(rand(0,360))},70%,50%)`
+      };
+    }
+
+    function initParticles(count){ particles = []; for(let i=0;i<count;i++) particles.push(createParticle()); }
+
+    function step(){
+      ctx.clearRect(0,0,W,H);
+      for(let p of particles){
+        p.x += p.vx; p.y += p.vy; p.r += p.vr;
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.r*Math.PI/180);
+        ctx.fillStyle = p.color;
+        ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
+        ctx.restore();
+        if (p.y > H + 50) Object.assign(p, createParticle());
+      }
+      animId = running ? requestAnimationFrame(step) : null;
+    }
+
+    function startConfetti(){ if (running) return; resize(); initParticles(Math.max(60, Math.floor(W/20))); running = true; step(); }
+    function stopConfetti(){ running = false; if (animId) cancelAnimationFrame(animId); if (ctx) ctx.clearRect(0,0,W,H); }
+
+    window.addEventListener('resize', () => { if (running) resize(); });
+
+    // Modal control
+    function showWinnerModal(name){
+      const modal = document.getElementById('winnerModal');
+      const nameEl = document.getElementById('winnerName');
+      if (!modal) return;
+      nameEl.textContent = name || '--';
+      modal.classList.add('open');
+      modal.style.display = 'flex';
+      try { sessionStorage.setItem('winnerModalShown','1'); } catch(e){}
+      startConfetti();
+    }
+
+    function closeWinnerModal(){
+      const modal = document.getElementById('winnerModal');
+      if (!modal) return;
+      modal.classList.remove('open');
+      modal.style.display = 'none';
+      stopConfetti();
+      try { sessionStorage.setItem('winnerModalClosed','1'); } catch(e){}
+    }
+
+    // expose to global so updateCountdown can call it
+    window.showWinnerModal = showWinnerModal;
+
+    document.getElementById('winnerCloseBtn').addEventListener('click', closeWinnerModal);
+    document.getElementById('visitSiteBtn').addEventListener('click', closeWinnerModal);
+
+    // initialize hidden state
+    (function(){ const modal = document.getElementById('winnerModal'); if (modal) modal.style.display = 'none'; })();
+  }());
 </script>
 
 </body>
