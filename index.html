@@ -3356,13 +3356,38 @@ async function loadTournamentData() {
       if (finale && finale.length) {
         // cerca la finale con risultato, altrimenti prendi la prima
         const finalMatch = finale.find(m => (m.HomeGoals !== undefined && m.HomeGoals !== null && m.HomeGoals !== '' && m.AwayGoals !== undefined && m.AwayGoals !== null && m.AwayGoals !== '')) || finale[0];
+
+        function resolveTeamNameFromValue(val, m) {
+          if (!val) return '';
+          const v = String(val).trim();
+          if (!v) return '';
+          // direct match with team names
+          if (m.HomeTeam && v.toLowerCase() === String(m.HomeTeam).toLowerCase()) return m.HomeTeam;
+          if (m.AwayTeam && v.toLowerCase() === String(m.AwayTeam).toLowerCase()) return m.AwayTeam;
+          // common tokens
+          const low = v.toLowerCase();
+          if (/^home$|^h$|^1$/.test(low)) return m.HomeTeam || '';
+          if (/^away$|^a$|^2$/.test(low)) return m.AwayTeam || '';
+          // if value matches a TeamID or TeamName from teams sheet
+          const teamsRows = window.TOURNAMENT_DATA && window.TOURNAMENT_DATA.teams ? window.TOURNAMENT_DATA.teams : [];
+          for (const t of teamsRows) {
+            const tid = String(t.TeamID || '').trim();
+            const tname = String(t.TeamName || t.Team || '').trim();
+            if (tid && tid === v) return tname || v;
+            if (tname && tname.toLowerCase() === low) return tname;
+          }
+          return '';
+        }
+
         let winner = '';
         if (finalMatch) {
-          const pen = (finalMatch.PenaltyWinner || finalMatch.PenWinner || '').toString().trim();
-          if (pen) {
-            // PenaltyWinner può contenere il nome della squadra vincente
-            winner = pen;
-          } else if (finalMatch.HomeGoals !== undefined && finalMatch.AwayGoals !== undefined && finalMatch.HomeGoals !== '' && finalMatch.AwayGoals !== '') {
+          // 1) check explicit penalty winner fields
+          const penRaw = (finalMatch.PenaltyWinner || finalMatch.PenWinner || finalMatch.Penalty || '').toString().trim();
+          const penResolved = resolveTeamNameFromValue(penRaw, finalMatch);
+          if (penResolved) winner = penResolved;
+
+          // 2) if no penalty info, check numeric score
+          if (!winner && finalMatch.HomeGoals !== undefined && finalMatch.AwayGoals !== undefined && finalMatch.HomeGoals !== '' && finalMatch.AwayGoals !== '') {
             const hg = Number(String(finalMatch.HomeGoals).replace(',', '.'));
             const ag = Number(String(finalMatch.AwayGoals).replace(',', '.'));
             if (!Number.isNaN(hg) && !Number.isNaN(ag)) {
@@ -3370,10 +3395,17 @@ async function loadTournamentData() {
               else if (ag > hg) winner = finalMatch.AwayTeam || '';
             }
           }
-          // fallback su possibili colonne Winner / WinnerTeam
-          if (!winner) winner = (finalMatch.Winner || finalMatch.WinnerTeam || finalMatch.MatchWinner || '').toString().trim();
+
+          // 3) try common winner columns
+          if (!winner) {
+            const cand = (finalMatch.Winner || finalMatch.WinnerTeam || finalMatch.MatchWinner || finalMatch.ResultWinner || '').toString().trim();
+            const candResolved = resolveTeamNameFromValue(cand, finalMatch);
+            if (candResolved) winner = candResolved; else if (cand) winner = cand; // fallback raw
+          }
         }
+
         if (winner) {
+          console.info('Final winner resolved:', winner, finalMatch);
           const finalEl = document.getElementById('final-result');
           if (finalEl) {
             finalEl.dataset.winner = winner;
