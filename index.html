@@ -47,7 +47,9 @@
   nav {
     position: fixed; top: 0; left: 0; right: 0; z-index: 100;
     display: flex; justify-content: space-between; align-items: center;
-    padding: 1.2rem 3rem;
+    gap: 1rem;
+    flex-wrap: wrap;
+    padding: 1rem 2.2rem;
     background: rgba(8,8,8,0.85);
     backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--border);
@@ -55,6 +57,7 @@
   }
   .nav-logo {
     display: flex; align-items: center; gap: 0.7rem;
+    flex-shrink: 0;
     font-family: 'Bebas Neue', sans-serif;
     font-size: 1.5rem;
     letter-spacing: 0.15em;
@@ -67,32 +70,32 @@
     object-fit: cover;
   }
   .nav-links {
-    display: flex; gap: 2rem; list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 0.45rem 1rem;
+    list-style: none;
+    margin-left: auto;
+    margin-right: 0.5rem;
+    max-width: min(980px, calc(100vw - 360px));
   }
+  .nav-links li { display: flex; align-items: center; }
   .nav-links a {
     font-family: 'Barlow Condensed', sans-serif;
     font-weight: 600;
-    font-size: 0.85rem;
+    font-size: 0.78rem;
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--white);
     text-decoration: none;
     opacity: 0.7;
     transition: opacity 0.2s, color 0.2s;
+    white-space: nowrap;
   }
   .nav-links a:hover { opacity: 1; color: var(--neon); }
-  .nav-links a.nav-results {
-    opacity: 1;
-    color: var(--black);
-    background: var(--neon);
-    padding: 0.45rem 0.8rem;
-    border-radius: 0;
-  }
-  .nav-links a.nav-results:hover {
-    color: var(--black);
-    background: var(--neon2);
-  }
   .nav-cta {
+    flex-shrink: 0;
     font-family: 'Barlow Condensed', sans-serif;
     font-weight: 700;
     font-size: 0.8rem;
@@ -1734,14 +1737,16 @@ window.TOURNAMENT_DATA = {"standings": [{"Group": "A", "Pos": 1, "Team": "Fatine
   <ul class="nav-links">
     <li><a href="#torneo">Torneo</a></li>
     <li><a href="#format">Format</a></li>
+    <li><a href="#iscrizione">Iscrizione</a></li>
     <li><a href="#programma">Programma</a></li>
     <li><a href="#premi">Premi</a></li>
     <li><a href="#regolamento">Regolamento</a></li>
     <li><a href="#location">Location</a></li>
     <li><a href="#experience">Esperienza</a></li>
-    <li><a href="#" class="nav-results" onclick="openPage('risultati'); return false;">Risultati</a></li>
+    <li><a href="#" onclick="openPage('risultati'); return false;">Risultati</a></li>
     <li><a href="#" onclick="openPage('squadre'); return false;">Squadre</a></li>
     <li><a href="#" onclick="openPage('marcatori'); return false;">Marcatori</a></li>
+    <li><a href="#" onclick="openPage('noBounce'); return false;">No Bounce</a></li>
     <li><a href="#" onclick="openPage('albodoro'); return false;">Albo d'Oro</a></li>
     <li><a href="#" onclick="openPage('sponsor'); return false;">Sponsor</a></li>
   </ul>
